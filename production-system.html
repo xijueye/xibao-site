@@ -93,6 +93,8 @@ function renderContent() {
 
 function renderProject(el) {
   const list = DB.get('biz_projects');
+  const kw=(document.getElementById('biz-prj-kw')?.value||'').toLowerCase();
+  const filtered=kw?list.filter(p=>p.name.toLowerCase().includes(kw)||p.manager.toLowerCase().includes(kw)||p.type.includes(kw)):list;
   const active = list.filter(i=>i.status==='进行中'||i.status==='进度滞后').length;
   const total = Summary.calc(list,'contract');
   el.innerHTML = `
@@ -102,9 +104,10 @@ function renderProject(el) {
       <div class="stat-card orange"><div class="label">合同总额（万元）</div><div class="value">${total}</div></div>
       <div class="stat-card red"><div class="label">风险项目</div><div class="value">${list.filter(i=>i.status==='进度滞后').length}</div></div>
     </div>
+    <div class="filter-bar"><input type="text" id="biz-prj-kw" placeholder="搜索项目名称/经理..." oninput="renderProject(document.getElementById('tab-content'))" style="padding:6px 12px;border:1px solid var(--gray-200);border-radius:6px;font-size:13px;width:240px"></div>
     <div class="card"><div class="card-body">
       <table><thead><tr><th>编号</th><th>项目名称</th><th>经理</th><th>类型</th><th>合同额（万）</th><th>进度</th><th>状态</th><th>操作</th></tr></thead>
-      <tbody>${list.map(p=>`<tr>
+      <tbody>${filtered.map(p=>`<tr>
         <td>${p.id}</td><td><strong>${p.name}</strong></td><td>${p.manager}</td><td>${p.type}</td><td>¥${p.contract}</td>
         <td><div class="progress-bar" style="width:100px;display:inline-block;vertical-align:middle"><div class="fill ${p.progress>=80?'green':p.progress>=40?'blue':'orange'}" style="width:${p.progress}%"></div></div> ${p.progress}%</td>
         <td><span class="status ${p.status==='已完成'?'approved':p.status==='进度滞后'?'warning':'processing'}">${p.status}</span></td>
@@ -200,14 +203,17 @@ function renderContract(el) {
 // ===== 采购管理 =====
 function renderPurchase(el) {
   const list = DB.get('biz_purchases');
+  const kw=(document.getElementById('biz-cg-kw')?.value||'').toLowerCase();
+  const filtered=kw?list.filter(p=>p.item.toLowerCase().includes(kw)||p.supplier.toLowerCase().includes(kw)||p.applicant.toLowerCase().includes(kw)):list;
   el.innerHTML = `
     <div class="portal-stats" style="margin-bottom:20px">
       <div class="stat-card"><div class="label">待审批采购</div><div class="value">${list.filter(i=>i.status==='待审批').length}</div></div>
       <div class="stat-card green"><div class="label">本月采购总额（万元）</div><div class="value">${(Summary.calc(list.filter(i=>i.status==='已通过'),'amount')/10000).toFixed(1)}</div></div>
     </div>
+    <div class="filter-bar"><input type="text" id="biz-cg-kw" placeholder="搜索采购内容/供应商..." oninput="renderPurchase(document.getElementById('tab-content'))" style="padding:6px 12px;border:1px solid var(--gray-200);border-radius:6px;font-size:13px;width:240px"></div>
     <div class="card"><div class="card-body">
       <table><thead><tr><th>采购单号</th><th>采购内容</th><th>供应商</th><th>金额（元）</th><th>申请人</th><th>日期</th><th>状态</th><th>操作</th></tr></thead>
-      <tbody>${list.map(p=>`<tr>
+      <tbody>${filtered.map(p=>`<tr>
         <td style="font-size:12px">${p.id}</td><td><strong>${p.item}</strong></td><td>${p.supplier}</td>
         <td style="font-weight:600">¥${p.amount.toLocaleString()}</td><td>${p.applicant}</td><td>${p.date}</td>
         <td><span class="status ${p.status==='待审核'||p.status==='待审批'?'pending':'approved'}">${p.status}</span></td>

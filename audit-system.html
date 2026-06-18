@@ -122,15 +122,18 @@ function renderContent() {
 
 function renderAuditProject(el) {
   const list = DB.get('aud_projects');
+  const kw=(document.getElementById('aud-prj-kw')?.value||'').toLowerCase();
+  const filtered=kw?list.filter(a=>a.name.toLowerCase().includes(kw)||a.leader.toLowerCase().includes(kw)||a.type.includes(kw)):list;
   el.innerHTML = `
     <div class="portal-stats" style="margin-bottom:20px">
       <div class="stat-card"><div class="label">年度项目</div><div class="value">${list.length}</div></div>
       <div class="stat-card green"><div class="label">已完成</div><div class="value">${list.filter(i=>i.status==='已完成').length}</div></div>
       <div class="stat-card orange"><div class="label">实施中</div><div class="value">${list.filter(i=>i.status==='实施中').length}</div></div>
     </div>
+    <div class="filter-bar"><input type="text" id="aud-prj-kw" placeholder="搜索项目名称/审计组长..." oninput="renderAuditProject(document.getElementById('tab-content'))" style="padding:6px 12px;border:1px solid var(--gray-200);border-radius:6px;font-size:13px;width:240px"></div>
     <div class="card"><div class="card-body">
       <table><thead><tr><th>编号</th><th>审计项目</th><th>类型</th><th>审计组长</th><th>计划周期</th><th>进度</th><th>状态</th><th>操作</th></tr></thead>
-      <tbody>${list.map(a=>`<tr>
+      <tbody>${filtered.map(a=>`<tr>
         <td>${a.id}</td><td><strong>${a.name}</strong></td><td>${a.type}</td><td>${a.leader}</td><td>${a.period}</td>
         <td><div class="progress-bar" style="width:80px;display:inline-block;vertical-align:middle"><div class="fill ${a.progress>=80?'green':'blue'}" style="width:${a.progress}%"></div></div> ${a.progress}%</td>
         <td><span class="status ${a.status==='已完成'?'approved':'processing'}">${a.status}</span></td>
@@ -183,6 +186,8 @@ function saveAuditProgress(id) {
 // ===== 问题台账 =====
 function renderIssue(el) {
   const list = DB.get('aud_issues');
+  const kw=(document.getElementById('aud-iss-kw')?.value||'').toLowerCase();
+  const filtered=kw?list.filter(i=>i.desc.toLowerCase().includes(kw)||i.dept.includes(kw)||i.source.includes(kw)):list;
   el.innerHTML = `
     <div class="portal-stats" style="margin-bottom:20px">
       <div class="stat-card"><div class="label">总问题数</div><div class="value">${list.length}</div></div>
@@ -190,9 +195,10 @@ function renderIssue(el) {
       <div class="stat-card orange"><div class="label">整改中</div><div class="value">${list.filter(i=>i.status==='整改中').length}</div></div>
       <div class="stat-card green"><div class="label">已整改</div><div class="value">${list.filter(i=>i.status==='已整改').length}</div></div>
     </div>
+    <div class="filter-bar"><input type="text" id="aud-iss-kw" placeholder="搜索问题描述/责任部门..." oninput="renderIssue(document.getElementById('tab-content'))" style="padding:6px 12px;border:1px solid var(--gray-200);border-radius:6px;font-size:13px;width:240px"></div>
     <div class="card"><div class="card-body">
       <table><thead><tr><th>编号</th><th>来源项目</th><th>问题描述</th><th>风险等级</th><th>责任部门</th><th>整改期限</th><th>状态</th><th>操作</th></tr></thead>
-      <tbody>${list.map(i=>`<tr>
+      <tbody>${filtered.map(i=>`<tr>
         <td>${i.id}</td><td style="font-size:12px">${i.source}</td><td style="max-width:250px">${i.desc}</td>
         <td><span class="status ${i.risk==='高'?'danger':i.risk==='中'?'warning':'pending'}">${i.risk}</span></td>
         <td>${i.dept}</td><td>${i.deadline}</td>

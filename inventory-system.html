@@ -157,9 +157,10 @@ function renderInbound(el) {
       <div class="stat-card green"><div class="label">本月已入库</div><div class="value">${list.filter(i=>i.status==='已入库').length}单</div></div>
       <div class="stat-card orange"><div class="label">本月入库金额（万元）</div><div class="value">${(Summary.calc(list.filter(i=>i.status==='已入库'),'qty')*1000/10000).toFixed(1)}</div></div>
     </div>
+    <div class="filter-bar"><input type="text" id="inv-in-kw" placeholder="搜索物料名称/供应商..." oninput="renderInbound(document.getElementById('tab-content'))" style="padding:6px 12px;border:1px solid var(--gray-200);border-radius:6px;font-size:13px;width:240px"></div>
     <div class="card"><div class="card-body">
       <table><thead><tr><th>入库单号</th><th>物料名称</th><th>规格</th><th>供应商</th><th>数量</th><th>单价</th><th>仓库</th><th>日期</th><th>状态</th><th>操作</th></tr></thead>
-      <tbody>${list.map(i=>`<tr>
+      <tbody>${filtered.map(i=>`<tr>
         <td style="font-size:12px">${i.id}</td><td><strong>${i.item}</strong></td><td style="font-size:12px">${i.spec}</td><td>${i.supplier}</td>
         <td>${i.qty}${i.unit||'件'}</td><td>¥${i.unitPrice?.toLocaleString()||'-'}</td><td>${i.warehouse}</td><td>${i.date}</td>
         <td><span class="status ${i.status==='已入库'?'approved':i.status==='待验收'?'pending':'processing'}">${i.status}</span></td>
@@ -233,15 +234,18 @@ function viewInbound(id) {
 // ===== 出库管理 =====
 function renderOutbound(el) {
   const list = DB.get('inv_outbounds');
+  const kw=(document.getElementById('inv-out-kw')?.value||'').toLowerCase();
+  const filtered=kw?list.filter(i=>i.item.toLowerCase().includes(kw)||i.dept.includes(kw)||i.applicant.toLowerCase().includes(kw)):list;
   el.innerHTML = `
     ${wfHtml||''}
     <div class="portal-stats" style="margin-bottom:20px">
       <div class="stat-card"><div class="label">本月出库单</div><div class="value">${list.length}</div></div>
       <div class="stat-card green"><div class="label">已出库</div><div class="value">${list.filter(i=>i.status==='已出库').length}</div></div>
     </div>
+    <div class="filter-bar"><input type="text" id="inv-out-kw" placeholder="搜索物料名称/领用部门..." oninput="renderOutbound(document.getElementById('tab-content'))" style="padding:6px 12px;border:1px solid var(--gray-200);border-radius:6px;font-size:13px;width:240px"></div>
     <div class="card"><div class="card-body">
       <table><thead><tr><th>出库单号</th><th>物料名称</th><th>数量</th><th>领用部门</th><th>领用人</th><th>日期</th><th>用途</th><th>状态</th></tr></thead>
-      <tbody>${list.map(i=>`<tr><td style="font-size:12px">${i.id}</td><td><strong>${i.item}</strong></td><td>${i.qty}件</td>
+      <tbody>${filtered.map(i=>`<tr><td style="font-size:12px">${i.id}</td><td><strong>${i.item}</strong></td><td>${i.qty}件</td>
         <td>${i.dept}</td><td>${i.applicant}</td><td>${i.date}</td><td>${i.purpose}</td>
         <td><span class="status ${i.status==='已出库'?'approved':'pending'}">${i.status}</span></td></tr>`).join('')}</tbody></table>
     </div></div>`;

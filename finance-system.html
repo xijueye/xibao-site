@@ -244,8 +244,11 @@ function switchTab(tab){
 }
 
 function renderGL(el){
-  el.innerHTML=`<div class="card"><div class="card-body"><div style="overflow-x:auto"><table><thead><tr><th>凭证号</th><th>日期</th><th>摘要</th><th>借方科目</th><th>贷方科目</th><th>金额</th><th>制单</th><th>审核</th><th>状态</th><th>操作</th></tr></thead>
-  <tbody>${vouchers.map(v=>`<tr><td style="font-size:12px">${v.id}</td><td>${v.date}</td><td><strong>${v.summary}</strong></td><td style="font-size:12px">${v.debit}</td><td style="font-size:12px">${v.credit}</td><td style="font-weight:600">¥${v.amount.toLocaleString()}</td><td>${v.prepBy}</td><td>${v.authBy}</td>
+  const kw=(document.getElementById('fin-gl-kw')?.value||'').toLowerCase();
+  const filtered=kw?vouchers.filter(v=>v.summary.toLowerCase().includes(kw)||v.debit.includes(kw)||v.credit.includes(kw)):vouchers;
+  el.innerHTML=`<div class="filter-bar"><input type="text" id="fin-gl-kw" placeholder="搜索摘要/科目..." oninput="renderGL(document.getElementById('tab-content'))" style="padding:6px 12px;border:1px solid var(--gray-200);border-radius:6px;font-size:13px;width:240px"></div>
+  <div class="card"><div class="card-body"><div style="overflow-x:auto"><table><thead><tr><th>凭证号</th><th>日期</th><th>摘要</th><th>借方科目</th><th>贷方科目</th><th>金额</th><th>制单</th><th>审核</th><th>状态</th><th>操作</th></tr></thead>
+  <tbody>${filtered.map(v=>`<tr><td style="font-size:12px">${v.id}</td><td>${v.date}</td><td><strong>${v.summary}</strong></td><td style="font-size:12px">${v.debit}</td><td style="font-size:12px">${v.credit}</td><td style="font-weight:600">¥${v.amount.toLocaleString()}</td><td>${v.prepBy}</td><td>${v.authBy}</td>
   <td><span class="status ${v.status==='已审核'?'approved':'pending'}">${v.status}</span></td>
   <td><a href="#" onclick="viewVoucher('${v.id}');return false" style="color:var(--primary);font-size:13px;text-decoration:none">查看</a></td></tr>`).join('')}</tbody></table></div>
   <div style="padding:16px;text-align:center;color:var(--gray-400);font-size:13px">共 ${vouchers.length} 条凭证</div></div></div>`;
@@ -254,6 +257,8 @@ function renderGL(el){
 // ===== 费用报销 =====
 function renderExpense(el){
   const list=DB.get('fin_expenses');
+  const kw=(document.getElementById('fin-exp-kw')?.value||'').toLowerCase();
+  const filtered=kw?list.filter(i=>i.applicant.toLowerCase().includes(kw)||i.type.includes(kw)||i.id.toLowerCase().includes(kw)):list;
   const pending=list.filter(i=>i.status==='待审核').length;
   const approved=list.filter(i=>i.status==='已通过');
   el.innerHTML=(wfHtml||'')+`<div class="portal-stats" style="margin-bottom:20px">
@@ -261,6 +266,7 @@ function renderExpense(el){
     <div class="stat-card green"><div class="label">已报销总额</div><div class="value">¥${Summary.money(Summary.calc(approved,'amount'))}</div></div>
     <div class="stat-card orange"><div class="label">审批流程中</div><div class="value">${list.filter(i=>i.status.includes('已审')).length}</div></div>
   </div>
+  <div class="filter-bar"><input type="text" id="fin-exp-kw" placeholder="搜索报销人/类型/单号..." oninput="renderExpense(document.getElementById('tab-content'))" style="padding:6px 12px;border:1px solid var(--gray-200);border-radius:6px;font-size:13px;width:240px"></div>
   <div class="card"><div class="card-header"><h3>报销审批流程说明</h3></div><div class="card-body padded" style="font-size:13px;color:var(--gray-600)">
     <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
       <span style="padding:4px 12px;background:var(--primary-light);color:var(--primary);border-radius:4px;font-weight:600">部门经理审核</span>→
@@ -271,7 +277,7 @@ function renderExpense(el){
     <div style="color:var(--gray-400);font-size:12px">金额≤5000元：部门经理审批即可 | 5000-20000元：需财务审核 | ＞20000元：需CFO审批</div>
   </div></div>
   <div class="card"><div class="card-body"><table><thead><tr><th>单号</th><th>报销人</th><th>部门</th><th>类型</th><th>金额</th><th>日期</th><th>审批阶段</th><th>状态</th><th>操作</th></tr></thead>
-  <tbody>${list.map(e=>{const stages=['待审核','部门经理已审','财务审核中','CFO审批','出纳付款','已通过'];const stageIdx=['待审核','部门经理已审','财务审核中','CFO审批','已通过','已驳回'].indexOf(e.status);
+  <tbody>${filtered.map(e=>{const stages=['待审核','部门经理已审','财务审核中','CFO审批','出纳付款','已通过'];const stageIdx=['待审核','部门经理已审','财务审核中','CFO审批','已通过','已驳回'].indexOf(e.status);
     return `<tr><td>${e.id}</td><td><strong>${e.applicant}</strong></td><td>${e.dept}</td><td>${e.type}</td><td style="font-weight:600">¥${e.amount.toLocaleString()}</td><td>${e.date}</td>
     <td><div style="display:flex;gap:4px">${stages.map((s,i)=>`<span style="width:8px;height:8px;border-radius:50%;background:${i<=stageIdx?'var(--success)':'var(--gray-200)'}"></span>`).join('')}</div></td>
     <td><span class="status ${e.status==='待审核'?'pending':e.status.includes('已审')?'processing':e.status==='已通过'?'approved':'rejected'}">${e.status}</span></td>
@@ -292,13 +298,16 @@ function viewExpense(id){const e=DB.get('fin_expenses').find(i=>i.id===id);if(!e
 // ===== 发票管理 =====
 function renderInvoice(el){
   const list=DB.get('fin_invoices');
+  const kw=(document.getElementById('fin-inv-kw')?.value||'').toLowerCase();
+  const filtered=kw?list.filter(i=>i.counterparty.toLowerCase().includes(kw)||i.number.includes(kw)||i.type.includes(kw)):list;
   el.innerHTML=(wfHtml||'')+`<div class="portal-stats" style="margin-bottom:20px">
     <div class="stat-card"><div class="label">待认证进项</div><div class="value">${list.filter(i=>i.direction==='进项'&&i.status==='待认证').length}</div></div>
     <div class="stat-card green"><div class="label">本月销项</div><div class="value">${list.filter(i=>i.direction==='销项').length}张</div></div>
     <div class="stat-card"><div class="label">发票总额（万元）</div><div class="value">${(Summary.calc(list,'amount')/10000).toFixed(1)}</div></div>
   </div>
+  <div class="filter-bar"><input type="text" id="fin-inv-kw" placeholder="搜索对方单位/发票号..." oninput="renderInvoice(document.getElementById('tab-content'))" style="padding:6px 12px;border:1px solid var(--gray-200);border-radius:6px;font-size:13px;width:240px"></div>
   <div class="card"><div class="card-body"><table><thead><tr><th>发票号码</th><th>类型</th><th>方向</th><th>对方单位</th><th>金额</th><th>税额</th><th>价税合计</th><th>状态</th><th>操作</th></tr></thead>
-  <tbody>${list.map(i=>`<tr><td>${i.number}</td><td>${i.type}</td><td><span class="status ${i.direction==='销项'?'processing':'approved'}">${i.direction}</span></td>
+  <tbody>${filtered.map(i=>`<tr><td>${i.number}</td><td>${i.type}</td><td><span class="status ${i.direction==='销项'?'processing':'approved'}">${i.direction}</span></td>
   <td>${i.counterparty}</td><td>¥${i.amount.toLocaleString()}</td><td>¥${i.tax.toLocaleString()}</td><td style="font-weight:600">¥${(i.amount+i.tax).toLocaleString()}</td>
   <td><span class="status ${i.status==='正常'||i.status==='已认证'?'approved':i.status==='待认证'?'pending':'danger'}">${i.status}</span></td>
   <td>${i.status==='待认证'?`<button class="btn btn-sm btn-success" onclick="certifyInv('${i.id}')">认证</button>`:`<a href="#" onclick="viewInv('${i.id}');return false" style="color:var(--primary);font-size:13px;text-decoration:none">查看</a>`}</td></tr>`).join('')}</tbody></table></div></div>`;
@@ -470,8 +479,9 @@ function renderSettlement(el){
     </div>
     <div style="color:var(--gray-400);font-size:12px">初审核对发票与合同 → 复审审批金额与付款方式 → 出纳执行银行付款</div>
   </div></div>
+  <div class="filter-bar"><input type="text" id="fin-set-kw" placeholder="搜索供应商/结算单号..." oninput="renderSettlement(document.getElementById('tab-content'))" style="padding:6px 12px;border:1px solid var(--gray-200);border-radius:6px;font-size:13px;width:240px"></div>
   <div class="card"><div class="card-body"><div style="overflow-x:auto"><table><thead><tr><th>结算单号</th><th>供应商</th><th>摘要</th><th>金额</th><th>发票号</th><th>合同号</th><th>日期</th><th>状态</th><th>操作</th></tr></thead>
-  <tbody>${list.map(s=>`<tr><td style="font-size:12px">${s.id}</td><td><strong>${s.vendor}</strong></td><td style="font-size:12px;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${s.desc}</td>
+  <tbody>${filtered.map(s=>`<tr><td style="font-size:12px">${s.id}</td><td><strong>${s.vendor}</strong></td><td style="font-size:12px;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${s.desc}</td>
     <td style="font-weight:600">¥${s.amount.toLocaleString()}</td><td style="font-size:12px">${s.invoiceNo}</td><td style="font-size:12px">${s.contractNo}</td><td>${s.date}</td>
     <td><span class="status ${s.status==='已付款'?'approved':s.status.includes('已审')?'processing':s.status==='已驳回'?'rejected':'pending'}">${s.status}</span></td>
     <td>${s.status==='待初审'?`<button class="btn btn-sm btn-primary" onclick="doFirstReview('${s.id}')">初审</button>`:''}${s.status==='初审通过'||s.status==='待复审'?`<button class="btn btn-sm btn-success" onclick="doSecondReview('${s.id}')">复审</button>`:''}${s.status==='复审通过'?`<button class="btn btn-sm btn-success" onclick="doPayment('${s.id}')">付款</button>`:''}

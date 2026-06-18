@@ -88,15 +88,18 @@ function renderContent() {
 
 function renderContract(el) {
   const list = DB.get('leg_contracts');
+  const kw=(document.getElementById('leg-ct-kw')?.value||'').toLowerCase();
+  const filtered=kw?list.filter(c=>c.name.toLowerCase().includes(kw)||c.counterparty.toLowerCase().includes(kw)||c.id.toLowerCase().includes(kw)):list;
   el.innerHTML = `
     <div class="portal-stats" style="margin-bottom:20px">
       <div class="stat-card"><div class="label">待审核</div><div class="value">${list.filter(i=>i.status==='待审核').length}</div></div>
       <div class="stat-card green"><div class="label">已审核</div><div class="value">${list.filter(i=>i.status!=='待审核').length}</div></div>
       <div class="stat-card orange"><div class="label">紧急</div><div class="value">${list.filter(i=>i.priority==='紧急'&&i.status==='待审核').length}</div></div>
     </div>
+    <div class="filter-bar"><input type="text" id="leg-ct-kw" placeholder="搜索合同名称/对方单位..." oninput="renderContract(document.getElementById('tab-content'))" style="padding:6px 12px;border:1px solid var(--gray-200);border-radius:6px;font-size:13px;width:240px"></div>
     <div class="card"><div class="card-body">
       <table><thead><tr><th>合同编号</th><th>合同名称</th><th>对方单位</th><th>金额（万）</th><th>提交人</th><th>日期</th><th>优先级</th><th>状态</th><th>操作</th></tr></thead>
-      <tbody>${list.map(c=>`<tr>
+      <tbody>${filtered.map(c=>`<tr>
         <td>${c.id}</td><td><strong>${c.name}</strong></td><td>${c.counterparty}</td><td>¥${c.amount}</td>
         <td>${c.applicant}</td><td>${c.date}</td>
         <td><span class="status ${c.priority==='紧急'?'danger':'pending'}">${c.priority}</span></td>
@@ -153,15 +156,18 @@ function confirmRejectContract(id) {
 // ===== 诉讼案件 =====
 function renderCase(el) {
   const list = DB.get('leg_cases');
+  const kw=(document.getElementById('leg-cs-kw')?.value||'').toLowerCase();
+  const filtered=kw?list.filter(c=>c.name.toLowerCase().includes(kw)||c.counterparty.toLowerCase().includes(kw)):list;
   el.innerHTML = `
     <div class="portal-stats" style="margin-bottom:20px">
       <div class="stat-card"><div class="label">诉讼案件</div><div class="value">${list.length}</div></div>
       <div class="stat-card orange"><div class="label">涉案总额（万元）</div><div class="value">${Summary.calc(list,'amount')}</div></div>
       <div class="stat-card red"><div class="label">待审案件</div><div class="value">${list.filter(i=>i.status==='已立案').length}</div></div>
     </div>
+    <div class="filter-bar"><input type="text" id="leg-cs-kw" placeholder="搜索案件名称/对方当事人..." oninput="renderCase(document.getElementById('tab-content'))" style="padding:6px 12px;border:1px solid var(--gray-200);border-radius:6px;font-size:13px;width:240px"></div>
     <div class="card"><div class="card-body">
       <table><thead><tr><th>案件编号</th><th>案件名称</th><th>对方当事人</th><th>案由</th><th>涉案金额（万）</th><th>状态</th><th>下次开庭</th><th>操作</th></tr></thead>
-      <tbody>${list.map(c=>`<tr>
+      <tbody>${filtered.map(c=>`<tr>
         <td>${c.id}</td><td><strong>${c.name}</strong></td><td>${c.counterparty}</td><td>${c.cause}</td>
         <td style="font-weight:600">¥${c.amount}</td>
         <td><span class="status ${c.status==='审理中'?'processing':c.status==='调解中'?'warning':'pending'}">${c.status}</span></td>

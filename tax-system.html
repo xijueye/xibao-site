@@ -86,6 +86,8 @@ function renderContent() {
 
 function renderInvoice(el) {
   const list = DB.get('tax_invoices');
+  const kw=(document.getElementById('tax-inv-kw')?.value||'').toLowerCase();
+  const filtered=kw?list.filter(i=>i.counterparty.toLowerCase().includes(kw)||i.number.includes(kw)||i.type.includes(kw)):list;
   const output = list.filter(i=>i.direction==='销项');
   const input = list.filter(i=>i.direction==='进项');
   el.innerHTML = `
@@ -94,9 +96,10 @@ function renderInvoice(el) {
       <div class="stat-card green"><div class="label">本月销项</div><div class="value">${output.length}张</div><div class="change">金额 ¥${Summary.calc(output,'amount').toLocaleString()}</div></div>
       <div class="stat-card orange"><div class="label">待申报</div><div class="value">${DB.get('tax_filings').filter(i=>i.status==='待申报').length}项</div></div>
     </div>
+    <div class="filter-bar"><input type="text" id="tax-inv-kw" placeholder="搜索对方单位/发票号..." oninput="renderInvoice(document.getElementById('tab-content'))" style="padding:6px 12px;border:1px solid var(--gray-200);border-radius:6px;font-size:13px;width:240px"></div>
     <div class="card"><div class="card-body">
       <table><thead><tr><th>发票号码</th><th>代码</th><th>类型</th><th>方向</th><th>对方单位</th><th>金额（元）</th><th>税额</th><th>日期</th><th>状态</th><th>操作</th></tr></thead>
-      <tbody>${list.map(i=>`<tr>
+      <tbody>${filtered.map(i=>`<tr>
         <td>${i.number}</td><td style="font-size:12px">${i.code}</td><td>${i.type}</td>
         <td><span class="status ${i.direction==='销项'?'processing':'approved'}">${i.direction}</span></td>
         <td>${i.counterparty}</td><td style="font-weight:600">¥${i.amount.toLocaleString()}</td><td>¥${i.tax.toLocaleString()}</td><td>${i.date}</td>
