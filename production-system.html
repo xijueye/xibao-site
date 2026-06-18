@@ -16,84 +16,229 @@
   <div class="sidebar">
     <div class="menu-group">
       <div class="menu-title">项目管理</div>
-      <a class="menu-item active" href="#"><span class="icon">📋</span> 项目总览</a>
-      <a class="menu-item" href="#"><span class="icon">📊</span> 项目进度</a>
-      <a class="menu-item" href="#"><span class="icon">💰</span> 项目预算</a>
+      <a class="menu-item active" href="#" onclick="switchTab('project')"><span class="icon">📋</span> 项目总览</a>
+      <a class="menu-item" href="#" onclick="showNewProject()"><span class="icon">➕</span> 新建项目</a>
     </div>
     <div class="menu-group">
       <div class="menu-title">合同管理</div>
-      <a class="menu-item" href="#"><span class="icon">📄</span> 合同台账</a>
-      <a class="menu-item" href="#"><span class="icon">✅</span> 合同审批</a>
-      <a class="menu-item" href="#"><span class="icon">🔄</span> 合同执行</a>
+      <a class="menu-item" href="#" onclick="switchTab('contract')"><span class="icon">📄</span> 合同台账</a>
     </div>
     <div class="menu-group">
       <div class="menu-title">采购管理</div>
-      <a class="menu-item" href="#"><span class="icon">🛒</span> 采购申请</a>
-      <a class="menu-item" href="#"><span class="icon">📦</span> 到货验收</a>
-      <a class="menu-item" href="#"><span class="icon">🏭</span> 供应商库</a>
-    </div>
-    <div class="menu-group">
-      <div class="menu-title">生产管理</div>
-      <a class="menu-item" href="#"><span class="icon">📈</span> 生产计划</a>
-      <a class="menu-item" href="#"><span class="icon">⚙️</span> 产线监控</a>
-      <a class="menu-item" href="#"><span class="icon">🔍</span> 质量检测</a>
+      <a class="menu-item" href="#" onclick="switchTab('purchase')"><span class="icon">🛒</span> 采购申请</a>
+      <a class="menu-item" href="#" onclick="showNewPurchase()"><span class="icon">➕</span> 新建采购</a>
     </div>
   </div>
   <div class="main-content">
     <div class="page-header">
-      <div>
-        <div class="breadcrumb">生产经营系统 / 项目管理</div>
-        <h2>📋 项目总览</h2>
-      </div>
-      <div class="btn-group">
-        <button class="btn btn-primary">➕ 新建项目</button>
-      </div>
+      <div><div class="breadcrumb">生产经营系统</div><h2 id="page-title">📋 项目总览</h2></div>
+      <div class="btn-group"><button class="btn btn-primary" id="add-btn" onclick="showNewProject()">➕ 新建项目</button></div>
     </div>
-
-    <div class="portal-stats" style="margin-bottom:20px;">
-      <div class="stat-card"><div class="label">进行中项目</div><div class="value">18</div><div class="change">5个本月启动</div></div>
-      <div class="stat-card green"><div class="label">本月完工</div><div class="value">3</div><div class="change">按时交付率 89%</div></div>
-      <div class="stat-card orange"><div class="label">本月合同签订（万元）</div><div class="value">2,180</div><div class="change">↑ 15.2%</div></div>
-      <div class="stat-card red"><div class="label">风险项目</div><div class="value">2</div><div class="change down">进度滞后</div></div>
-    </div>
-
-    <div class="card">
-      <div class="filter-bar">
-        <select><option>全部状态</option><option>进行中</option><option>已完成</option><option>已暂停</option></select>
-        <select><option>全部类型</option><option>工程项目</option><option>软件开发</option><option>咨询服务</option></select>
-        <input type="text" placeholder="搜索项目名称/编号...">
-        <button class="btn btn-primary">🔍 搜索</button>
-      </div>
-      <table>
-        <thead><tr><th>项目编号</th><th>项目名称</th><th>项目经理</th><th>类型</th><th>合同金额（万元）</th><th>进度</th><th>状态</th></tr></thead>
-        <tbody>
-          <tr><td>PRJ2026-001</td><td>智慧城市数据平台建设项目</td><td>陈明</td><td>软件开发</td><td>860.00</td><td><div class="progress-bar" style="width:120px;display:inline-block;vertical-align:middle;"><div class="fill blue" style="width:75%"></div></div> 75%</td><td><span class="status processing">进行中</span></td></tr>
-          <tr><td>PRJ2026-002</td><td>华东区政务云迁移项目</td><td>张伟</td><td>软件开发</td><td>1,200.00</td><td><div class="progress-bar" style="width:120px;display:inline-block;vertical-align:middle;"><div class="fill blue" style="width:60%"></div></div> 60%</td><td><span class="status processing">进行中</span></td></tr>
-          <tr><td>PRJ2026-003</td><td>数据中心扩容工程</td><td>王强</td><td>工程项目</td><td>520.00</td><td><div class="progress-bar" style="width:120px;display:inline-block;vertical-align:middle;"><div class="fill orange" style="width:35%"></div></div> 35%</td><td><span class="status warning">进度滞后</span></td></tr>
-          <tr><td>PRJ2026-004</td><td>ERP系统升级项目</td><td>周婷</td><td>软件开发</td><td>380.00</td><td><div class="progress-bar" style="width:120px;display:inline-block;vertical-align:middle;"><div class="fill blue" style="width:90%"></div></div> 90%</td><td><span class="status processing">进行中</span></td></tr>
-          <tr><td>PRJ2026-005</td><td>供应链优化咨询项目</td><td>李娜</td><td>咨询服务</td><td>150.00</td><td><div class="progress-bar" style="width:120px;display:inline-block;vertical-align:middle;"><div class="fill green" style="width:100%"></div></div> 100%</td><td><span class="status approved">已完成</span></td></tr>
-          <tr><td>PRJ2026-006</td><td>智慧园区物联网平台</td><td>张伟</td><td>软件开发</td><td>680.00</td><td><div class="progress-bar" style="width:120px;display:inline-block;vertical-align:middle;"><div class="fill blue" style="width:45%"></div></div> 45%</td><td><span class="status processing">进行中</span></td></tr>
-          <tr><td>PRJ2025-078</td><td>财务共享中心建设</td><td>刘芳</td><td>软件开发</td><td>450.00</td><td><div class="progress-bar" style="width:120px;display:inline-block;vertical-align:middle;"><div class="fill green" style="width:100%"></div></div> 100%</td><td><span class="status approved">已完成</span></td></tr>
-          <tr><td>PRJ2026-007</td><td>国产化替代适配项目</td><td>陈明</td><td>软件开发</td><td>920.00</td><td><div class="progress-bar" style="width:120px;display:inline-block;vertical-align:middle;"><div class="fill orange" style="width:20%"></div></div> 20%</td><td><span class="status processing">进行中</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- 合同到期提醒 -->
-    <div class="card" style="margin-top:20px;">
-      <div class="card-header"><h3>📄 合同到期提醒</h3></div>
-      <div class="card-body">
-        <table>
-          <thead><tr><th>合同编号</th><th>合同名称</th><th>对方单位</th><th>金额（万元）</th><th>到期日</th><th>剩余天数</th></tr></thead>
-          <tbody>
-            <tr><td>HT2025-0089</td><td>云计算服务年度合同</td><td>阿里云科技有限公司</td><td>320.00</td><td>2026-07-15</td><td><span class="status warning">27天</span></td></tr>
-            <tr><td>HT2025-0102</td><td>网络安全设备采购合同</td><td>深信服科技股份有限公司</td><td>185.00</td><td>2026-08-01</td><td><span class="status processing">44天</span></td></tr>
-            <tr><td>HT2024-0056</td><td>办公场地租赁合同</td><td>中关村科技园区管委会</td><td>480.00</td><td>2026-12-31</td><td><span class="status normal">196天</span></td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+    <div id="tab-content"></div>
+    <div class="footer">华信集团 · 生产经营管理系统 V3.2.0 © 2026</div>
   </div>
 </div>
+<script src="assets/app.js"></script>
+<script>
+const defaultProjects = [
+  {id:'PRJ2026001',name:'智慧城市数据平台建设',manager:'陈明',type:'软件开发',contract:860,progress:75,status:'进行中',startDate:'2026-01-15',endDate:'2026-08-30'},
+  {id:'PRJ2026002',name:'华东区政务云迁移',manager:'张伟',type:'软件开发',contract:1200,progress:60,status:'进行中',startDate:'2026-02-01',endDate:'2026-09-30'},
+  {id:'PRJ2026003',name:'数据中心扩容工程',manager:'王强',type:'工程项目',contract:520,progress:35,status:'进度滞后',startDate:'2026-03-01',endDate:'2026-07-31'},
+  {id:'PRJ2026004',name:'ERP系统升级',manager:'周婷',type:'软件开发',contract:380,progress:90,status:'进行中',startDate:'2026-01-01',endDate:'2026-06-30'},
+  {id:'PRJ2026005',name:'供应链优化咨询',manager:'李娜',type:'咨询服务',contract:150,progress:100,status:'已完成',startDate:'2026-02-15',endDate:'2026-05-31'},
+  {id:'PRJ2026006',name:'智慧园区物联网平台',manager:'张伟',type:'软件开发',contract:680,progress:45,status:'进行中',startDate:'2026-03-15',endDate:'2026-11-30'},
+  {id:'PRJ2026007',name:'国产化替代适配',manager:'陈明',type:'软件开发',contract:920,progress:20,status:'进行中',startDate:'2026-05-01',endDate:'2026-12-31'},
+];
+if (!DB.get('biz_projects').length) DB.set('biz_projects', defaultProjects);
+
+const defaultPurchases = [
+  {id:'CG20260618001',item:'ThinkPad T14 笔记本 50台',supplier:'联想集团',amount:340000,applicant:'孙磊',date:'2026-06-18',status:'待审批',reason:'项目交付部新员工配备'},
+  {id:'CG20260617003',item:'华为交换机 20台',supplier:'华为技术',amount:64000,applicant:'张伟',date:'2026-06-17',status:'待审批',reason:'数据中心扩容'},
+  {id:'CG20260615005',item:'服务器硬盘 100块',supplier:'希捷科技',amount:185000,applicant:'周婷',date:'2026-06-15',status:'已通过',reason:'存储扩容'},
+];
+if (!DB.get('biz_purchases').length) DB.set('biz_purchases', defaultPurchases);
+
+let currentTab = 'project';
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.menu-item').forEach(m=>m.classList.remove('active'));
+  event.target.closest('.menu-item')?.classList.add('active');
+  const addBtn = document.getElementById('add-btn');
+  addBtn.style.display = '';
+  if (tab === 'project') { addBtn.textContent = '➕ 新建项目'; addBtn.onclick = showNewProject; }
+  else if (tab === 'purchase') { addBtn.textContent = '➕ 新建采购'; addBtn.onclick = showNewPurchase; }
+  else { addBtn.style.display = 'none'; }
+  renderContent();
+}
+
+function renderContent() {
+  const el = document.getElementById('tab-content');
+  const titles = {project:'📋 项目总览',contract:'📄 合同台账',purchase:'🛒 采购申请'};
+  document.getElementById('page-title').textContent = titles[currentTab] || '';
+  ({project:renderProject, contract:renderContract, purchase:renderPurchase})[currentTab]?.(el);
+}
+
+function renderProject(el) {
+  const list = DB.get('biz_projects');
+  const active = list.filter(i=>i.status==='进行中'||i.status==='进度滞后').length;
+  const total = Summary.calc(list,'contract');
+  el.innerHTML = `
+    <div class="portal-stats" style="margin-bottom:20px">
+      <div class="stat-card"><div class="label">进行中项目</div><div class="value">${active}</div></div>
+      <div class="stat-card green"><div class="label">已完成</div><div class="value">${list.filter(i=>i.status==='已完成').length}</div></div>
+      <div class="stat-card orange"><div class="label">合同总额（万元）</div><div class="value">${total}</div></div>
+      <div class="stat-card red"><div class="label">风险项目</div><div class="value">${list.filter(i=>i.status==='进度滞后').length}</div></div>
+    </div>
+    <div class="card"><div class="card-body">
+      <table><thead><tr><th>编号</th><th>项目名称</th><th>经理</th><th>类型</th><th>合同额（万）</th><th>进度</th><th>状态</th><th>操作</th></tr></thead>
+      <tbody>${list.map(p=>`<tr>
+        <td>${p.id}</td><td><strong>${p.name}</strong></td><td>${p.manager}</td><td>${p.type}</td><td>¥${p.contract}</td>
+        <td><div class="progress-bar" style="width:100px;display:inline-block;vertical-align:middle"><div class="fill ${p.progress>=80?'green':p.progress>=40?'blue':'orange'}" style="width:${p.progress}%"></div></div> ${p.progress}%</td>
+        <td><span class="status ${p.status==='已完成'?'approved':p.status==='进度滞后'?'warning':'processing'}">${p.status}</span></td>
+        <td><a href="#" onclick="viewProject('${p.id}');return false" style="color:var(--primary);font-size:13px;text-decoration:none">查看</a> <a href="#" onclick="editProjectProgress('${p.id}');return false" style="color:var(--gray-500);font-size:13px;text-decoration:none;margin-left:4px">更新进度</a></td>
+      </tr>`).join('')}</tbody></table>
+    </div></div>`;
+}
+
+function showNewProject() {
+  const fields = [
+    {name:'name',label:'项目名称',full:true,required:true},
+    {name:'manager',label:'项目经理',required:true},
+    {name:'type',label:'项目类型',type:'select',options:['软件开发','工程项目','咨询服务','运维服务'],required:true},
+    {name:'contract',label:'合同金额（万元）',type:'number',required:true},
+    {name:'startDate',label:'开始日期',type:'date',required:true},
+    {name:'endDate',label:'结束日期',type:'date',required:true},
+  ];
+  const html = Form.render(fields) + `<div style="margin-top:20px;text-align:right">
+    <button class="btn" style="background:#f3f4f6;color:#374151" onclick="Modal.close(this.closest('[id^=modal]').id)">取消</button>
+    <button class="btn btn-primary" onclick="saveProject()">创建项目</button></div>`;
+  Modal.show('➕ 新建项目', html, {width:'560px'});
+}
+
+function saveProject() {
+  const data = Form.getData();
+  if (!data.name || !data.manager) { Modal.toast('请填写必填项', 'warning'); return; }
+  const list = DB.get('biz_projects');
+  list.unshift({...data, id:DB.genId('PRJ'), contract:parseFloat(data.contract), progress:0, status:'进行中'});
+  DB.set('biz_projects', list);
+  document.querySelectorAll('[id^=modal-]').forEach(m=>m.remove());
+  Modal.toast(`✅ 项目「${data.name}」已创建`); renderContent();
+}
+
+function editProjectProgress(id) {
+  const p = DB.get('biz_projects').find(i=>i.id===id);
+  if (!p) return;
+  const html = `<div style="margin-bottom:16px">
+    <label style="display:block;font-size:13px;color:#4b5563;margin-bottom:6px;font-weight:500">当前进度：${p.progress}%</label>
+    <input type="range" id="progress-slider" min="0" max="100" value="${p.progress}" style="width:100%" oninput="document.getElementById('progress-val').textContent=this.value+'%'">
+    <div style="text-align:center;font-size:24px;font-weight:700;color:var(--primary);margin-top:8px" id="progress-val">${p.progress}%</div>
+  </div>
+  <div><label style="display:block;font-size:13px;color:#4b5563;margin-bottom:6px;font-weight:500">更新说明</label>
+    <textarea id="progress-note" rows="2" style="width:100%;padding:8px 12px;border:1px solid #d1d5db;border-radius:6px" placeholder="填写进度更新说明..."></textarea></div>`;
+  Modal.show(`更新进度 - ${p.name}`, html, {width:'480px', footer:`<button class="btn" style="background:#f3f4f6;color:#374151" onclick="Modal.close(this.closest('[id^=modal]').id)">取消</button><button class="btn btn-primary" onclick="saveProgress('${id}')">保存</button>`});
+}
+
+function saveProgress(id) {
+  const val = parseInt(document.getElementById('progress-slider').value);
+  const list = DB.get('biz_projects');
+  const p = list.find(i=>i.id===id);
+  if (p) {
+    p.progress = val;
+    p.status = val >= 100 ? '已完成' : p.status === '进度滞后' && val > p.progress ? '进行中' : p.status;
+    DB.set('biz_projects', list);
+    document.querySelectorAll('[id^=modal-]').forEach(m=>m.remove());
+    Modal.toast(`✅ 进度已更新为 ${val}%`); renderContent();
+  }
+}
+
+function viewProject(id) {
+  const p = DB.get('biz_projects').find(i=>i.id===id);
+  if (!p) return;
+  const html = `<div class="detail-grid" style="grid-template-columns:1fr 1fr">
+    <div class="detail-item"><div class="label">项目编号</div><div class="value">${p.id}</div></div>
+    <div class="detail-item"><div class="label">项目经理</div><div class="value">${p.manager}</div></div>
+    <div class="detail-item"><div class="label">类型</div><div class="value">${p.type}</div></div>
+    <div class="detail-item"><div class="label">合同金额</div><div class="value" style="color:var(--primary)">¥${p.contract}万</div></div>
+    <div class="detail-item"><div class="label">计划周期</div><div class="value">${p.startDate} ~ ${p.endDate}</div></div>
+    <div class="detail-item"><div class="label">进度</div><div class="value"><strong>${p.progress}%</strong></div></div>
+  </div>
+  <div style="margin-top:12px"><div class="progress-bar" style="height:12px"><div class="fill ${p.progress>=80?'green':'blue'}" style="width:${p.progress}%"></div></div></div>`;
+  Modal.show(`📋 ${p.name}`, html, {width:'520px'});
+}
+
+// ===== 合同台账 =====
+function renderContract(el) {
+  const contracts = [
+    {id:'HT2025-0089',name:'云计算服务年度合同',vendor:'阿里云',amount:320,dueDate:'2026-07-15',status:'即将到期'},
+    {id:'HT2025-0102',name:'网络安全设备采购',vendor:'深信服',amount:185,dueDate:'2026-08-01',status:'执行中'},
+    {id:'HT2024-0056',name:'办公场地租赁',vendor:'中关村管委会',amount:480,dueDate:'2026-12-31',status:'执行中'},
+    {id:'HT2026-0012',name:'ThinkPad批量采购',vendor:'联想集团',amount:340,dueDate:'2027-06-15',status:'执行中'},
+  ];
+  el.innerHTML = `<div class="card"><div class="card-header"><h3>📄 合同台账</h3></div><div class="card-body">
+    <table><thead><tr><th>合同编号</th><th>合同名称</th><th>对方单位</th><th>金额（万）</th><th>到期日</th><th>状态</th><th>操作</th></tr></thead>
+    <tbody>${contracts.map(c=>`<tr>
+      <td>${c.id}</td><td><strong>${c.name}</strong></td><td>${c.vendor}</td><td>¥${c.amount}</td><td>${c.dueDate}</td>
+      <td><span class="status ${c.status==='即将到期'?'warning':'processing'}">${c.status}</span></td>
+      <td><button class="btn btn-sm btn-primary" onclick="Modal.toast('📋 合同详情（模拟）','info')">查看</button></td>
+    </tr>`).join('')}</tbody></table>
+  </div></div>`;
+}
+
+// ===== 采购管理 =====
+function renderPurchase(el) {
+  const list = DB.get('biz_purchases');
+  el.innerHTML = `
+    <div class="portal-stats" style="margin-bottom:20px">
+      <div class="stat-card"><div class="label">待审批采购</div><div class="value">${list.filter(i=>i.status==='待审批').length}</div></div>
+      <div class="stat-card green"><div class="label">本月采购总额（万元）</div><div class="value">${(Summary.calc(list.filter(i=>i.status==='已通过'),'amount')/10000).toFixed(1)}</div></div>
+    </div>
+    <div class="card"><div class="card-body">
+      <table><thead><tr><th>采购单号</th><th>采购内容</th><th>供应商</th><th>金额（元）</th><th>申请人</th><th>日期</th><th>状态</th><th>操作</th></tr></thead>
+      <tbody>${list.map(p=>`<tr>
+        <td style="font-size:12px">${p.id}</td><td><strong>${p.item}</strong></td><td>${p.supplier}</td>
+        <td style="font-weight:600">¥${p.amount.toLocaleString()}</td><td>${p.applicant}</td><td>${p.date}</td>
+        <td><span class="status ${p.status==='待审核'||p.status==='待审批'?'pending':'approved'}">${p.status}</span></td>
+        <td>${p.status==='待审批'||p.status==='待审核' ? `<button class="btn btn-sm btn-primary" onclick="approvePurchase('${p.id}')">通过</button> <button class="btn btn-sm btn-danger" onclick="rejectPurchase('${p.id}')">驳回</button>` : `<span style="color:var(--gray-400);font-size:12px">已审批</span>`}</td>
+      </tr>`).join('')}</tbody></table>
+    </div></div>`;
+}
+
+function showNewPurchase() {
+  const fields = [
+    {name:'item',label:'采购内容',full:true,required:true},
+    {name:'supplier',label:'供应商',type:'select',options:['联想集团','华为技术','阿里云','深信服','安普布线','得力办公'],required:true},
+    {name:'amount',label:'预算金额（元）',type:'number',required:true},
+    {name:'reason',label:'采购原因',type:'textarea',full:true,required:true},
+  ];
+  const html = Form.render(fields) + `<div style="margin-top:20px;text-align:right">
+    <button class="btn" style="background:#f3f4f6;color:#374151" onclick="Modal.close(this.closest('[id^=modal]').id)">取消</button>
+    <button class="btn btn-primary" onclick="savePurchase()">提交采购申请</button></div>`;
+  Modal.show('🛒 新建采购申请', html, {width:'560px'});
+}
+
+function savePurchase() {
+  const data = Form.getData();
+  if (!data.item) { Modal.toast('请填写采购内容', 'warning'); return; }
+  const list = DB.get('biz_purchases');
+  list.unshift({...data, id:DB.genId('CG'), amount:parseFloat(data.amount), applicant:'席宝', date:new Date().toISOString().slice(0,10), status:'待审批'});
+  DB.set('biz_purchases', list);
+  document.querySelectorAll('[id^=modal-]').forEach(m=>m.remove());
+  Modal.toast('✅ 采购申请已提交'); renderContent();
+}
+
+function approvePurchase(id) {
+  const list = DB.get('biz_purchases');
+  const item = list.find(i=>i.id===id);
+  if (item) { item.status = '已通过'; DB.set('biz_purchases', list); Modal.toast('✅ 采购审批通过'); renderContent(); }
+}
+
+function rejectPurchase(id) {
+  const list = DB.get('biz_purchases');
+  const item = list.find(i=>i.id===id);
+  if (item) { item.status = '已驳回'; DB.set('biz_purchases', list); Modal.toast('❌ 已驳回', 'error'); renderContent(); }
+}
+
+renderContent();
+</script>
 </body>
 </html>

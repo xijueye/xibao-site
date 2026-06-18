@@ -16,108 +16,277 @@
   <div class="sidebar">
     <div class="menu-group">
       <div class="menu-title">入库管理</div>
-      <a class="menu-item active" href="#"><span class="icon">📥</span> 入库登记</a>
-      <a class="menu-item" href="#"><span class="icon">📋</span> 入库记录</a>
-      <a class="menu-item" href="#"><span class="icon">🔍</span> 到货验收</a>
+      <a class="menu-item active" href="#" onclick="switchTab('inbound')"><span class="icon">📥</span> 入库登记</a>
+      <a class="menu-item" href="#" onclick="showNewInbound()"><span class="icon">➕</span> 新建入库</a>
     </div>
     <div class="menu-group">
       <div class="menu-title">出库管理</div>
-      <a class="menu-item" href="#"><span class="icon">📤</span> 出库登记</a>
-      <a class="menu-item" href="#"><span class="icon">📋</span> 出库记录</a>
-      <a class="menu-item" href="#"><span class="icon">📝</span> 领用申请</a>
+      <a class="menu-item" href="#" onclick="switchTab('outbound')"><span class="icon">📤</span> 出库登记</a>
+      <a class="menu-item" href="#" onclick="showNewOutbound()"><span class="icon">➕</span> 新建出库</a>
     </div>
     <div class="menu-group">
       <div class="menu-title">库存管理</div>
-      <a class="menu-item" href="#"><span class="icon">📊</span> 库存总览</a>
-      <a class="menu-item" href="#"><span class="icon">🔄</span> 库存盘点</a>
-      <a class="menu-item" href="#"><span class="icon">⚠️</span> 库存预警</a>
-      <a class="menu-item" href="#"><span class="icon">📍</span> 库位管理</a>
-    </div>
-    <div class="menu-group">
-      <div class="menu-title">报表统计</div>
-      <a class="menu-item" href="#"><span class="icon">📈</span> 出入库报表</a>
-      <a class="menu-item" href="#"><span class="icon">📊</span> 库龄分析</a>
+      <a class="menu-item" href="#" onclick="switchTab('stock')"><span class="icon">📊</span> 库存总览</a>
+      <a class="menu-item" href="#" onclick="switchTab('warning')"><span class="icon">⚠️</span> 库存预警</a>
     </div>
   </div>
   <div class="main-content">
     <div class="page-header">
-      <div>
-        <div class="breadcrumb">出入库管理系统 / 入库管理</div>
-        <h2>📥 入库登记</h2>
-      </div>
-      <div class="btn-group">
-        <button class="btn btn-primary">➕ 新建入库单</button>
-      </div>
+      <div><div class="breadcrumb">出入库管理系统</div><h2 id="page-title">📥 入库登记</h2></div>
+      <div class="btn-group"><button class="btn btn-primary" id="add-btn" onclick="showNewInbound()">➕ 新建入库单</button></div>
     </div>
-
-    <div class="portal-stats" style="margin-bottom:20px;">
-      <div class="stat-card"><div class="label">待入库</div><div class="value">7</div><div class="change">3单今日到货</div></div>
-      <div class="stat-card green"><div class="label">本月入库总额（万元）</div><div class="value">186.5</div><div class="change">↑ 12%</div></div>
-      <div class="stat-card orange"><div class="label">库存预警</div><div class="value">3</div><div class="change down">低于安全库存</div></div>
-      <div class="stat-card"><div class="label">库存总值（万元）</div><div class="value">2,450</div><div class="change">SKU: 1,856</div></div>
-    </div>
-
-    <div class="tabs">
-      <div class="tab active">待入库</div>
-      <div class="tab">已入库</div>
-      <div class="tab">全部记录</div>
-    </div>
-
-    <div class="card">
-      <div class="filter-bar">
-        <select><option>全部仓库</option><option>A区-原材料仓</option><option>B区-成品仓</option><option>C区-办公用品仓</option><option>D区-设备仓</option></select>
-        <select><option>全部供应商</option><option>联想集团</option><option>华为技术</option><option>阿里云</option><option>深信服</option></select>
-        <input type="text" placeholder="搜索入库单号/物料名称...">
-        <button class="btn btn-primary">🔍 搜索</button>
-      </div>
-      <div class="card-body">
-        <table>
-          <thead><tr><th>入库单号</th><th>物料名称</th><th>规格型号</th><th>供应商</th><th>数量</th><th>单价（元）</th><th>仓库</th><th>预计到货</th><th>状态</th></tr></thead>
-          <tbody>
-            <tr><td>RK20260618-001</td><td>ThinkPad T14 笔记本</td><td>i7-1365U/16G/512G</td><td>联想集团</td><td>50台</td><td>6,800.00</td><td>C区-办公用品仓</td><td>06-18</td><td><span class="status pending">待验收</span></td></tr>
-            <tr><td>RK20260618-002</td><td>华为交换机</td><td>S5735-L24T4X</td><td>华为技术</td><td>20台</td><td>3,200.00</td><td>D区-设备仓</td><td>06-18</td><td><span class="status pending">运输中</span></td></tr>
-            <tr><td>RK20260617-005</td><td>服务器硬盘</td><td>希捷银河 8TB SAS</td><td>希捷科技</td><td>100块</td><td>1,850.00</td><td>A区-原材料仓</td><td>06-17</td><td><span class="status approved">已入库</span></td></tr>
-            <tr><td>RK20260617-004</td><td>网线（六类）</td><td>安普 六类 305米/箱</td><td>安普布线</td><td>30箱</td><td>480.00</td><td>A区-原材料仓</td><td>06-17</td><td><span class="status approved">已入库</span></td></tr>
-            <tr><td>RK20260616-008</td><td>A4打印纸</td><td>Double A 70g 500张/包</td><td>得力办公</td><td>200箱</td><td>120.00</td><td>C区-办公用品仓</td><td>06-16</td><td><span class="status approved">已入库</span></td></tr>
-            <tr><td>RK20260616-007</td><td>防火墙设备</td><td>USG6555E</td><td>华为技术</td><td>5台</td><td>28,000.00</td><td>D区-设备仓</td><td>06-16</td><td><span class="status approved">已入库</span></td></tr>
-            <tr><td>RK20260615-006</td><td>光纤跳线</td><td>LC-LC 单模 3米</td><td>安普布线</td><td>500条</td><td>35.00</td><td>A区-原材料仓</td><td>06-15</td><td><span class="status approved">已入库</span></td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- 库存预警 -->
-    <div class="card" style="margin-top:20px;">
-      <div class="card-header"><h3>⚠️ 库存预警</h3><span style="font-size:13px;color:var(--danger);">低于安全库存的物料</span></div>
-      <div class="card-body">
-        <table>
-          <thead><tr><th>物料编码</th><th>物料名称</th><th>当前库存</th><th>安全库存</th><th>缺口</th><th>最近入库</th><th>建议操作</th></tr></thead>
-          <tbody>
-            <tr><td>WH-001</td><td>六类网线（箱）</td><td style="color:var(--danger);font-weight:600;">5箱</td><td>20箱</td><td>15箱</td><td>06-17</td><td><button class="btn btn-sm btn-warning">立即采购</button></td></tr>
-            <tr><td>WH-023</td><td>A4打印纸（箱）</td><td style="color:var(--danger);font-weight:600;">12箱</td><td>50箱</td><td>38箱</td><td>06-16</td><td><button class="btn btn-sm btn-warning">立即采购</button></td></tr>
-            <tr><td>WH-045</td><td>USB-C转接头</td><td style="color:var(--warning);font-weight:600;">18个</td><td>30个</td><td>12个</td><td>06-10</td><td><button class="btn btn-sm btn-warning">建议采购</button></td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- 出库记录 -->
-    <div class="card" style="margin-top:20px;">
-      <div class="card-header"><h3>📤 最近出库记录</h3></div>
-      <div class="card-body">
-        <table>
-          <thead><tr><th>出库单号</th><th>物料名称</th><th>数量</th><th>领用部门</th><th>领用人</th><th>出库日期</th><th>用途</th></tr></thead>
-          <tbody>
-            <tr><td>CK20260618-001</td><td>ThinkPad T14 笔记本</td><td>5台</td><td>技术研发部</td><td>张伟</td><td>06-18</td><td>新员工入职</td></tr>
-            <tr><td>CK20260617-003</td><td>A4打印纸</td><td>10箱</td><td>行政综合部</td><td>孙磊</td><td>06-17</td><td>日常办公</td></tr>
-            <tr><td>CK20260616-005</td><td>服务器硬盘</td><td>20块</td><td>技术研发部</td><td>周婷</td><td>06-16</td><td>数据中心扩容</td></tr>
-            <tr><td>CK20260615-002</td><td>防火墙设备</td><td>2台</td><td>技术研发部</td><td>张伟</td><td>06-15</td><td>机房部署</td></tr>
-            <tr><td>CK20260614-008</td><td>网线（六类）</td><td>5箱</td><td>项目交付部</td><td>陈明</td><td>06-14</td><td>项目现场</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+    <div id="tab-content"></div>
+    <div class="footer">华信集团 · 出入库管理系统 V3.2.0 © 2026</div>
   </div>
 </div>
+<script src="assets/app.js"></script>
+<script>
+// ===== 数据 =====
+const warehouses = ['A区-原材料仓','B区-成品仓','C区-办公用品仓','D区-设备仓'];
+const suppliers = ['联想集团','华为技术','阿里云','深信服','希捷科技','安普布线','得力办公','腾讯云'];
+
+const defaultStock = [
+  {code:'WH-001',name:'六类网线',spec:'安普 305米/箱',warehouse:'A区-原材料仓',qty:5,safety:20,unit:'箱',cost:480},
+  {code:'WH-002',name:'光纤跳线',spec:'LC-LC 单模 3米',warehouse:'A区-原材料仓',qty:180,safety:50,unit:'条',cost:35},
+  {code:'WH-003',name:'服务器硬盘',spec:'希捷银河 8TB SAS',warehouse:'A区-原材料仓',qty:45,safety:20,unit:'块',cost:1850},
+  {code:'WH-010',name:'ThinkPad T14',spec:'i7/16G/512G',warehouse:'C区-办公用品仓',qty:38,safety:10,unit:'台',cost:6800},
+  {code:'WH-011',name:'A4打印纸',spec:'Double A 70g 500张/包',warehouse:'C区-办公用品仓',qty:12,safety:50,unit:'箱',cost:120},
+  {code:'WH-012',name:'USB-C转接头',spec:'Type-C转HDMI',warehouse:'C区-办公用品仓',qty:18,safety:30,unit:'个',cost:85},
+  {code:'WH-020',name:'交换机',spec:'S5735-L24T4X',warehouse:'D区-设备仓',qty:15,safety:5,unit:'台',cost:3200},
+  {code:'WH-021',name:'防火墙',spec:'USG6555E',warehouse:'D区-设备仓',qty:8,safety:3,unit:'台',cost:28000},
+];
+if (!DB.get('inv_stock').length) DB.set('inv_stock', defaultStock);
+
+const defaultInbounds = [
+  {id:'RK20260618001',item:'ThinkPad T14 笔记本',spec:'i7-1365U/16G/512G',supplier:'联想集团',qty:50,unitPrice:6800,warehouse:'C区-办公用品仓',date:'2026-06-18',status:'待验收'},
+  {id:'RK20260618002',item:'华为交换机',spec:'S5735-L24T4X',supplier:'华为技术',qty:20,unitPrice:3200,warehouse:'D区-设备仓',date:'2026-06-18',status:'运输中'},
+  {id:'RK20260617005',item:'服务器硬盘',spec:'希捷银河 8TB',supplier:'希捷科技',qty:100,unitPrice:1850,warehouse:'A区-原材料仓',date:'2026-06-17',status:'已入库',receivedBy:'席宝'},
+  {id:'RK20260617004',item:'网线（六类）',spec:'安普 六类 305米/箱',supplier:'安普布线',qty:30,unitPrice:480,warehouse:'A区-原材料仓',date:'2026-06-17',status:'已入库',receivedBy:'席宝'},
+];
+if (!DB.get('inv_inbounds').length) DB.set('inv_inbounds', defaultInbounds);
+
+const defaultOutbounds = [
+  {id:'CK20260618001',item:'ThinkPad T14 笔记本',qty:5,dept:'技术研发部',applicant:'张伟',date:'2026-06-18',purpose:'新员工入职',status:'已出库'},
+  {id:'CK20260617003',item:'A4打印纸',qty:10,dept:'行政综合部',applicant:'孙磊',date:'2026-06-17',purpose:'日常办公',status:'已出库'},
+  {id:'CK20260616005',item:'服务器硬盘',qty:20,dept:'技术研发部',applicant:'周婷',date:'2026-06-16',purpose:'数据中心扩容',status:'已出库'},
+];
+if (!DB.get('inv_outbounds').length) DB.set('inv_outbounds', defaultOutbounds);
+
+let currentTab = 'inbound';
+
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.menu-item').forEach(m=>m.classList.remove('active'));
+  event.target.closest('.menu-item')?.classList.add('active');
+  const addBtn = document.getElementById('add-btn');
+  if (tab === 'inbound') { addBtn.textContent = '➕ 新建入库单'; addBtn.onclick = showNewInbound; }
+  else if (tab === 'outbound') { addBtn.textContent = '➕ 新建出库单'; addBtn.onclick = showNewOutbound; }
+  else { addBtn.style.display = 'none'; }
+  renderContent();
+}
+
+function renderContent() {
+  const el = document.getElementById('tab-content');
+  document.getElementById('add-btn').style.display = '';
+  const titles = {inbound:'📥 入库登记',outbound:'📤 出库登记',stock:'📊 库存总览',warning:'⚠️ 库存预警'};
+  document.getElementById('page-title').textContent = titles[currentTab] || '';
+  ({inbound:renderInbound, outbound:renderOutbound, stock:renderStock, warning:renderWarning})[currentTab]?.(el);
+}
+
+// ===== 入库管理 =====
+function renderInbound(el) {
+  const list = DB.get('inv_inbounds');
+  el.innerHTML = `
+    <div class="portal-stats" style="margin-bottom:20px">
+      <div class="stat-card"><div class="label">待入库</div><div class="value">${list.filter(i=>i.status!=='已入库').length}</div></div>
+      <div class="stat-card green"><div class="label">本月已入库</div><div class="value">${list.filter(i=>i.status==='已入库').length}单</div></div>
+      <div class="stat-card orange"><div class="label">本月入库金额（万元）</div><div class="value">${(Summary.calc(list.filter(i=>i.status==='已入库'),'qty')*1000/10000).toFixed(1)}</div></div>
+    </div>
+    <div class="card"><div class="card-body">
+      <table><thead><tr><th>入库单号</th><th>物料名称</th><th>规格</th><th>供应商</th><th>数量</th><th>单价</th><th>仓库</th><th>日期</th><th>状态</th><th>操作</th></tr></thead>
+      <tbody>${list.map(i=>`<tr>
+        <td style="font-size:12px">${i.id}</td><td><strong>${i.item}</strong></td><td style="font-size:12px">${i.spec}</td><td>${i.supplier}</td>
+        <td>${i.qty}${i.unit||'件'}</td><td>¥${i.unitPrice?.toLocaleString()||'-'}</td><td>${i.warehouse}</td><td>${i.date}</td>
+        <td><span class="status ${i.status==='已入库'?'approved':i.status==='待验收'?'pending':'processing'}">${i.status}</span></td>
+        <td>${i.status==='待验收' ? `<button class="btn btn-sm btn-success" onclick="confirmReceive('${i.id}')">验收入库</button>` :
+          i.status==='已入库' ? `<a href="#" onclick="viewInbound('${i.id}');return false" style="color:var(--primary);font-size:13px;text-decoration:none">查看</a>` :
+          `<span style="color:var(--gray-400);font-size:12px">运输中</span>`}</td>
+      </tr>`).join('')}</tbody></table>
+    </div></div>`;
+}
+
+function showNewInbound() {
+  const fields = [
+    {name:'item',label:'物料名称',required:true},
+    {name:'spec',label:'规格型号',required:true},
+    {name:'supplier',label:'供应商',type:'select',options:suppliers,required:true},
+    {name:'qty',label:'数量',type:'number',required:true},
+    {name:'unitPrice',label:'单价（元）',type:'number',required:true},
+    {name:'warehouse',label:'入库仓库',type:'select',options:warehouses,required:true},
+    {name:'date',label:'预计到货日期',type:'date',required:true},
+  ];
+  const html = Form.render(fields) + `<div style="margin-top:20px;text-align:right">
+    <button class="btn" style="background:#f3f4f6;color:#374151" onclick="Modal.close(this.closest('[id^=modal]').id)">取消</button>
+    <button class="btn btn-primary" onclick="saveInbound()">提交入库单</button></div>`;
+  Modal.show('📥 新建入库单', html, {width:'560px'});
+}
+
+function saveInbound() {
+  const data = Form.getData();
+  if (!data.item || !data.supplier) { Modal.toast('请填写必填项', 'warning'); return; }
+  const list = DB.get('inv_inbounds');
+  list.unshift({...data, id:DB.genId('RK'), qty:parseInt(data.qty), unitPrice:parseFloat(data.unitPrice), status:'待验收'});
+  DB.set('inv_inbounds', list);
+  document.querySelectorAll('[id^=modal-]').forEach(m=>m.remove());
+  Modal.toast('✅ 入库单已创建'); renderContent();
+}
+
+function confirmReceive(id) {
+  Modal.confirm('确认验收此批物料入库？', () => {
+    const list = DB.get('inv_inbounds');
+    const item = list.find(i=>i.id===id);
+    if (item) {
+      item.status = '已入库'; item.receivedBy = '席宝';
+      DB.set('inv_inbounds', list);
+      // 更新库存
+      const stock = DB.get('inv_stock');
+      const existing = stock.find(s => s.name.includes(item.item.split(' ')[0]));
+      if (existing) { existing.qty += item.qty; }
+      else { stock.push({code:DB.genId('WH'),name:item.item,spec:item.spec,warehouse:item.warehouse,qty:item.qty,safety:10,unit:'件',cost:item.unitPrice}); }
+      DB.set('inv_stock', stock);
+      Modal.toast('✅ 验收完成，库存已更新'); renderContent();
+    }
+  });
+}
+
+function viewInbound(id) {
+  const i = DB.get('inv_inbounds').find(x=>x.id===id);
+  if (!i) return;
+  const html = `<div class="detail-grid" style="grid-template-columns:1fr 1fr">
+    <div class="detail-item"><div class="label">入库单号</div><div class="value">${i.id}</div></div>
+    <div class="detail-item"><div class="label">物料名称</div><div class="value">${i.item}</div></div>
+    <div class="detail-item"><div class="label">规格型号</div><div class="value">${i.spec}</div></div>
+    <div class="detail-item"><div class="label">供应商</div><div class="value">${i.supplier}</div></div>
+    <div class="detail-item"><div class="label">数量</div><div class="value">${i.qty}件</div></div>
+    <div class="detail-item"><div class="label">单价</div><div class="value">¥${i.unitPrice?.toLocaleString()}</div></div>
+    <div class="detail-item"><div class="label">金额</div><div class="value" style="color:var(--primary);font-weight:700">¥${(i.qty*i.unitPrice).toLocaleString()}</div></div>
+    <div class="detail-item"><div class="label">验收人</div><div class="value">${i.receivedBy||'-'}</div></div>
+  </div>`;
+  Modal.show(`入库单详情 - ${i.id}`, html, {width:'520px'});
+}
+
+// ===== 出库管理 =====
+function renderOutbound(el) {
+  const list = DB.get('inv_outbounds');
+  el.innerHTML = `
+    <div class="portal-stats" style="margin-bottom:20px">
+      <div class="stat-card"><div class="label">本月出库单</div><div class="value">${list.length}</div></div>
+      <div class="stat-card green"><div class="label">已出库</div><div class="value">${list.filter(i=>i.status==='已出库').length}</div></div>
+    </div>
+    <div class="card"><div class="card-body">
+      <table><thead><tr><th>出库单号</th><th>物料名称</th><th>数量</th><th>领用部门</th><th>领用人</th><th>日期</th><th>用途</th><th>状态</th></tr></thead>
+      <tbody>${list.map(i=>`<tr><td style="font-size:12px">${i.id}</td><td><strong>${i.item}</strong></td><td>${i.qty}件</td>
+        <td>${i.dept}</td><td>${i.applicant}</td><td>${i.date}</td><td>${i.purpose}</td>
+        <td><span class="status ${i.status==='已出库'?'approved':'pending'}">${i.status}</span></td></tr>`).join('')}</tbody></table>
+    </div></div>`;
+}
+
+function showNewOutbound() {
+  const stock = DB.get('inv_stock');
+  const fields = [
+    {name:'item',label:'物料名称',type:'select',options:stock.map(s=>`${s.name}（库存:${s.qty}${s.unit}）`),required:true},
+    {name:'qty',label:'数量',type:'number',required:true},
+    {name:'dept',label:'领用部门',type:'select',options:['技术研发部','市场营销部','生产制造部','财务管理部','人力资源部','行政综合部','项目交付部','法务合规部'],required:true},
+    {name:'applicant',label:'领用人',required:true},
+    {name:'purpose',label:'用途',type:'textarea',full:true,required:true},
+  ];
+  const html = Form.render(fields) + `<div style="margin-top:20px;text-align:right">
+    <button class="btn" style="background:#f3f4f6;color:#374151" onclick="Modal.close(this.closest('[id^=modal]').id)">取消</button>
+    <button class="btn btn-primary" onclick="saveOutbound()">提交出库</button></div>`;
+  Modal.show('📤 新建出库单', html, {width:'560px'});
+}
+
+function saveOutbound() {
+  const data = Form.getData();
+  if (!data.item || !data.qty) { Modal.toast('请填写必填项', 'warning'); return; }
+  const itemName = data.item.split('（')[0];
+  const stock = DB.get('inv_stock');
+  const s = stock.find(i => i.name === itemName);
+  if (s && parseInt(data.qty) > s.qty) { Modal.toast(`库存不足！当前库存仅 ${s.qty}${s.unit}`, 'error'); return; }
+
+  const list = DB.get('inv_outbounds');
+  list.unshift({...data, id:DB.genId('CK'), qty:parseInt(data.qty), date:new Date().toISOString().slice(0,10), status:'已出库'});
+  DB.set('inv_outbounds', list);
+  if (s) { s.qty -= parseInt(data.qty); DB.set('inv_stock', stock); }
+  document.querySelectorAll('[id^=modal-]').forEach(m=>m.remove());
+  Modal.toast('✅ 出库成功，库存已更新'); renderContent();
+}
+
+// ===== 库存总览 =====
+function renderStock(el) {
+  const stock = DB.get('inv_stock');
+  const totalValue = stock.reduce((s,i) => s + i.qty * i.cost, 0);
+  el.innerHTML = `
+    <div class="portal-stats" style="margin-bottom:20px">
+      <div class="stat-card"><div class="label">SKU数量</div><div class="value">${stock.length}</div></div>
+      <div class="stat-card green"><div class="label">库存总值（万元）</div><div class="value">${(totalValue/10000).toFixed(1)}</div></div>
+      <div class="stat-card orange"><div class="label">预警物料</div><div class="value">${stock.filter(i=>i.qty<i.safety).length}</div></div>
+    </div>
+    <div class="card">
+      <div class="filter-bar">
+        <select id="f-wh"><option value="">全部仓库</option>${warehouses.map(w=>`<option>${w}</option>`).join('')}</select>
+        <button class="btn btn-primary" onclick="renderStockList()">🔍 筛选</button>
+      </div>
+      <div class="card-body" id="stock-list"></div>
+    </div>`;
+  renderStockList();
+}
+
+function renderStockList() {
+  let stock = DB.get('inv_stock');
+  const wh = document.getElementById('f-wh')?.value;
+  if (wh) stock = stock.filter(i=>i.warehouse===wh);
+
+  document.getElementById('stock-list').innerHTML = `<table><thead><tr><th>物料编码</th><th>物料名称</th><th>规格</th><th>仓库</th><th>库存量</th><th>安全库存</th><th>单价</th><th>库存金额</th><th>状态</th></tr></thead>
+    <tbody>${stock.map(s => {
+      const warn = s.qty < s.safety;
+      return `<tr><td>${s.code}</td><td><strong>${s.name}</strong></td><td style="font-size:12px">${s.spec}</td><td>${s.warehouse}</td>
+      <td style="color:${warn?'var(--danger)':'var(--gray-800)'};font-weight:${warn?'700':'500'}">${s.qty} ${s.unit}</td>
+      <td>${s.safety} ${s.unit}</td><td>¥${s.cost.toLocaleString()}</td><td style="font-weight:600">¥${(s.qty*s.cost).toLocaleString()}</td>
+      <td><span class="status ${warn?'danger':'normal'}">${warn?'⚠️ 不足':'✅ 正常'}</span></td></tr>`;
+    }).join('')}</tbody></table>`;
+}
+
+// ===== 库存预警 =====
+function renderWarning(el) {
+  const stock = DB.get('inv_stock');
+  const warnings = stock.filter(i=>i.qty<i.safety).sort((a,b)=>(a.qty/a.safety)-(b.qty/b.safety));
+  el.innerHTML = `
+    <div class="portal-stats" style="margin-bottom:20px">
+      <div class="stat-card red"><div class="label">预警物料数</div><div class="value">${warnings.length}</div></div>
+      <div class="stat-card orange"><div class="label">需采购总金额（万元）</div><div class="value">${(warnings.reduce((s,w)=>s+(w.safety-w.qty)*w.cost,0)/10000).toFixed(1)}</div></div>
+    </div>
+    <div class="card"><div class="card-header"><h3>⚠️ 低于安全库存的物料</h3></div>
+      <div class="card-body">${warnings.length ? `<table><thead><tr><th>编码</th><th>名称</th><th>当前库存</th><th>安全库存</th><th>缺口</th><th>仓库</th><th>建议采购金额</th><th>操作</th></tr></thead>
+        <tbody>${warnings.map(w => {
+          const gap = w.safety - w.qty;
+          return `<tr><td>${w.code}</td><td><strong>${w.name}</strong></td>
+          <td style="color:var(--danger);font-weight:700">${w.qty} ${w.unit}</td>
+          <td>${w.safety} ${w.unit}</td>
+          <td style="color:var(--danger)">${gap} ${w.unit}</td>
+          <td>${w.warehouse}</td>
+          <td style="font-weight:600">¥${(gap*w.cost).toLocaleString()}</td>
+          <td><button class="btn btn-sm btn-warning" onclick="createPurchase('${w.name}',${gap},${w.cost})">生成采购单</button></td></tr>`;
+        }).join('')}</tbody></table>`
+        : '<div style="padding:40px;text-align:center;color:var(--gray-400)"><div style="font-size:48px;margin-bottom:8px">✅</div>所有物料库存充足</div>'}
+      </div></div>`;
+}
+
+function createPurchase(name, qty, price) {
+  Modal.toast(`🛒 已生成「${name}」采购申请，数量${qty}，预算¥${(qty*price).toLocaleString()}（模拟）`, 'info');
+}
+
+renderContent();
+</script>
 </body>
 </html>

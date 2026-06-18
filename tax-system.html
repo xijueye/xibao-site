@@ -16,95 +16,179 @@
   <div class="sidebar">
     <div class="menu-group">
       <div class="menu-title">发票管理</div>
-      <a class="menu-item active" href="#"><span class="icon">📄</span> 发票台账</a>
-      <a class="menu-item" href="#"><span class="icon">📥</span> 进项发票</a>
-      <a class="menu-item" href="#"><span class="icon">📤</span> 销项发票</a>
-      <a class="menu-item" href="#"><span class="icon">🔍</span> 发票验真</a>
+      <a class="menu-item active" href="#" onclick="switchTab('invoice')"><span class="icon">📄</span> 发票台账</a>
+      <a class="menu-item" href="#" onclick="showNewInvoice()"><span class="icon">➕</span> 登记发票</a>
     </div>
     <div class="menu-group">
       <div class="menu-title">纳税申报</div>
-      <a class="menu-item" href="#"><span class="icon">📋</span> 申报计划</a>
-      <a class="menu-item" href="#"><span class="icon">📊</span> 申报台账</a>
-      <a class="menu-item" href="#"><span class="icon">⚠️</span> 申报预警</a>
+      <a class="menu-item" href="#" onclick="switchTab('filing')"><span class="icon">📋</span> 申报台账</a>
     </div>
     <div class="menu-group">
-      <div class="menu-title">税务台账</div>
-      <a class="menu-item" href="#"><span class="icon">📒</span> 增值税台账</a>
-      <a class="menu-item" href="#"><span class="icon">📒</span> 企业所得税台账</a>
-      <a class="menu-item" href="#"><span class="icon">📒</span> 印花税台账</a>
-    </div>
-    <div class="menu-group">
-      <div class="menu-title">税务筹划</div>
-      <a class="menu-item" href="#"><span class="icon">📈</span> 税负分析</a>
-      <a class="menu-item" href="#"><span class="icon">📑</span> 税收优惠</a>
+      <div class="menu-title">税务分析</div>
+      <a class="menu-item" href="#" onclick="switchTab('analysis')"><span class="icon">📈</span> 税负分析</a>
     </div>
   </div>
   <div class="main-content">
     <div class="page-header">
-      <div>
-        <div class="breadcrumb">税务管理系统 / 发票管理</div>
-        <h2>📄 发票台账</h2>
-      </div>
-      <div class="btn-group">
-        <button class="btn btn-primary">📥 导入发票</button>
-      </div>
+      <div><div class="breadcrumb">税务管理系统</div><h2 id="page-title">📄 发票台账</h2></div>
+      <div class="btn-group"><button class="btn btn-primary" id="add-btn" onclick="showNewInvoice()">➕ 登记发票</button></div>
     </div>
-
-    <div class="portal-stats" style="margin-bottom:20px;">
-      <div class="stat-card"><div class="label">待认证进项发票</div><div class="value">23</div><div class="change down">金额 ¥156,800</div></div>
-      <div class="stat-card green"><div class="label">本月已开销项</div><div class="value">128</div><div class="change">金额 ¥2,340,000</div></div>
-      <div class="stat-card orange"><div class="label">即将到期申报</div><div class="value">2</div><div class="change down">6/20前需完成</div></div>
-      <div class="stat-card"><div class="label">本月税负率</div><div class="value">3.82%</div><div class="change">行业均值 3.5%</div></div>
-    </div>
-
-    <div class="tabs">
-      <div class="tab active">全部发票</div>
-      <div class="tab">进项发票</div>
-      <div class="tab">销项发票</div>
-      <div class="tab">异常发票</div>
-    </div>
-
-    <div class="card">
-      <div class="filter-bar">
-        <select><option>发票类型</option><option>增值税专用发票</option><option>增值税普通发票</option><option>电子发票</option></select>
-        <select><option>进项/销项</option><option>进项</option><option>销项</option></select>
-        <select><option>2026年6月</option><option>2026年5月</option></select>
-        <input type="text" placeholder="搜索发票号/购方名称...">
-        <button class="btn btn-primary">🔍 搜索</button>
-      </div>
-      <table>
-        <thead><tr><th>发票号码</th><th>发票代码</th><th>类型</th><th>方向</th><th>购方/销方</th><th>金额（元）</th><th>税额</th><th>开票日期</th><th>状态</th></tr></thead>
-        <tbody>
-          <tr><td>08945621</td><td>011002600311</td><td>增值税专票</td><td>销项</td><td>北京中科信息技术有限公司</td><td>280,000.00</td><td>36,400.00</td><td>2026-06-16</td><td><span class="status approved">正常</span></td></tr>
-          <tr><td>08945622</td><td>011002600311</td><td>增值税专票</td><td>销项</td><td>上海恒远建设工程有限公司</td><td>156,000.00</td><td>20,280.00</td><td>2026-06-15</td><td><span class="status approved">正常</span></td></tr>
-          <tr><td>FP202606012</td><td>电子发票</td><td>电子普票</td><td>进项</td><td>腾讯科技（深圳）有限公司</td><td>45,000.00</td><td>2,700.00</td><td>2026-06-14</td><td><span class="status pending">待认证</span></td></tr>
-          <tr><td>08945623</td><td>011002600311</td><td>增值税专票</td><td>销项</td><td>广州华南装备制造集团</td><td>380,000.00</td><td>49,400.00</td><td>2026-06-13</td><td><span class="status approved">正常</span></td></tr>
-          <tr><td>FP202606008</td><td>电子发票</td><td>电子普票</td><td>进项</td><td>中国石油天然气股份有限公司</td><td>12,500.00</td><td>0.00</td><td>2026-06-12</td><td><span class="status approved">已认证</span></td></tr>
-          <tr><td>08945624</td><td>011002600311</td><td>增值税专票</td><td>销项</td><td>深圳前海数字科技有限公司</td><td>520,000.00</td><td>67,600.00</td><td>2026-06-10</td><td><span class="status approved">正常</span></td></tr>
-          <tr><td>FP202606005</td><td>电子发票</td><td>增值税专票</td><td>进项</td><td>华为技术有限公司</td><td>186,000.00</td><td>24,180.00</td><td>2026-06-08</td><td><span class="status pending">待认证</span></td></tr>
-          <tr><td>FP202606003</td><td>电子发票</td><td>电子普票</td><td>进项</td><td>滴滴出行科技有限公司</td><td>3,200.00</td><td>0.00</td><td>2026-06-05</td><td><span class="status approved">已认证</span></td></tr>
-        </tbody>
-      </table>
-      <div style="padding:16px;text-align:center;color:var(--gray-400);font-size:13px;">共 1,256 条记录 · 第 1/105 页</div>
-    </div>
-
-    <!-- 申报日历 -->
-    <div class="card" style="margin-top:20px;">
-      <div class="card-header"><h3>⚠️ 申报提醒日历</h3></div>
-      <div class="card-body padded">
-        <table>
-          <thead><tr><th>税种</th><th>所属期</th><th>申报截止日</th><th>应纳税额（元）</th><th>状态</th></tr></thead>
-          <tbody>
-            <tr><td>增值税</td><td>2026年5月</td><td>2026-06-20</td><td>186,420.00</td><td><span class="status warning">待申报</span></td></tr>
-            <tr><td>企业所得税（季度）</td><td>2026年Q2</td><td>2026-07-15</td><td>-</td><td><span class="status processing">未到期</span></td></tr>
-            <tr><td>个人所得税</td><td>2026年5月</td><td>2026-06-20</td><td>52,380.00</td><td><span class="status warning">待申报</span></td></tr>
-            <tr><td>印花税</td><td>2026年Q2</td><td>2026-07-15</td><td>8,640.00</td><td><span class="status processing">未到期</span></td></tr>
-            <tr><td>城建税及附加</td><td>2026年5月</td><td>2026-06-20</td><td>22,370.40</td><td><span class="status warning">待申报</span></td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+    <div id="tab-content"></div>
+    <div class="footer">华信集团 · 税务管理系统 V3.2.0 © 2026</div>
   </div>
 </div>
+<script src="assets/app.js"></script>
+<script>
+const defaultInvoices = [
+  {id:'FP20260618001',code:'011002600311',number:'08945621',type:'增值税专票',direction:'销项',counterparty:'北京中科信息技术有限公司',amount:280000,tax:36400,date:'2026-06-16',status:'正常'},
+  {id:'FP20260617002',code:'011002600311',number:'08945622',type:'增值税专票',direction:'销项',counterparty:'上海恒远建设工程有限公司',amount:156000,tax:20280,date:'2026-06-15',status:'正常'},
+  {id:'FP20260616003',code:'电子发票',number:'FP202606012',type:'电子普票',direction:'进项',counterparty:'腾讯科技（深圳）有限公司',amount:45000,tax:2700,date:'2026-06-14',status:'待认证'},
+  {id:'FP20260615004',code:'011002600311',number:'08945623',type:'增值税专票',direction:'销项',counterparty:'广州华南装备制造集团',amount:380000,tax:49400,date:'2026-06-13',status:'正常'},
+  {id:'FP20260614005',code:'电子发票',number:'FP202606008',type:'电子普票',direction:'进项',counterparty:'中国石油天然气股份有限公司',amount:12500,tax:0,date:'2026-06-12',status:'已认证'},
+  {id:'FP20260613006',code:'011002600311',number:'08945624',type:'增值税专票',direction:'销项',counterparty:'深圳前海数字科技有限公司',amount:520000,tax:67600,date:'2026-06-10',status:'正常'},
+  {id:'FP20260612007',code:'电子发票',number:'FP202606005',type:'增值税专票',direction:'进项',counterparty:'华为技术有限公司',amount:186000,tax:24180,date:'2026-06-08',status:'待认证'},
+];
+if (!DB.get('tax_invoices').length) DB.set('tax_invoices', defaultInvoices);
+
+const filings = [
+  {tax:'增值税',period:'2026年5月',deadline:'2026-06-20',amount:186420,status:'待申报'},
+  {tax:'企业所得税（季度）',period:'2026年Q2',deadline:'2026-07-15',amount:0,status:'未到期'},
+  {tax:'个人所得税',period:'2026年5月',deadline:'2026-06-20',amount:52380,status:'待申报'},
+  {tax:'印花税',period:'2026年Q2',deadline:'2026-07-15',amount:8640,status:'未到期'},
+  {tax:'城建税及附加',period:'2026年5月',deadline:'2026-06-20',amount:22370,status:'待申报'},
+];
+
+let currentTab = 'invoice';
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.menu-item').forEach(m=>m.classList.remove('active'));
+  event.target.closest('.menu-item')?.classList.add('active');
+  const addBtn = document.getElementById('add-btn');
+  addBtn.style.display = tab === 'invoice' ? '' : 'none';
+  renderContent();
+}
+
+function renderContent() {
+  const el = document.getElementById('tab-content');
+  const titles = {invoice:'📄 发票台账',filing:'📋 申报台账',analysis:'📈 税负分析'};
+  document.getElementById('page-title').textContent = titles[currentTab] || '';
+  ({invoice:renderInvoice, filing:renderFiling, analysis:renderAnalysis})[currentTab]?.(el);
+}
+
+function renderInvoice(el) {
+  const list = DB.get('tax_invoices');
+  const output = list.filter(i=>i.direction==='销项');
+  const input = list.filter(i=>i.direction==='进项');
+  el.innerHTML = `
+    <div class="portal-stats" style="margin-bottom:20px">
+      <div class="stat-card"><div class="label">待认证进项</div><div class="value">${input.filter(i=>i.status==='待认证').length}</div><div class="change">金额 ¥${Summary.calc(input.filter(i=>i.status==='待认证'),'amount').toLocaleString()}</div></div>
+      <div class="stat-card green"><div class="label">本月销项</div><div class="value">${output.length}张</div><div class="change">金额 ¥${Summary.calc(output,'amount').toLocaleString()}</div></div>
+      <div class="stat-card orange"><div class="label">待申报</div><div class="value">${filings.filter(i=>i.status==='待申报').length}项</div></div>
+    </div>
+    <div class="card"><div class="card-body">
+      <table><thead><tr><th>发票号码</th><th>代码</th><th>类型</th><th>方向</th><th>对方单位</th><th>金额（元）</th><th>税额</th><th>日期</th><th>状态</th><th>操作</th></tr></thead>
+      <tbody>${list.map(i=>`<tr>
+        <td>${i.number}</td><td style="font-size:12px">${i.code}</td><td>${i.type}</td>
+        <td><span class="status ${i.direction==='销项'?'processing':'approved'}">${i.direction}</span></td>
+        <td>${i.counterparty}</td><td style="font-weight:600">¥${i.amount.toLocaleString()}</td><td>¥${i.tax.toLocaleString()}</td><td>${i.date}</td>
+        <td><span class="status ${i.status==='正常'||i.status==='已认证'?'approved':i.status==='待认证'?'pending':'danger'}">${i.status}</span></td>
+        <td>${i.status==='待认证' ? `<button class="btn btn-sm btn-success" onclick="certifyInvoice('${i.id}')">认证</button>` : `<a href="#" onclick="viewInvoice('${i.id}');return false" style="color:var(--primary);font-size:13px;text-decoration:none">查看</a>`}</td>
+      </tr>`).join('')}</tbody></table>
+    </div></div>`;
+}
+
+function showNewInvoice() {
+  const fields = [
+    {name:'number',label:'发票号码',required:true},
+    {name:'code',label:'发票代码',required:true},
+    {name:'type',label:'发票类型',type:'select',options:['增值税专票','增值税普票','电子普票'],required:true},
+    {name:'direction',label:'方向',type:'select',options:['销项','进项'],required:true},
+    {name:'counterparty',label:'对方单位',full:true,required:true},
+    {name:'amount',label:'金额（元）',type:'number',required:true},
+    {name:'tax',label:'税额（元）',type:'number'},
+    {name:'date',label:'开票日期',type:'date',required:true},
+  ];
+  const html = Form.render(fields) + `<div style="margin-top:20px;text-align:right">
+    <button class="btn" style="background:#f3f4f6;color:#374151" onclick="Modal.close(this.closest('[id^=modal]').id)">取消</button>
+    <button class="btn btn-primary" onclick="saveInvoice()">登记发票</button></div>`;
+  Modal.show('➕ 登记发票', html, {width:'560px'});
+}
+
+function saveInvoice() {
+  const data = Form.getData();
+  if (!data.number || !data.counterparty) { Modal.toast('请填写必填项', 'warning'); return; }
+  const list = DB.get('tax_invoices');
+  list.unshift({...data, id:DB.genId('FP'), amount:parseFloat(data.amount)||0, tax:parseFloat(data.tax)||0, status:'正常'});
+  DB.set('tax_invoices', list);
+  document.querySelectorAll('[id^=modal-]').forEach(m=>m.remove());
+  Modal.toast('✅ 发票已登记'); renderContent();
+}
+
+function certifyInvoice(id) {
+  const list = DB.get('tax_invoices');
+  const item = list.find(i=>i.id===id);
+  if (item) { item.status = '已认证'; DB.set('tax_invoices', list); Modal.toast('✅ 发票认证成功'); renderContent(); }
+}
+
+function viewInvoice(id) {
+  const i = DB.get('tax_invoices').find(x=>x.id===id);
+  if (!i) return;
+  const html = `<div class="detail-grid" style="grid-template-columns:1fr 1fr">
+    <div class="detail-item"><div class="label">发票号码</div><div class="value">${i.number}</div></div>
+    <div class="detail-item"><div class="label">发票代码</div><div class="value">${i.code}</div></div>
+    <div class="detail-item"><div class="label">类型</div><div class="value">${i.type}</div></div>
+    <div class="detail-item"><div class="label">方向</div><div class="value">${i.direction}</div></div>
+    <div class="detail-item"><div class="label">对方单位</div><div class="value">${i.counterparty}</div></div>
+    <div class="detail-item"><div class="label">开票日期</div><div class="value">${i.date}</div></div>
+    <div class="detail-item"><div class="label">金额</div><div class="value" style="font-weight:700">¥${i.amount.toLocaleString()}</div></div>
+    <div class="detail-item"><div class="label">税额</div><div class="value">¥${i.tax.toLocaleString()}</div></div>
+    <div class="detail-item"><div class="label">状态</div><div class="value"><span class="status approved">${i.status}</span></div></div>
+    <div class="detail-item"><div class="label">价税合计</div><div class="value" style="color:var(--primary);font-weight:700;font-size:18px">¥${(i.amount+i.tax).toLocaleString()}</div></div>
+  </div>`;
+  Modal.show(`发票详情 - ${i.number}`, html, {width:'520px'});
+}
+
+// ===== 申报台账 =====
+function renderFiling(el) {
+  el.innerHTML = `<div class="card"><div class="card-header"><h3>⚠️ 申报提醒</h3></div><div class="card-body">
+    <table><thead><tr><th>税种</th><th>所属期</th><th>截止日</th><th>应纳税额</th><th>状态</th><th>操作</th></tr></thead>
+    <tbody>${filings.map((f,i)=>`<tr>
+      <td><strong>${f.tax}</strong></td><td>${f.period}</td><td>${f.deadline}</td>
+      <td>${f.amount ? '¥'+f.amount.toLocaleString() : '-'}</td>
+      <td><span class="status ${f.status==='待申报'?'warning':f.status==='已申报'?'approved':'processing'}">${f.status}</span></td>
+      <td>${f.status==='待申报' ? `<button class="btn btn-sm btn-primary" onclick="doFiling(${i})">申报</button>` : f.status==='已申报' ? '<span style="color:var(--gray-400);font-size:12px">已完成</span>' : '<span style="color:var(--gray-400);font-size:12px">未到期</span>'}</td>
+    </tr>`).join('')}</tbody></table>
+  </div></div>`;
+}
+
+function doFiling(idx) {
+  const f = filings[idx];
+  Modal.confirm(`确认申报「${f.tax}」（${f.period}），应纳税额 ¥${f.amount.toLocaleString()}？`, () => {
+    f.status = '已申报';
+    Modal.toast(`✅ ${f.tax}申报成功（模拟）`); renderContent();
+  });
+}
+
+// ===== 税负分析 =====
+function renderAnalysis(el) {
+  const months = ['1月','2月','3月','4月','5月','6月'];
+  const data = months.map(m => ({month:m, revenue: Math.round(2000+Math.random()*1000), tax: Math.round(70+Math.random()*40)}));
+  data.forEach(d => d.rate = (d.tax/d.revenue*100).toFixed(2));
+
+  el.innerHTML = `
+    <div class="portal-stats" style="margin-bottom:20px">
+      <div class="stat-card"><div class="label">年度增值税负率</div><div class="value">3.82%</div><div class="change">行业均值 3.5%</div></div>
+      <div class="stat-card green"><div class="label">年度纳税总额（万元）</div><div class="value">${(Summary.calc(data,'tax')).toFixed(1)}</div></div>
+    </div>
+    <div class="card"><div class="card-header"><h3>月度税负趋势</h3></div><div class="card-body">
+      <table><thead><tr><th>月份</th><th>营收（万元）</th><th>增值税（万元）</th><th>税负率</th><th>趋势</th></tr></thead>
+      <tbody>${data.map(d=>`<tr><td><strong>${d.month}</strong></td><td>¥${d.revenue.toFixed(1)}</td><td>¥${d.tax.toFixed(1)}</td>
+        <td style="font-weight:600;color:${parseFloat(d.rate)>4?'var(--danger)':'var(--gray-700)'}">${d.rate}%</td>
+        <td>${parseFloat(d.rate)>4?'📈 偏高':'✅ 正常'}</td></tr>`).join('')}</tbody></table>
+    </div></div>`;
+}
+
+renderContent();
+</script>
 </body>
 </html>

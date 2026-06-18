@@ -15,103 +15,301 @@
 <div class="layout">
   <div class="sidebar">
     <div class="menu-group">
-      <div class="menu-title">总账管理</div>
-      <a class="menu-item" href="#"><span class="icon">📒</span> 凭证管理</a>
-      <a class="menu-item" href="#"><span class="icon">📊</span> 科目余额表</a>
-      <a class="menu-item" href="#"><span class="icon">📑</span> 财务报表</a>
-    </div>
-    <div class="menu-group">
       <div class="menu-title">费用管理</div>
-      <a class="menu-item active" href="#"><span class="icon">🧾</span> 费用报销</a>
-      <a class="menu-item" href="#"><span class="icon">💳</span> 应付管理</a>
-      <a class="menu-item" href="#"><span class="icon">📥</span> 应收管理</a>
+      <a class="menu-item active" href="#" onclick="switchTab('expense')"><span class="icon">🧾</span> 费用报销</a>
+      <a class="menu-item" href="#" onclick="showNewExpense()"><span class="icon">➕</span> 新建报销</a>
     </div>
     <div class="menu-group">
-      <div class="menu-title">资产管理</div>
-      <a class="menu-item" href="#"><span class="icon">🏠</span> 固定资产</a>
-      <a class="menu-item" href="#"><span class="icon">📉</span> 折旧计提</a>
+      <div class="menu-title">应收应付</div>
+      <a class="menu-item" href="#" onclick="switchTab('receivable')"><span class="icon">📥</span> 应收账款</a>
+      <a class="menu-item" href="#" onclick="switchTab('payable')"><span class="icon">📤</span> 应付账款</a>
     </div>
     <div class="menu-group">
       <div class="menu-title">预算管理</div>
-      <a class="menu-item" href="#"><span class="icon">📋</span> 预算编制</a>
-      <a class="menu-item" href="#"><span class="icon">⚠️</span> 预算执行</a>
-      <a class="menu-item" href="#"><span class="icon">📈</span> 预算分析</a>
+      <a class="menu-item" href="#" onclick="switchTab('budget')"><span class="icon">📊</span> 预算执行</a>
     </div>
     <div class="menu-group">
-      <div class="menu-title">资金管理</div>
-      <a class="menu-item" href="#"><span class="icon">🏦</span> 银行账户</a>
-      <a class="menu-item" href="#"><span class="icon">💸</span> 资金调度</a>
+      <div class="menu-title">财务报表</div>
+      <a class="menu-item" href="#" onclick="switchTab('report')"><span class="icon">📈</span> 汇总报表</a>
     </div>
   </div>
   <div class="main-content">
     <div class="page-header">
-      <div>
-        <div class="breadcrumb">财务云系统 / 费用管理</div>
-        <h2>🧾 费用报销单</h2>
-      </div>
-      <div class="btn-group">
-        <button class="btn btn-primary">➕ 新建报销单</button>
-      </div>
+      <div><div class="breadcrumb">财务云系统 / 费用管理</div><h2 id="page-title">🧾 费用报销</h2></div>
+      <div class="btn-group"><button class="btn btn-primary" onclick="showNewExpense()">➕ 新建报销单</button></div>
     </div>
-
-    <!-- 财务概览 -->
-    <div class="portal-stats" style="margin-bottom:20px;">
-      <div class="stat-card"><div class="label">待审核</div><div class="value">3</div><div class="change down">需尽快处理</div></div>
-      <div class="stat-card green"><div class="label">本月已报销（元）</div><div class="value">156,820</div><div class="change">↑ 8.5%</div></div>
-      <div class="stat-card orange"><div class="label">预算剩余（万元）</div><div class="value">328.6</div><div class="change">剩余62%</div></div>
-      <div class="stat-card"><div class="label">应收账款（万元）</div><div class="value">1,245</div><div class="change down">3笔逾期</div></div>
-    </div>
-
-    <div class="tabs">
-      <div class="tab active">全部报销单</div>
-      <div class="tab">待审核</div>
-      <div class="tab">已通过</div>
-      <div class="tab">已驳回</div>
-    </div>
-
-    <div class="card">
-      <div class="filter-bar">
-        <select><option>全部类型</option><option>差旅费</option><option>办公费</option><option>招待费</option><option>交通费</option><option>培训费</option></select>
-        <select><option>2026年6月</option><option>2026年5月</option><option>2026年4月</option></select>
-        <input type="text" placeholder="搜索报销单号/报销人...">
-        <button class="btn btn-primary">🔍 搜索</button>
-      </div>
-      <table>
-        <thead>
-          <tr><th>报销单号</th><th>报销人</th><th>部门</th><th>类型</th><th>金额（元）</th><th>提交日期</th><th>审批状态</th><th>操作</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>BX202606001</td><td>张伟</td><td>技术研发部</td><td>差旅费</td><td>8,560.00</td><td>2026-06-16</td><td><span class="status pending">待审核</span></td><td><a href="#" style="color:var(--primary);text-decoration:none;font-size:13px;">审核</a></td></tr>
-          <tr><td>BX202606002</td><td>李娜</td><td>市场营销部</td><td>招待费</td><td>3,200.00</td><td>2026-06-15</td><td><span class="status pending">待审核</span></td><td><a href="#" style="color:var(--primary);text-decoration:none;font-size:13px;">审核</a></td></tr>
-          <tr><td>BX202606003</td><td>王强</td><td>生产制造部</td><td>办公费</td><td>1,850.00</td><td>2026-06-15</td><td><span class="status pending">待审核</span></td><td><a href="#" style="color:var(--primary);text-decoration:none;font-size:13px;">审核</a></td></tr>
-          <tr><td>BX202606004</td><td>陈明</td><td>项目交付部</td><td>差旅费</td><td>12,300.00</td><td>2026-06-14</td><td><span class="status approved">已通过</span></td><td><a href="#" style="color:var(--primary);text-decoration:none;font-size:13px;">查看</a></td></tr>
-          <tr><td>BX202606005</td><td>赵丽</td><td>人力资源部</td><td>培训费</td><td>5,600.00</td><td>2026-06-13</td><td><span class="status approved">已通过</span></td><td><a href="#" style="color:var(--primary);text-decoration:none;font-size:13px;">查看</a></td></tr>
-          <tr><td>BX202606006</td><td>孙磊</td><td>行政综合部</td><td>交通费</td><td>780.00</td><td>2026-06-12</td><td><span class="status approved">已通过</span></td><td><a href="#" style="color:var(--primary);text-decoration:none;font-size:13px;">查看</a></td></tr>
-          <tr><td>BX202606007</td><td>周婷</td><td>技术研发部</td><td>办公费</td><td>2,100.00</td><td>2026-06-11</td><td><span class="status rejected">已驳回</span></td><td><a href="#" style="color:var(--primary);text-decoration:none;font-size:13px;">查看</a></td></tr>
-          <tr><td>BX202606008</td><td>吴刚</td><td>法务合规部</td><td>差旅费</td><td>4,500.00</td><td>2026-06-10</td><td><span class="status approved">已通过</span></td><td><a href="#" style="color:var(--primary);text-decoration:none;font-size:13px;">查看</a></td></tr>
-          <tr><td>BX202606009</td><td>郑雪</td><td>市场营销部</td><td>招待费</td><td>6,800.00</td><td>2026-06-09</td><td><span class="status approved">已通过</span></td><td><a href="#" style="color:var(--primary);text-decoration:none;font-size:13px;">查看</a></td></tr>
-          <tr><td>BX202606010</td><td>黄海</td><td>生产制造部</td><td>交通费</td><td>450.00</td><td>2026-06-08</td><td><span class="status approved">已通过</span></td><td><a href="#" style="color:var(--primary);text-decoration:none;font-size:13px;">查看</a></td></tr>
-        </tbody>
-      </table>
-      <div style="padding:16px;text-align:center;color:var(--gray-400);font-size:13px;">共 86 条记录 · 第 1/9 页</div>
-    </div>
-
-    <!-- 应收账款 -->
-    <div class="card" style="margin-top:20px;">
-      <div class="card-header"><h3>📥 应收账款到期提醒</h3></div>
-      <div class="card-body">
-        <table>
-          <thead><tr><th>客户名称</th><th>合同金额（万元）</th><th>应收金额</th><th>到期日</th><th>逾期天数</th><th>状态</th></tr></thead>
-          <tbody>
-            <tr><td>北京中科信息技术有限公司</td><td>280.00</td><td>84.00</td><td>2026-05-30</td><td>19天</td><td><span class="status danger">逾期</span></td></tr>
-            <tr><td>上海恒远建设工程有限公司</td><td>156.00</td><td>46.80</td><td>2026-06-01</td><td>17天</td><td><span class="status danger">逾期</span></td></tr>
-            <tr><td>深圳前海数字科技有限公司</td><td>520.00</td><td>156.00</td><td>2026-06-15</td><td>3天</td><td><span class="status warning">逾期3天</span></td></tr>
-            <tr><td>广州华南装备制造集团</td><td>380.00</td><td>114.00</td><td>2026-06-30</td><td>-</td><td><span class="status processing">未到期</span></td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+    <div id="tab-content"></div>
+    <div class="footer">华信集团 · 财务云管理系统 V3.2.0 © 2026</div>
   </div>
 </div>
+<script src="assets/app.js"></script>
+<script>
+// ===== 数据 =====
+const defaultExpenses = [
+  {id:'BX202606001',applicant:'张伟',dept:'技术研发部',type:'差旅费',amount:8560,date:'2026-06-16',status:'待审核',items:[{desc:'北京-上海高铁票',amount:553},{desc:'上海酒店2晚',amount:1200},{desc:'出租车费',amount:180},{desc:'出差补贴',amount:600}]},
+  {id:'BX202606002',applicant:'李娜',dept:'市场营销部',type:'招待费',amount:3200,date:'2026-06-15',status:'待审核',items:[{desc:'客户晚宴（全聚德）',amount:2800},{desc:'礼品',amount:400}]},
+  {id:'BX202606003',applicant:'王强',dept:'生产制造部',type:'办公费',amount:1850,date:'2026-06-15',status:'待审核',items:[{desc:'文件夹、打印纸等',amount:850},{desc:'墨盒硒鼓',amount:1000}]},
+  {id:'BX202606004',applicant:'陈明',dept:'项目交付部',type:'差旅费',amount:12300,date:'2026-06-14',status:'已通过',approvedBy:'席宝',approvedAt:'2026-06-15 10:00',items:[{desc:'北京-深圳机票',amount:2400},{desc:'深圳酒店4晚',amount:3200},{desc:'出租车',amount:560},{desc:'出差补贴',amount:1200},{desc:'客户接待',amount:4000}]},
+  {id:'BX202606005',applicant:'赵丽',dept:'人力资源部',type:'培训费',amount:5600,date:'2026-06-13',status:'已通过',approvedBy:'席宝',approvedAt:'2026-06-14 09:00',items:[{desc:'人力资源管理培训课程',amount:4800},{desc:'教材费',amount:800}]},
+  {id:'BX202606006',applicant:'孙磊',dept:'行政综合部',type:'交通费',amount:780,date:'2026-06-12',status:'已通过',approvedBy:'席宝',approvedAt:'2026-06-13 14:00',items:[{desc:'滴滴出行（6月）',amount:580},{desc:'地铁充值',amount:200}]},
+  {id:'BX202606007',applicant:'周婷',dept:'技术研发部',type:'办公费',amount:2100,date:'2026-06-11',status:'已驳回',rejectReason:'发票不合规，请重新提交',items:[{desc:'机械键盘',amount:1200},{desc:'显示器支架',amount:900}]},
+  {id:'BX202606008',applicant:'吴刚',dept:'法务合规部',type:'差旅费',amount:4500,date:'2026-06-10',status:'已通过',approvedBy:'席宝',approvedAt:'2026-06-11 11:00',items:[{desc:'北京-杭州高铁',amount:630},{desc:'杭州酒店2晚',amount:1000},{desc:'出租车',amount:270},{desc:'出差补贴',amount:600}]},
+];
+if (!DB.get('fin_expenses').length) DB.set('fin_expenses', defaultExpenses);
+
+const defaultReceivables = [
+  {id:'AR001',client:'北京中科信息技术有限公司',contract:280,receivable:84,dueDate:'2026-05-30',status:'逾期',overdueDays:19},
+  {id:'AR002',client:'上海恒远建设工程有限公司',contract:156,receivable:46.8,dueDate:'2026-06-01',status:'逾期',overdueDays:17},
+  {id:'AR003',client:'深圳前海数字科技有限公司',contract:520,receivable:156,dueDate:'2026-06-15',status:'逾期',overdueDays:3},
+  {id:'AR004',client:'广州华南装备制造集团',contract:380,receivable:114,dueDate:'2026-06-30',status:'未到期',overdueDays:0},
+  {id:'AR005',client:'杭州数字政通科技有限公司',contract:260,receivable:78,dueDate:'2026-07-15',status:'未到期',overdueDays:0},
+];
+if (!DB.get('fin_receivables').length) DB.set('fin_receivables', defaultReceivables);
+
+const budgets = [
+  {dept:'技术研发部',total:120,used:78.5},{dept:'市场营销部',total:80,used:52.3},{dept:'生产制造部',total:60,used:41.2},
+  {dept:'财务管理部',total:30,used:12.8},{dept:'人力资源部',total:25,used:18.6},{dept:'行政综合部',total:40,used:28.4},
+  {dept:'项目交付部',total:150,used:96.7},{dept:'法务合规部',total:20,used:8.5},
+];
+
+let currentTab = 'expense';
+
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
+  event.target.closest('.menu-item')?.classList.add('active');
+  renderContent();
+}
+
+function renderContent() {
+  const el = document.getElementById('tab-content');
+  const titles = {expense:'🧾 费用报销',receivable:'📥 应收账款',payable:'📤 应付账款',budget:'📊 预算执行',report:'📈 汇总报表'};
+  document.getElementById('page-title').textContent = titles[currentTab] || titles.expense;
+  ({expense:renderExpense, receivable:renderReceivable, payable:renderPayable, budget:renderBudget, report:renderReport})[currentTab]?.(el);
+}
+
+// ===== 费用报销 =====
+function renderExpense(el) {
+  const list = DB.get('fin_expenses');
+  const pending = list.filter(i=>i.status==='待审核').length;
+  const approved = list.filter(i=>i.status==='已通过');
+  const totalApproved = Summary.calc(approved, 'amount');
+
+  el.innerHTML = `
+    <div class="portal-stats" style="margin-bottom:20px">
+      <div class="stat-card"><div class="label">待审核</div><div class="value">${pending}</div></div>
+      <div class="stat-card green"><div class="label">已报销总额</div><div class="value">¥${Summary.money(totalApproved)}</div></div>
+      <div class="stat-card orange"><div class="label">被驳回</div><div class="value">${list.filter(i=>i.status==='已驳回').length}</div></div>
+      <div class="stat-card"><div class="label">本月报销笔数</div><div class="value">${list.length}</div></div>
+    </div>
+    <div class="tabs">
+      <div class="tab active" onclick="renderExpenseList('all',this)">全部</div>
+      <div class="tab" onclick="renderExpenseList('待审核',this)">待审核</div>
+      <div class="tab" onclick="renderExpenseList('已通过',this)">已通过</div>
+      <div class="tab" onclick="renderExpenseList('已驳回',this)">已驳回</div>
+    </div>
+    <div class="card"><div class="card-body" id="expense-list"></div></div>`;
+  renderExpenseList('all');
+}
+
+function renderExpenseList(status, tabEl) {
+  if (tabEl) { document.querySelectorAll('.tabs .tab').forEach(t=>t.classList.remove('active')); tabEl.classList.add('active'); }
+  let list = DB.get('fin_expenses');
+  if (status !== 'all') list = list.filter(i => i.status === status);
+
+  document.getElementById('expense-list').innerHTML = list.length ?
+    `<table><thead><tr><th>报销单号</th><th>报销人</th><th>部门</th><th>类型</th><th>金额（元）</th><th>提交日期</th><th>状态</th><th>操作</th></tr></thead>
+    <tbody>${list.map(e => `<tr>
+      <td>${e.id}</td><td><strong>${e.applicant}</strong></td><td>${e.dept}</td><td>${e.type}</td>
+      <td style="font-weight:600">¥${e.amount.toLocaleString()}</td><td>${e.date}</td>
+      <td><span class="status ${e.status==='待审核'?'pending':e.status==='已通过'?'approved':'rejected'}">${e.status}</span></td>
+      <td>${e.status==='待审核' ?
+        `<button class="btn btn-sm btn-primary" onclick="approveExpense('${e.id}')">通过</button> <button class="btn btn-sm btn-danger" onclick="rejectExpense('${e.id}')">驳回</button>` :
+        `<a href="#" onclick="viewExpense('${e.id}');return false" style="color:var(--primary);text-decoration:none;font-size:13px">查看</a>`}</td>
+    </tr>`).join('')}</tbody></table>` :
+    '<div style="padding:40px;text-align:center;color:var(--gray-400)">暂无数据</div>';
+}
+
+function showNewExpense() {
+  const fields = [
+    {name:'type',label:'报销类型',type:'select',options:['差旅费','办公费','招待费','交通费','培训费','通讯费'],required:true},
+    {name:'amount',label:'总金额（元）',type:'number',required:true},
+    {name:'desc1',label:'费用明细1',placeholder:'费用描述',required:true},
+    {name:'amount1',label:'金额1',type:'number',required:true},
+    {name:'desc2',label:'费用明细2',placeholder:'费用描述（选填）'},
+    {name:'amount2',label:'金额2',type:'number'},
+    {name:'remark',label:'备注',type:'textarea',full:true},
+  ];
+  const html = Form.render(fields) + `<div style="margin-top:20px;text-align:right">
+    <button class="btn" style="background:#f3f4f6;color:#374151" onclick="Modal.close(this.closest('[id^=modal]').id)">取消</button>
+    <button class="btn btn-primary" onclick="submitExpense()">提交报销</button></div>`;
+  Modal.show('📝 新建报销单', html, {width:'560px'});
+}
+
+function submitExpense() {
+  const data = Form.getData();
+  if (!data.type || !data.amount) { Modal.toast('请填写必填项', 'warning'); return; }
+  const items = [];
+  if (data.desc1) items.push({desc:data.desc1, amount:parseFloat(data.amount1)||0});
+  if (data.desc2) items.push({desc:data.desc2, amount:parseFloat(data.amount2)||0});
+
+  const list = DB.get('fin_expenses');
+  list.unshift({id:DB.genId('BX'),applicant:'席宝',dept:'人力资源部',type:data.type,amount:parseFloat(data.amount),
+    date:new Date().toISOString().slice(0,10),status:'待审核',items,remark:data.remark});
+  DB.set('fin_expenses', list);
+  document.querySelectorAll('[id^=modal-]').forEach(m=>m.remove());
+  Modal.toast('✅ 报销单已提交');
+  currentTab = 'expense'; renderContent();
+}
+
+function approveExpense(id) {
+  const list = DB.get('fin_expenses');
+  const item = list.find(i=>i.id===id);
+  if (item) {
+    item.status = '已通过'; item.approvedBy = '席宝'; item.approvedAt = new Date().toLocaleString('zh-CN');
+    DB.set('fin_expenses', list);
+    Modal.toast('✅ 报销审批通过'); renderContent();
+  }
+}
+
+function rejectExpense(id) {
+  const html = `<div><label style="display:block;font-size:13px;color:#4b5563;margin-bottom:6px;font-weight:500">驳回原因</label>
+    <textarea id="reject-reason" rows="3" style="width:100%;padding:8px 12px;border:1px solid #d1d5db;border-radius:6px" placeholder="请输入驳回原因..."></textarea></div>`;
+  Modal.show('驳回报销单', html, {width:'420px', footer:`<button class="btn" style="background:#f3f4f6;color:#374151" onclick="Modal.close(this.closest('[id^=modal]').id)">取消</button><button class="btn btn-danger" onclick="confirmRejectExpense('${id}')">确认驳回</button>`});
+}
+
+function confirmRejectExpense(id) {
+  const reason = document.getElementById('reject-reason')?.value;
+  const list = DB.get('fin_expenses');
+  const item = list.find(i=>i.id===id);
+  if (item) {
+    item.status = '已驳回'; item.rejectReason = reason || '未说明';
+    DB.set('fin_expenses', list);
+    document.querySelectorAll('[id^=modal-]').forEach(m=>m.remove());
+    Modal.toast('❌ 已驳回', 'error'); renderContent();
+  }
+}
+
+function viewExpense(id) {
+  const e = DB.get('fin_expenses').find(i=>i.id===id);
+  if (!e) return;
+  const html = `
+    <div style="background:var(--gray-50);padding:12px 16px;border-radius:8px;margin-bottom:16px;font-size:13px;display:flex;gap:20px">
+      <span>报销人：<strong>${e.applicant}</strong></span><span>类型：${e.type}</span><span>提交：${e.date}</span>
+    </div>
+    <h4 style="font-size:14px;margin-bottom:8px;color:var(--gray-600)">费用明细</h4>
+    <table><thead><tr><th>费用描述</th><th>金额</th></tr></thead>
+    <tbody>${(e.items||[]).map(i=>`<tr><td>${i.desc}</td><td style="font-weight:600">¥${i.amount.toLocaleString()}</td></tr>`).join('')}
+    <tr style="background:var(--gray-50)"><td><strong>合计</strong></td><td style="font-weight:700;color:var(--primary);font-size:16px">¥${e.amount.toLocaleString()}</td></tr>
+    </tbody></table>
+    ${e.approvedBy ? `<div style="margin-top:16px;padding:12px;background:#d1fae5;border-radius:8px;font-size:13px">✅ 审批通过 | 审批人：${e.approvedBy} | ${e.approvedAt}</div>` : ''}
+    ${e.rejectReason ? `<div style="margin-top:16px;padding:12px;background:#fee2e2;border-radius:8px;font-size:13px">❌ 驳回原因：${e.rejectReason}</div>` : ''}`;
+  Modal.show(`报销单详情 - ${e.id}`, html, {width:'520px'});
+}
+
+// ===== 应收账款 =====
+function renderReceivable(el) {
+  const list = DB.get('fin_receivables');
+  const overdue = list.filter(i=>i.status==='逾期');
+  const totalOverdue = Summary.calc(overdue, 'receivable');
+  el.innerHTML = `
+    <div class="portal-stats" style="margin-bottom:20px">
+      <div class="stat-card"><div class="label">应收账款总额（万元）</div><div class="value">${Summary.calc(list,'receivable').toFixed(1)}</div></div>
+      <div class="stat-card red"><div class="label">逾期金额（万元）</div><div class="value">${totalOverdue.toFixed(1)}</div></div>
+      <div class="stat-card orange"><div class="label">逾期笔数</div><div class="value">${overdue.length}</div></div>
+    </div>
+    <div class="card"><div class="card-body">
+      <table><thead><tr><th>客户名称</th><th>合同金额（万）</th><th>应收金额</th><th>到期日</th><th>逾期天数</th><th>状态</th><th>操作</th></tr></thead>
+      <tbody>${list.map(r => `<tr>
+        <td>${r.client}</td><td>¥${r.contract.toFixed(1)}</td><td style="font-weight:600">¥${r.receivable.toFixed(1)}</td>
+        <td>${r.dueDate}</td><td>${r.overdueDays > 0 ? r.overdueDays+'天' : '-'}</td>
+        <td><span class="status ${r.status==='逾期'?'danger':'processing'}">${r.status}</span></td>
+        <td><button class="btn btn-sm btn-warning" onclick="sendReminder('${r.client}')">催收</button></td>
+      </tr>`).join('')}</tbody></table>
+    </div></div>`;
+}
+
+function sendReminder(client) {
+  Modal.toast(`📧 已向「${client}」发送催收提醒（模拟）`, 'info');
+}
+
+// ===== 应付账款 =====
+function renderPayable(el) {
+  const payables = [
+    {vendor:'联想集团有限公司',amount:340,dueDate:'2026-07-15',status:'未到期'},
+    {vendor:'阿里云科技有限公司',amount:280,dueDate:'2026-07-01',status:'未到期'},
+    {vendor:'华为技术有限公司',amount:186,dueDate:'2026-06-25',status:'即将到期'},
+    {vendor:'深信服科技股份有限公司',amount:120,dueDate:'2026-07-10',status:'未到期'},
+    {vendor:'安普布线系统有限公司',amount:45,dueDate:'2026-06-20',status:'即将到期'},
+  ];
+  el.innerHTML = `
+    <div class="portal-stats" style="margin-bottom:20px">
+      <div class="stat-card"><div class="label">应付总额（万元）</div><div class="value">${Summary.calc(payables,'amount').toFixed(1)}</div></div>
+      <div class="stat-card orange"><div class="label">即将到期</div><div class="value">${payables.filter(i=>i.status==='即将到期').length}</div></div>
+    </div>
+    <div class="card"><div class="card-body">
+      <table><thead><tr><th>供应商</th><th>应付金额（万元）</th><th>到期日</th><th>状态</th><th>操作</th></tr></thead>
+      <tbody>${payables.map(p=>`<tr><td>${p.vendor}</td><td style="font-weight:600">¥${p.amount.toFixed(1)}</td><td>${p.dueDate}</td>
+        <td><span class="status ${p.status==='即将到期'?'warning':'processing'}">${p.status}</span></td>
+        <td><button class="btn btn-sm btn-success" onclick="Modal.toast('💰 已安排付款（模拟）','success')">付款</button></td></tr>`).join('')}</tbody></table>
+    </div></div>`;
+}
+
+// ===== 预算执行 =====
+function renderBudget(el) {
+  const total = Summary.calc(budgets,'total'), used = Summary.calc(budgets,'used');
+  el.innerHTML = `
+    <div class="portal-stats" style="margin-bottom:20px">
+      <div class="stat-card"><div class="label">总预算（万元）</div><div class="value">${total}</div></div>
+      <div class="stat-card green"><div class="label">已执行</div><div class="value">${used.toFixed(1)}</div></div>
+      <div class="stat-card orange"><div class="label">剩余</div><div class="value">${(total-used).toFixed(1)}</div></div>
+      <div class="stat-card"><div class="label">执行率</div><div class="value">${(used/total*100).toFixed(1)}%</div></div>
+    </div>
+    <div class="card"><div class="card-header"><h3>各部门预算执行情况</h3></div><div class="card-body padded">
+      <table><thead><tr><th>部门</th><th>年度预算（万元）</th><th>已使用</th><th>剩余</th><th>执行率</th><th>进度</th></tr></thead>
+      <tbody>${budgets.map(b => {
+        const rate = (b.used/b.total*100).toFixed(1);
+        const color = rate > 80 ? 'red' : rate > 60 ? 'orange' : 'green';
+        return `<tr><td><strong>${b.dept}</strong></td><td>¥${b.total}</td><td>¥${b.used}</td><td>¥${(b.total-b.used).toFixed(1)}</td>
+          <td><span style="color:${rate>80?'var(--danger)':'var(--gray-700)'};font-weight:600">${rate}%</span></td>
+          <td><div class="progress-bar" style="width:150px"><div class="fill ${color}" style="width:${rate}%"></div></div></td></tr>`;
+      }).join('')}</tbody></table>
+    </div></div>`;
+}
+
+// ===== 汇总报表 =====
+function renderReport(el) {
+  const expenses = DB.get('fin_expenses');
+  const byType = Summary.group(expenses, 'type');
+  const typeSummary = Object.entries(byType).map(([type, items]) => ({
+    type, count: items.length, total: Summary.calc(items, 'amount')
+  })).sort((a,b) => b.total - a.total);
+
+  el.innerHTML = `
+    <div class="card">
+      <div class="card-header"><h3>📊 费用类型汇总</h3></div>
+      <div class="card-body">
+        <table><thead><tr><th>费用类型</th><th>笔数</th><th>金额（元）</th><th>占比</th><th>进度</th></tr></thead>
+        <tbody>${typeSummary.map(t => {
+          const pct = (t.total / Summary.calc(expenses,'amount') * 100).toFixed(1);
+          return `<tr><td><strong>${t.type}</strong></td><td>${t.count}</td><td style="font-weight:600">¥${t.total.toLocaleString()}</td>
+            <td>${pct}%</td><td><div class="progress-bar" style="width:150px"><div class="fill blue" style="width:${pct}%"></div></div></td></tr>`;
+        }).join('')}</tbody></table>
+      </div>
+    </div>
+    <div class="card" style="margin-top:20px">
+      <div class="card-header"><h3>📊 部门费用汇总</h3></div>
+      <div class="card-body">
+        <table><thead><tr><th>部门</th><th>笔数</th><th>金额（元）</th><th>人均</th></tr></thead>
+        <tbody>${Object.entries(Summary.group(expenses,'dept')).map(([dept, items]) => {
+          const total = Summary.calc(items, 'amount');
+          return `<tr><td><strong>${dept}</strong></td><td>${items.length}</td><td style="font-weight:600">¥${total.toLocaleString()}</td><td>¥${(total/items.length).toFixed(0)}</td></tr>`;
+        }).join('')}</tbody></table>
+      </div>
+    </div>`;
+}
+
+renderContent();
+</script>
 </body>
 </html>

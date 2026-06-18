@@ -8,145 +8,322 @@
 </head>
 <body>
 <div class="topbar">
-  <div class="logo">
-    <span class="icon">👥</span>
-    <span>人力资源管理系统</span>
-  </div>
-  <div class="nav-links">
-    <a href="index.html">← 返回门户</a>
-  </div>
-  <div class="user-info">
-    <div class="avatar">席</div>
-    <span>席宝 | 人事专员</span>
-  </div>
+  <div class="logo"><span class="icon">👥</span><span>人力资源管理系统</span></div>
+  <div class="nav-links"><a href="index.html">← 返回门户</a></div>
+  <div class="user-info"><div class="avatar">席</div><span>席宝 | 人事专员</span></div>
 </div>
 <div class="layout">
   <div class="sidebar">
     <div class="menu-group">
       <div class="menu-title">员工管理</div>
-      <a class="menu-item active" href="#"><span class="icon">📋</span> 员工花名册</a>
-      <a class="menu-item" href="#"><span class="icon">➕</span> 入职办理</a>
-      <a class="menu-item" href="#"><span class="icon">🚪</span> 离职管理</a>
+      <a class="menu-item active" href="#" onclick="switchTab('employee')"><span class="icon">📋</span> 员工花名册</a>
+      <a class="menu-item" href="#" onclick="showAddEmployee()"><span class="icon">➕</span> 入职办理</a>
     </div>
     <div class="menu-group">
       <div class="menu-title">考勤管理</div>
-      <a class="menu-item" href="#"><span class="icon">⏰</span> 考勤统计</a>
-      <a class="menu-item" href="#"><span class="icon">🏖️</span> 请假管理</a>
-      <a class="menu-item" href="#"><span class="icon">🚗</span> 加班记录</a>
+      <a class="menu-item" href="#" onclick="switchTab('attendance')"><span class="icon">⏰</span> 考勤统计</a>
+      <a class="menu-item" href="#" onclick="doCheckIn()"><span class="icon">✅</span> 今日签到</a>
     </div>
     <div class="menu-group">
       <div class="menu-title">薪酬福利</div>
-      <a class="menu-item" href="#"><span class="icon">💵</span> 工资查询</a>
-      <a class="menu-item" href="#"><span class="icon">📊</span> 社保公积金</a>
-      <a class="menu-item" href="#"><span class="icon">🎁</span> 福利管理</a>
+      <a class="menu-item" href="#" onclick="switchTab('salary')"><span class="icon">💵</span> 工资查询</a>
     </div>
     <div class="menu-group">
       <div class="menu-title">招聘管理</div>
-      <a class="menu-item" href="#"><span class="icon">📢</span> 招聘需求</a>
-      <a class="menu-item" href="#"><span class="icon">👤</span> 候选人库</a>
-      <a class="menu-item" href="#"><span class="icon">📅</span> 面试安排</a>
-    </div>
-    <div class="menu-group">
-      <div class="menu-title">培训发展</div>
-      <a class="menu-item" href="#"><span class="icon">📚</span> 培训计划</a>
-      <a class="menu-item" href="#"><span class="icon">🎓</span> 在线学习</a>
+      <a class="menu-item" href="#" onclick="showAddRecruit()"><span class="icon">📢</span> 发布招聘</a>
     </div>
   </div>
   <div class="main-content">
     <div class="page-header">
       <div>
         <div class="breadcrumb">人力资源系统 / 员工管理</div>
-        <h2>📋 员工花名册</h2>
+        <h2 id="page-title">📋 员工花名册</h2>
       </div>
-      <div class="btn-group">
-        <button class="btn btn-outline" style="background:white;border:1px solid #d1d5db;color:#4b5563;">📥 导出</button>
-        <button class="btn btn-primary">➕ 新增员工</button>
-      </div>
-    </div>
-
-    <!-- 统计卡片 -->
-    <div class="dashboard-grid" style="margin-bottom:20px;">
-      <div class="mini-stat">
-        <div class="icon">👥</div>
-        <div class="num">1,286</div>
-        <div class="desc">在职总人数</div>
-      </div>
-      <div class="mini-stat">
-        <div class="icon">➕</div>
-        <div class="num">23</div>
-        <div class="desc">本月新入职</div>
-      </div>
-      <div class="mini-stat">
-        <div class="icon">🚪</div>
-        <div class="num">8</div>
-        <div class="desc">本月离职</div>
+      <div class="btn-group" id="header-actions">
+        <button class="btn btn-outline" style="background:white;border:1px solid #d1d5db;color:#4b5563;" onclick="exportData()">📥 导出</button>
+        <button class="btn btn-primary" onclick="showAddEmployee()">➕ 新增员工</button>
       </div>
     </div>
-
-    <!-- 筛选 -->
-    <div class="card">
-      <div class="filter-bar">
-        <select><option>全部部门</option><option>技术研发部</option><option>市场营销部</option><option>财务管理部</option><option>人力资源部</option><option>行政综合部</option><option>项目交付部</option><option>生产制造部</option><option>法务合规部</option></select>
-        <select><option>全部状态</option><option>在职</option><option>试用期</option><option>离职</option></select>
-        <input type="text" placeholder="搜索姓名/工号...">
-        <button class="btn btn-primary">🔍 搜索</button>
-        <button class="btn btn-outline" style="background:white;border:1px solid #d1d5db;color:#4b5563;">重置</button>
-      </div>
-
-      <!-- 员工列表 -->
-      <table>
-        <thead>
-          <tr>
-            <th>工号</th>
-            <th>姓名</th>
-            <th>部门</th>
-            <th>岗位</th>
-            <th>入职日期</th>
-            <th>手机号</th>
-            <th>状态</th>
-            <th>操作</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>HX2024001</td><td>张伟</td><td>技术研发部</td><td>高级开发工程师</td><td>2024-03-15</td><td>138****1234</td><td><span class="status approved">在职</span></td><td><a href="#" style="color:var(--primary);text-decoration:none;font-size:13px;">查看</a></td></tr>
-          <tr><td>HX2024002</td><td>李娜</td><td>市场营销部</td><td>市场总监</td><td>2024-01-10</td><td>139****5678</td><td><span class="status approved">在职</span></td><td><a href="#" style="color:var(--primary);text-decoration:none;font-size:13px;">查看</a></td></tr>
-          <tr><td>HX2024003</td><td>王强</td><td>生产制造部</td><td>车间主任</td><td>2023-06-20</td><td>137****9012</td><td><span class="status approved">在职</span></td><td><a href="#" style="color:var(--primary);text-decoration:none;font-size:13px;">查看</a></td></tr>
-          <tr><td>HX2024004</td><td>刘芳</td><td>财务管理部</td><td>财务主管</td><td>2023-09-01</td><td>136****3456</td><td><span class="status approved">在职</span></td><td><a href="#" style="color:var(--primary);text-decoration:none;font-size:13px;">查看</a></td></tr>
-          <tr><td>HX2025005</td><td>陈明</td><td>项目交付部</td><td>项目经理</td><td>2025-02-18</td><td>135****7890</td><td><span class="status processing">试用期</span></td><td><a href="#" style="color:var(--primary);text-decoration:none;font-size:13px;">查看</a></td></tr>
-          <tr><td>HX2025006</td><td>赵丽</td><td>人力资源部</td><td>HRBP</td><td>2025-04-01</td><td>158****2345</td><td><span class="status processing">试用期</span></td><td><a href="#" style="color:var(--primary);text-decoration:none;font-size:13px;">查看</a></td></tr>
-          <tr><td>HX2024007</td><td>孙磊</td><td>行政综合部</td><td>行政主管</td><td>2024-05-12</td><td>159****6789</td><td><span class="status approved">在职</span></td><td><a href="#" style="color:var(--primary);text-decoration:none;font-size:13px;">查看</a></td></tr>
-          <tr><td>HX2024008</td><td>周婷</td><td>技术研发部</td><td>测试工程师</td><td>2024-08-20</td><td>186****0123</td><td><span class="status approved">在职</span></td><td><a href="#" style="color:var(--primary);text-decoration:none;font-size:13px;">查看</a></td></tr>
-          <tr><td>HX2024009</td><td>吴刚</td><td>法务合规部</td><td>法务专员</td><td>2024-02-28</td><td>187****4567</td><td><span class="status approved">在职</span></td><td><a href="#" style="color:var(--primary);text-decoration:none;font-size:13px;">查看</a></td></tr>
-          <tr><td>HX2025010</td><td>郑雪</td><td>市场营销部</td><td>产品经理</td><td>2025-06-01</td><td>188****8901</td><td><span class="status processing">试用期</span></td><td><a href="#" style="color:var(--primary);text-decoration:none;font-size:13px;">查看</a></td></tr>
-          <tr><td>HX2023011</td><td>黄海</td><td>生产制造部</td><td>技术工人</td><td>2023-03-10</td><td>133****2222</td><td><span class="status approved">在职</span></td><td><a href="#" style="color:var(--primary);text-decoration:none;font-size:13px;">查看</a></td></tr>
-          <tr><td>HX2023012</td><td>马丽</td><td>财务管理部</td><td>出纳</td><td>2023-07-15</td><td>156****3333</td><td><span class="status approved">在职</span></td><td><a href="#" style="color:var(--primary);text-decoration:none;font-size:13px;">查看</a></td></tr>
-        </tbody>
-      </table>
-      <div style="padding:16px;text-align:center;color:var(--gray-400);font-size:13px;">
-        共 1,286 条记录 · 第 1/107 页 · 每页 12 条
-      </div>
-    </div>
-
-    <!-- 考勤概览 -->
-    <div class="card" style="margin-top:20px;">
-      <div class="card-header"><h3>⏰ 今日考勤概览（2026-06-18）</h3></div>
-      <div class="card-body padded">
-        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:16px;text-align:center;">
-          <div><div style="font-size:28px;font-weight:700;color:var(--success);">1,198</div><div style="font-size:12px;color:var(--gray-400);">已签到</div></div>
-          <div><div style="font-size:28px;font-weight:700;color:var(--warning);">42</div><div style="font-size:12px;color:var(--gray-400);">迟到</div></div>
-          <div><div style="font-size:28px;font-weight:700;color:var(--primary);">15</div><div style="font-size:12px;color:var(--gray-400);">请假</div></div>
-          <div><div style="font-size:28px;font-weight:700;color:var(--info);">8</div><div style="font-size:12px;color:var(--gray-400);">出差</div></div>
-          <div><div style="font-size:28px;font-weight:700;color:var(--danger);">23</div><div style="font-size:12px;color:var(--gray-400);">未签到</div></div>
-        </div>
-        <div style="margin-top:16px;">
-          <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--gray-500);margin-bottom:4px;">
-            <span>签到率</span><span>93.2%</span>
-          </div>
-          <div class="progress-bar"><div class="fill green" style="width:93.2%"></div></div>
-        </div>
-      </div>
-    </div>
+    <div id="tab-content"></div>
+    <div class="footer">华信集团 · 人力资源管理系统 V3.2.0 © 2026</div>
   </div>
 </div>
+<script src="assets/app.js"></script>
+<script>
+// ===== 数据初始化 =====
+const defaultEmployees = [
+  {id:'HX2024001',name:'张伟',dept:'技术研发部',position:'高级开发工程师',joinDate:'2024-03-15',phone:'138****1234',status:'在职',salary:18500},
+  {id:'HX2024002',name:'李娜',dept:'市场营销部',position:'市场总监',joinDate:'2024-01-10',phone:'139****5678',status:'在职',salary:25000},
+  {id:'HX2024003',name:'王强',dept:'生产制造部',position:'车间主任',joinDate:'2023-06-20',phone:'137****9012',status:'在职',salary:15000},
+  {id:'HX2024004',name:'刘芳',dept:'财务管理部',position:'财务主管',joinDate:'2023-09-01',phone:'136****3456',status:'在职',salary:20000},
+  {id:'HX2025005',name:'陈明',dept:'项目交付部',position:'项目经理',joinDate:'2025-02-18',phone:'135****7890',status:'试用期',salary:16000},
+  {id:'HX2025006',name:'赵丽',dept:'人力资源部',position:'HRBP',joinDate:'2025-04-01',phone:'158****2345',status:'试用期',salary:14000},
+  {id:'HX2024007',name:'孙磊',dept:'行政综合部',position:'行政主管',joinDate:'2024-05-12',phone:'159****6789',status:'在职',salary:13000},
+  {id:'HX2024008',name:'周婷',dept:'技术研发部',position:'测试工程师',joinDate:'2024-08-20',phone:'186****0123',status:'在职',salary:15500},
+  {id:'HX2024009',name:'吴刚',dept:'法务合规部',position:'法务专员',joinDate:'2024-02-28',phone:'187****4567',status:'在职',salary:16000},
+  {id:'HX2025010',name:'郑雪',dept:'市场营销部',position:'产品经理',joinDate:'2025-06-01',phone:'188****8901',status:'试用期',salary:17000},
+  {id:'HX2023011',name:'黄海',dept:'生产制造部',position:'技术工人',joinDate:'2023-03-10',phone:'133****2222',status:'在职',salary:9500},
+  {id:'HX2023012',name:'马丽',dept:'财务管理部',position:'出纳',joinDate:'2023-07-15',phone:'156****3333',status:'在职',salary:11000},
+];
+if (!DB.get('hr_employees').length) DB.set('hr_employees', defaultEmployees);
+
+const depts = ['技术研发部','市场营销部','生产制造部','财务管理部','人力资源部','行政综合部','项目交付部','法务合规部'];
+let currentTab = 'employee';
+let currentPage = 1;
+
+// ===== Tab切换 =====
+function switchTab(tab) {
+  currentTab = tab; currentPage = 1;
+  document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
+  event.target.closest('.menu-item')?.classList.add('active');
+  renderContent();
+}
+
+function renderContent() {
+  const el = document.getElementById('tab-content');
+  const renderers = { employee: renderEmployee, attendance: renderAttendance, salary: renderSalary };
+  (renderers[currentTab] || renderEmployee)(el);
+}
+
+// ===== 员工花名册 =====
+function renderEmployee(el) {
+  document.getElementById('page-title').textContent = '📋 员工花名册';
+  const list = DB.get('hr_employees');
+  const total = list.length, onJob = list.filter(i=>i.status==='在职').length, trial = list.filter(i=>i.status==='试用期').length;
+
+  el.innerHTML = `
+    <div class="dashboard-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:20px">
+      <div class="mini-stat"><div class="icon">👥</div><div class="num">${total}</div><div class="desc">在职总人数</div></div>
+      <div class="mini-stat"><div class="icon">✅</div><div class="num">${onJob}</div><div class="desc">正式员工</div></div>
+      <div class="mini-stat"><div class="icon">⏳</div><div class="num">${trial}</div><div class="desc">试用期</div></div>
+      <div class="mini-stat"><div class="icon">💰</div><div class="num">¥${(Summary.calc(list,'salary')/10000).toFixed(1)}万</div><div class="desc">月薪总额</div></div>
+    </div>
+    <div class="card">
+      <div class="filter-bar">
+        <select id="f-dept"><option value="">全部部门</option>${depts.map(d=>`<option>${d}</option>`).join('')}</select>
+        <select id="f-status"><option value="">全部状态</option><option>在职</option><option>试用期</option><option>离职</option></select>
+        <input type="text" id="f-keyword" placeholder="搜索姓名/工号...">
+        <button class="btn btn-primary" onclick="renderEmployeeList()">🔍 搜索</button>
+      </div>
+      <div id="employee-list"></div>
+    </div>`;
+  renderEmployeeList();
+}
+
+function renderEmployeeList() {
+  let list = DB.get('hr_employees');
+  const dept = document.getElementById('f-dept')?.value;
+  const status = document.getElementById('f-status')?.value;
+  const kw = document.getElementById('f-keyword')?.value?.toLowerCase();
+  if (dept) list = list.filter(i => i.dept === dept);
+  if (status) list = list.filter(i => i.status === status);
+  if (kw) list = list.filter(i => i.name.toLowerCase().includes(kw) || i.id.toLowerCase().includes(kw));
+
+  const statusClass = s => s === '在职' ? 'approved' : s === '试用期' ? 'processing' : 'rejected';
+  document.getElementById('employee-list').innerHTML = `
+    <table><thead><tr><th>工号</th><th>姓名</th><th>部门</th><th>岗位</th><th>入职日期</th><th>月薪</th><th>状态</th><th>操作</th></tr></thead>
+    <tbody>${list.map(e => `<tr>
+      <td>${e.id}</td><td><strong>${e.name}</strong></td><td>${e.dept}</td><td>${e.position}</td><td>${e.joinDate}</td>
+      <td>¥${e.salary?.toLocaleString() || '-'}</td>
+      <td><span class="status ${statusClass(e.status)}">${e.status}</span></td>
+      <td><a href="#" onclick="viewEmployee('${e.id}');return false" style="color:var(--primary);text-decoration:none;font-size:13px">查看</a> <a href="#" onclick="editEmployee('${e.id}');return false" style="color:var(--gray-500);text-decoration:none;font-size:13px;margin-left:6px">编辑</a></td>
+    </tr>`).join('')}</tbody></table>
+    <div style="padding:16px;text-align:center;color:var(--gray-400);font-size:13px">共 ${list.length} 条记录</div>`;
+}
+
+// ===== 新增员工 =====
+function showAddEmployee() {
+  const fields = [
+    {name:'id',label:'工号',placeholder:'如 HX2026XXX',required:true},
+    {name:'name',label:'姓名',required:true},
+    {name:'dept',label:'部门',type:'select',options:depts,required:true},
+    {name:'position',label:'岗位',required:true},
+    {name:'joinDate',label:'入职日期',type:'date',required:true},
+    {name:'phone',label:'手机号',placeholder:'138xxxxxxxx',required:true},
+    {name:'salary',label:'月薪（元）',type:'number',placeholder:'如 15000',required:true},
+    {name:'status',label:'状态',type:'select',options:['在职','试用期'],required:true},
+  ];
+  const html = Form.render(fields) + `<div style="margin-top:16px;text-align:right">
+    <button class="btn" style="background:#f3f4f6;color:#374151" onclick="Modal.close(this.closest('[id^=modal]').id)">取消</button>
+    <button class="btn btn-primary" onclick="saveEmployee()">提交入职</button></div>`;
+  Modal.show('📝 新增员工', html, {width:'560px'});
+}
+
+function saveEmployee() {
+  const data = Form.getData();
+  if (!data.id || !data.name) { Modal.toast('请填写必填项', 'warning'); return; }
+  data.salary = parseInt(data.salary) || 0;
+  const list = DB.get('hr_employees');
+  if (list.find(i => i.id === data.id)) { Modal.toast('工号已存在', 'error'); return; }
+  list.unshift(data);
+  DB.set('hr_employees', list);
+  document.querySelectorAll('[id^=modal-]').forEach(m => m.remove());
+  Modal.toast(`✅ 员工 ${data.name} 入职办理成功`);
+  renderContent();
+}
+
+function editEmployee(id) {
+  const list = DB.get('hr_employees');
+  const emp = list.find(i => i.id === id);
+  if (!emp) return;
+  const fields = [
+    {name:'name',label:'姓名',required:true},
+    {name:'dept',label:'部门',type:'select',options:depts,required:true},
+    {name:'position',label:'岗位',required:true},
+    {name:'phone',label:'手机号'},
+    {name:'salary',label:'月薪（元）',type:'number'},
+    {name:'status',label:'状态',type:'select',options:['在职','试用期','离职'],required:true},
+  ];
+  const html = Form.render(fields, emp) + `<div style="margin-top:16px;text-align:right">
+    <button class="btn" style="background:#f3f4f6;color:#374151" onclick="Modal.close(this.closest('[id^=modal]').id)">取消</button>
+    <button class="btn btn-primary" onclick="updateEmployee('${id}')">保存修改</button></div>`;
+  Modal.show(`✏️ 编辑员工 - ${emp.name}`, html, {width:'560px'});
+}
+
+function updateEmployee(id) {
+  const data = Form.getData();
+  const list = DB.get('hr_employees');
+  const idx = list.findIndex(i => i.id === id);
+  if (idx >= 0) {
+    Object.assign(list[idx], data);
+    list[idx].salary = parseInt(list[idx].salary) || 0;
+    DB.set('hr_employees', list);
+    document.querySelectorAll('[id^=modal-]').forEach(m => m.remove());
+    Modal.toast('✅ 员工信息已更新');
+    renderContent();
+  }
+}
+
+function viewEmployee(id) {
+  const emp = DB.get('hr_employees').find(i => i.id === id);
+  if (!emp) return;
+  const html = `
+    <div class="detail-grid" style="grid-template-columns:1fr 1fr">
+      <div class="detail-item"><div class="label">工号</div><div class="value">${emp.id}</div></div>
+      <div class="detail-item"><div class="label">姓名</div><div class="value">${emp.name}</div></div>
+      <div class="detail-item"><div class="label">部门</div><div class="value">${emp.dept}</div></div>
+      <div class="detail-item"><div class="label">岗位</div><div class="value">${emp.position}</div></div>
+      <div class="detail-item"><div class="label">入职日期</div><div class="value">${emp.joinDate}</div></div>
+      <div class="detail-item"><div class="label">手机号</div><div class="value">${emp.phone}</div></div>
+      <div class="detail-item"><div class="label">月薪</div><div class="value" style="color:var(--primary);font-size:18px">¥${emp.salary?.toLocaleString() || '-'}</div></div>
+      <div class="detail-item"><div class="label">状态</div><div class="value"><span class="status ${emp.status==='在职'?'approved':'processing'}">${emp.status}</span></div></div>
+    </div>`;
+  Modal.show(`👤 员工详情 - ${emp.name}`, html, {width:'520px'});
+}
+
+// ===== 考勤管理 =====
+function renderAttendance(el) {
+  document.getElementById('page-title').textContent = '⏰ 考勤统计';
+  const records = DB.get('hr_attendance');
+  const today = new Date().toLocaleDateString('zh-CN');
+  const todayRecords = records.filter(r => r.date === today);
+  const checkedIn = todayRecords.length;
+  const onTime = todayRecords.filter(r => r.time < '09:00').length;
+  const late = todayRecords.filter(r => r.time >= '09:00').length;
+  const rate = checkedIn > 0 ? ((onTime / checkedIn) * 100).toFixed(1) : 0;
+
+  el.innerHTML = `
+    <div class="portal-stats" style="margin-bottom:20px">
+      <div class="stat-card green"><div class="label">今日签到</div><div class="value">${checkedIn}</div><div class="change">按时 ${onTime} | 迟到 ${late}</div></div>
+      <div class="stat-card"><div class="label">出勤率</div><div class="value">${(checkedIn/12*100).toFixed(1)}%</div></div>
+      <div class="stat-card orange"><div class="label">请假人数</div><div class="value">15</div></div>
+      <div class="stat-card"><div class="label">出差人数</div><div class="value">8</div></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><h3>今日签到记录</h3><span style="font-size:13px;color:var(--gray-400)">${today}</span></div>
+      <div class="card-body" id="attendance-list">
+        ${todayRecords.length ? `<table><thead><tr><th>姓名</th><th>部门</th><th>签到时间</th><th>状态</th></tr></thead>
+        <tbody>${todayRecords.map(r => `<tr><td>${r.name}</td><td>${r.dept}</td><td>${r.time}</td>
+        <td><span class="status ${r.time < '09:00' ? 'approved' : 'warning'}">${r.time < '09:00' ? '准时' : '迟到'}</span></td></tr>`).join('')}</tbody></table>`
+        : '<div style="padding:40px;text-align:center;color:var(--gray-400)">今日暂无签到记录，点击侧边栏「今日签到」打卡</div>'}
+      </div>
+    </div>`;
+}
+
+function doCheckIn() {
+  const now = new Date();
+  const time = now.toTimeString().slice(0,5);
+  const records = DB.get('hr_attendance');
+  const today = now.toLocaleDateString('zh-CN');
+  if (records.find(r => r.date === today && r.name === '席宝')) {
+    Modal.toast('今日已签到，无需重复打卡', 'warning');
+    return;
+  }
+  records.unshift({name:'席宝', dept:'人力资源部', date: today, time: time});
+  DB.set('hr_attendance', records);
+  Modal.toast(`✅ 签到成功！时间 ${time} ${time < '09:00' ? '(准时)' : '(迟到)'}`);
+  if (currentTab === 'attendance') renderContent();
+}
+
+// ===== 薪酬查询 =====
+function renderSalary(el) {
+  document.getElementById('page-title').textContent = '💵 薪酬查询';
+  const list = DB.get('hr_employees');
+  const totalSalary = Summary.calc(list, 'salary');
+  const avgSalary = totalSalary / list.length;
+  const maxSalary = Math.max(...list.map(i => i.salary || 0));
+  const minSalary = Math.min(...list.map(i => i.salary || 0));
+
+  el.innerHTML = `
+    <div class="portal-stats" style="margin-bottom:20px">
+      <div class="stat-card"><div class="label">月薪总额</div><div class="value">¥${(totalSalary/10000).toFixed(1)}万</div></div>
+      <div class="stat-card green"><div class="label">平均月薪</div><div class="value">¥${avgSalary.toFixed(0).toLocaleString()}</div></div>
+      <div class="stat-card orange"><div class="label">最高月薪</div><div class="value">¥${maxSalary.toLocaleString()}</div></div>
+      <div class="stat-card"><div class="label">最低月薪</div><div class="value">¥${minSalary.toLocaleString()}</div></div>
+    </div>
+    <div class="card">
+      <div class="card-header"><h3>员工薪酬明细</h3></div>
+      <div class="card-body">
+        <table><thead><tr><th>工号</th><th>姓名</th><th>部门</th><th>岗位</th><th>基本工资</th><th>社保（个人）</th><th>公积金</th><th>个税</th><th>实发工资</th></tr></thead>
+        <tbody>${list.map(e => {
+          const base = e.salary || 0;
+          const social = Math.round(base * 0.105);
+          const fund = Math.round(base * 0.12);
+          const taxable = Math.max(0, base - social - fund - 5000);
+          const tax = Math.round(taxable * 0.1);
+          const real = base - social - fund - tax;
+          return `<tr><td>${e.id}</td><td><strong>${e.name}</strong></td><td>${e.dept}</td><td>${e.position}</td>
+          <td>¥${base.toLocaleString()}</td><td style="color:var(--danger)">-¥${social.toLocaleString()}</td>
+          <td style="color:var(--danger)">-¥${fund.toLocaleString()}</td><td style="color:var(--danger)">-¥${tax.toLocaleString()}</td>
+          <td style="color:var(--success);font-weight:600">¥${real.toLocaleString()}</td></tr>`;
+        }).join('')}</tbody></table>
+      </div>
+    </div>`;
+}
+
+// ===== 招聘发布 =====
+function showAddRecruit() {
+  const fields = [
+    {name:'title',label:'招聘岗位',required:true},
+    {name:'dept',label:'需求部门',type:'select',options:depts,required:true},
+    {name:'count',label:'招聘人数',type:'number',required:true},
+    {name:'salary',label:'薪资范围',placeholder:'如 15K-20K'},
+    {name:'requirements',label:'任职要求',type:'textarea',full:true,placeholder:'请输入任职要求...',required:true},
+    {name:'deadline',label:'截止日期',type:'date'},
+  ];
+  const html = Form.render(fields) + `<div style="margin-top:16px;text-align:right">
+    <button class="btn" style="background:#f3f4f6;color:#374151" onclick="Modal.close(this.closest('[id^=modal]').id)">取消</button>
+    <button class="btn btn-primary" onclick="saveRecruit()">发布招聘</button></div>`;
+  Modal.show('📢 发布招聘需求', html, {width:'600px'});
+}
+
+function saveRecruit() {
+  const data = Form.getData();
+  if (!data.title || !data.dept) { Modal.toast('请填写必填项', 'warning'); return; }
+  const list = DB.get('hr_recruits');
+  list.unshift({...data, id: DB.genId('RC'), status: '招聘中', createdAt: new Date().toLocaleString('zh-CN')});
+  DB.set('hr_recruits', list);
+  document.querySelectorAll('[id^=modal-]').forEach(m => m.remove());
+  Modal.toast(`✅ 招聘需求「${data.title}」已发布`);
+}
+
+function exportData() {
+  Modal.toast('📥 数据导出中...', 'info');
+  setTimeout(() => Modal.toast('✅ 导出成功（模拟）'), 1500);
+}
+
+// ===== 初始化 =====
+renderContent();
+</script>
 </body>
 </html>

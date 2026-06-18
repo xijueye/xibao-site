@@ -15,92 +15,196 @@
 <div class="layout">
   <div class="sidebar">
     <div class="menu-group">
-      <div class="menu-title">审计计划</div>
-      <a class="menu-item active" href="#"><span class="icon">📋</span> 年度审计计划</a>
-      <a class="menu-item" href="#"><span class="icon">📅</span> 审计排期</a>
+      <div class="menu-title">审计管理</div>
+      <a class="menu-item active" href="#" onclick="switchTab('project')"><span class="icon">📋</span> 审计项目</a>
+      <a class="menu-item" href="#" onclick="showNewAudit()"><span class="icon">➕</span> 新建项目</a>
     </div>
     <div class="menu-group">
-      <div class="menu-title">审计项目</div>
-      <a class="menu-item" href="#"><span class="icon">🔍</span> 在审项目</a>
-      <a class="menu-item" href="#"><span class="icon">📊</span> 审计底稿</a>
-      <a class="menu-item" href="#"><span class="icon">📝</span> 审计证据</a>
-    </div>
-    <div class="menu-group">
-      <div class="menu-title">审计报告</div>
-      <a class="menu-item" href="#"><span class="icon">📄</span> 审计报告库</a>
-      <a class="menu-item" href="#"><span class="icon">📑</span> 管理建议书</a>
-    </div>
-    <div class="menu-group">
-      <div class="menu-title">问题整改</div>
-      <a class="menu-item" href="#"><span class="icon">⚠️</span> 问题台账</a>
-      <a class="menu-item" href="#"><span class="icon">🔄</span> 整改跟踪</a>
-    </div>
-    <div class="menu-group">
-      <div class="menu-title">风险管控</div>
-      <a class="menu-item" href="#"><span class="icon">🛡️</span> 风险评估</a>
-      <a class="menu-item" href="#"><span class="icon">📈</span> 内控评价</a>
+      <div class="menu-title">问题管理</div>
+      <a class="menu-item" href="#" onclick="switchTab('issue')"><span class="icon">⚠️</span> 问题台账</a>
+      <a class="menu-item" href="#" onclick="showNewIssue()"><span class="icon">➕</span> 录入问题</a>
     </div>
   </div>
   <div class="main-content">
     <div class="page-header">
-      <div>
-        <div class="breadcrumb">审计管理系统 / 审计计划</div>
-        <h2>📋 2026年度审计计划</h2>
-      </div>
-      <div class="btn-group">
-        <button class="btn btn-primary">➕ 新建审计项目</button>
-      </div>
+      <div><div class="breadcrumb">审计管理系统</div><h2 id="page-title">📋 审计项目</h2></div>
+      <div class="btn-group"><button class="btn btn-primary" id="add-btn" onclick="showNewAudit()">➕ 新建审计项目</button></div>
     </div>
-
-    <div class="portal-stats" style="margin-bottom:20px;">
-      <div class="stat-card"><div class="label">年度审计项目</div><div class="value">24</div><div class="change">已完成 8 项</div></div>
-      <div class="stat-card green"><div class="label">在审项目</div><div class="value">6</div><div class="change">进行中</div></div>
-      <div class="stat-card orange"><div class="label">待整改问题</div><div class="value">15</div><div class="change down">3项超期</div></div>
-      <div class="stat-card red"><div class="label">高风险事项</div><div class="value">2</div><div class="change down">需重点关注</div></div>
-    </div>
-
-    <div class="card">
-      <div class="card-header"><h3>审计项目列表</h3></div>
-      <div class="filter-bar">
-        <select><option>全部类型</option><option>财务审计</option><option>合规审计</option><option>专项审计</option><option>经济责任审计</option></select>
-        <select><option>全部状态</option><option>计划中</option><option>实施中</option><option>已完成</option></select>
-        <input type="text" placeholder="搜索项目名称...">
-        <button class="btn btn-primary">🔍 搜索</button>
-      </div>
-      <div class="card-body">
-        <table>
-          <thead><tr><th>项目编号</th><th>审计项目</th><th>类型</th><th>审计组长</th><th>计划周期</th><th>进度</th><th>状态</th></tr></thead>
-          <tbody>
-            <tr><td>AUD2026-001</td><td>2025年度财务报表审计</td><td>财务审计</td><td>刘芳</td><td>2026.01-2026.03</td><td>100%</td><td><span class="status approved">已完成</span></td></tr>
-            <tr><td>AUD2026-002</td><td>采购业务合规审计</td><td>合规审计</td><td>吴刚</td><td>2026.03-2026.05</td><td>100%</td><td><span class="status approved">已完成</span></td></tr>
-            <tr><td>AUD2026-003</td><td>工程项目专项审计</td><td>专项审计</td><td>吴刚</td><td>2026.04-2026.06</td><td>75%</td><td><span class="status processing">实施中</span></td></tr>
-            <tr><td>AUD2026-004</td><td>信息技术部经济责任审计</td><td>经济责任</td><td>刘芳</td><td>2026.05-2026.07</td><td>40%</td><td><span class="status processing">实施中</span></td></tr>
-            <tr><td>AUD2026-005</td><td>2026年Q1财务收支审计</td><td>财务审计</td><td>马丽</td><td>2026.05-2026.06</td><td>60%</td><td><span class="status processing">实施中</span></td></tr>
-            <tr><td>AUD2026-006</td><td>税务合规专项审计</td><td>合规审计</td><td>吴刚</td><td>2026.06-2026.08</td><td>15%</td><td><span class="status processing">实施中</span></td></tr>
-            <tr><td>AUD2026-007</td><td>安全生产费用专项审计</td><td>专项审计</td><td>王强</td><td>2026.07-2026.09</td><td>-</td><td><span class="status pending">计划中</span></td></tr>
-            <tr><td>AUD2026-008</td><td>人力资源管理审计</td><td>合规审计</td><td>赵丽</td><td>2026.08-2026.10</td><td>-</td><td><span class="status pending">计划中</span></td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- 问题整改台账 -->
-    <div class="card" style="margin-top:20px;">
-      <div class="card-header"><h3>⚠️ 问题整改台账</h3><span style="font-size:13px;color:var(--gray-400);">审计发现问题跟踪</span></div>
-      <div class="card-body">
-        <table>
-          <thead><tr><th>问题编号</th><th>来源项目</th><th>问题描述</th><th>风险等级</th><th>责任部门</th><th>整改期限</th><th>状态</th></tr></thead>
-          <tbody>
-            <tr><td>WH2026-001</td><td>采购合规审计</td><td>部分采购未履行招标程序，涉及金额86万元</td><td><span class="status danger">高</span></td><td>采购部</td><td>2026-06-30</td><td><span class="status warning">整改中</span></td></tr>
-            <tr><td>WH2026-002</td><td>采购合规审计</td><td>供应商准入评审记录不完整</td><td><span class="status warning">中</span></td><td>采购部</td><td>2026-06-30</td><td><span class="status warning">整改中</span></td></tr>
-            <tr><td>WH2026-003</td><td>财务报表审计</td><td>关联交易披露不充分</td><td><span class="status danger">高</span></td><td>财务管理部</td><td>2026-07-15</td><td><span class="status pending">未整改</span></td></tr>
-            <tr><td>WH2026-004</td><td>采购合规审计</td><td>合同签订时间晚于实际执行时间</td><td><span class="status pending">低</span></td><td>法务合规部</td><td>2026-07-31</td><td><span class="status approved">已整改</span></td></tr>
-            <tr><td>WH2026-005</td><td>工程项目审计</td><td>3个项目存在超预算支出，合计超支127万元</td><td><span class="status danger">高</span></td><td>项目交付部</td><td>2026-07-15</td><td><span class="status warning">整改中</span></td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
+    <div id="tab-content"></div>
+    <div class="footer">华信集团 · 审计管理系统 V3.2.0 © 2026</div>
   </div>
 </div>
+<script src="assets/app.js"></script>
+<script>
+const defaultAudits = [
+  {id:'AUD2026001',name:'2025年度财务报表审计',type:'财务审计',leader:'刘芳',period:'2026.01-2026.03',progress:100,status:'已完成'},
+  {id:'AUD2026002',name:'采购业务合规审计',type:'合规审计',leader:'吴刚',period:'2026.03-2026.05',progress:100,status:'已完成'},
+  {id:'AUD2026003',name:'工程项目专项审计',type:'专项审计',leader:'吴刚',period:'2026.04-2026.06',progress:75,status:'实施中'},
+  {id:'AUD2026004',name:'信息技术部经济责任审计',type:'经济责任',leader:'刘芳',period:'2026.05-2026.07',progress:40,status:'实施中'},
+  {id:'AUD2026005',name:'2026年Q1财务收支审计',type:'财务审计',leader:'马丽',period:'2026.05-2026.06',progress:60,status:'实施中'},
+  {id:'AUD2026006',name:'税务合规专项审计',type:'合规审计',leader:'吴刚',period:'2026.06-2026.08',progress:15,status:'实施中'},
+];
+if (!DB.get('aud_projects').length) DB.set('aud_projects', defaultAudits);
+
+const defaultIssues = [
+  {id:'WH2026001',source:'采购合规审计',desc:'部分采购未履行招标程序，涉及金额86万元',risk:'高',dept:'采购部',deadline:'2026-06-30',status:'整改中'},
+  {id:'WH2026002',source:'采购合规审计',desc:'供应商准入评审记录不完整',risk:'中',dept:'采购部',deadline:'2026-06-30',status:'整改中'},
+  {id:'WH2026003',source:'财务报表审计',desc:'关联交易披露不充分',risk:'高',dept:'财务管理部',deadline:'2026-07-15',status:'未整改'},
+  {id:'WH2026004',source:'采购合规审计',desc:'合同签订时间晚于实际执行时间',risk:'低',dept:'法务合规部',deadline:'2026-07-31',status:'已整改'},
+  {id:'WH2026005',source:'工程项目审计',desc:'3个项目存在超预算支出，合计超支127万元',risk:'高',dept:'项目交付部',deadline:'2026-07-15',status:'整改中'},
+];
+if (!DB.get('aud_issues').length) DB.set('aud_issues', defaultIssues);
+
+let currentTab = 'project';
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.menu-item').forEach(m=>m.classList.remove('active'));
+  event.target.closest('.menu-item')?.classList.add('active');
+  const addBtn = document.getElementById('add-btn');
+  addBtn.style.display = '';
+  if (tab === 'project') { addBtn.textContent = '➕ 新建审计项目'; addBtn.onclick = showNewAudit; }
+  else { addBtn.textContent = '➕ 录入问题'; addBtn.onclick = showNewIssue; }
+  renderContent();
+}
+
+function renderContent() {
+  const el = document.getElementById('tab-content');
+  const titles = {project:'📋 审计项目',issue:'⚠️ 问题台账'};
+  document.getElementById('page-title').textContent = titles[currentTab] || '';
+  ({project:renderAuditProject, issue:renderIssue})[currentTab]?.(el);
+}
+
+function renderAuditProject(el) {
+  const list = DB.get('aud_projects');
+  el.innerHTML = `
+    <div class="portal-stats" style="margin-bottom:20px">
+      <div class="stat-card"><div class="label">年度项目</div><div class="value">${list.length}</div></div>
+      <div class="stat-card green"><div class="label">已完成</div><div class="value">${list.filter(i=>i.status==='已完成').length}</div></div>
+      <div class="stat-card orange"><div class="label">实施中</div><div class="value">${list.filter(i=>i.status==='实施中').length}</div></div>
+    </div>
+    <div class="card"><div class="card-body">
+      <table><thead><tr><th>编号</th><th>审计项目</th><th>类型</th><th>审计组长</th><th>计划周期</th><th>进度</th><th>状态</th><th>操作</th></tr></thead>
+      <tbody>${list.map(a=>`<tr>
+        <td>${a.id}</td><td><strong>${a.name}</strong></td><td>${a.type}</td><td>${a.leader}</td><td>${a.period}</td>
+        <td><div class="progress-bar" style="width:80px;display:inline-block;vertical-align:middle"><div class="fill ${a.progress>=80?'green':'blue'}" style="width:${a.progress}%"></div></div> ${a.progress}%</td>
+        <td><span class="status ${a.status==='已完成'?'approved':'processing'}">${a.status}</span></td>
+        <td><a href="#" onclick="updateAuditProgress('${a.id}');return false" style="color:var(--primary);font-size:13px;text-decoration:none">更新</a></td>
+      </tr>`).join('')}</tbody></table>
+    </div></div>`;
+}
+
+function showNewAudit() {
+  const fields = [
+    {name:'name',label:'审计项目名称',full:true,required:true},
+    {name:'type',label:'审计类型',type:'select',options:['财务审计','合规审计','专项审计','经济责任审计'],required:true},
+    {name:'leader',label:'审计组长',required:true},
+    {name:'period',label:'计划周期',placeholder:'如 2026.06-2026.08',required:true},
+  ];
+  const html = Form.render(fields) + `<div style="margin-top:20px;text-align:right">
+    <button class="btn" style="background:#f3f4f6;color:#374151" onclick="Modal.close(this.closest('[id^=modal]').id)">取消</button>
+    <button class="btn btn-primary" onclick="saveAudit()">创建项目</button></div>`;
+  Modal.show('➕ 新建审计项目', html, {width:'560px'});
+}
+
+function saveAudit() {
+  const data = Form.getData();
+  if (!data.name || !data.leader) { Modal.toast('请填写必填项', 'warning'); return; }
+  const list = DB.get('aud_projects');
+  list.unshift({...data, id:DB.genId('AUD'), progress:0, status:'计划中'});
+  DB.set('aud_projects', list);
+  document.querySelectorAll('[id^=modal-]').forEach(m=>m.remove());
+  Modal.toast(`✅ 审计项目「${data.name}」已创建`); renderContent();
+}
+
+function updateAuditProgress(id) {
+  const p = DB.get('aud_projects').find(i=>i.id===id);
+  if (!p) return;
+  const html = `<div style="margin-bottom:16px">
+    <label style="display:block;font-size:13px;color:#4b5563;margin-bottom:6px;font-weight:500">当前进度：${p.progress}%</label>
+    <input type="range" id="audit-progress" min="0" max="100" value="${p.progress}" style="width:100%" oninput="document.getElementById('ap-val').textContent=this.value+'%'">
+    <div style="text-align:center;font-size:24px;font-weight:700;color:var(--primary);margin-top:8px" id="ap-val">${p.progress}%</div>
+  </div>`;
+  Modal.show(`更新进度 - ${p.name}`, html, {width:'420px', footer:`<button class="btn" style="background:#f3f4f6;color:#374151" onclick="Modal.close(this.closest('[id^=modal]').id)">取消</button><button class="btn btn-primary" onclick="saveAuditProgress('${id}')">保存</button>`});
+}
+
+function saveAuditProgress(id) {
+  const val = parseInt(document.getElementById('audit-progress').value);
+  const list = DB.get('aud_projects');
+  const p = list.find(i=>i.id===id);
+  if (p) { p.progress = val; p.status = val >= 100 ? '已完成' : val > 0 ? '实施中' : '计划中'; DB.set('aud_projects', list); document.querySelectorAll('[id^=modal-]').forEach(m=>m.remove()); Modal.toast(`✅ 进度更新为 ${val}%`); renderContent(); }
+}
+
+// ===== 问题台账 =====
+function renderIssue(el) {
+  const list = DB.get('aud_issues');
+  el.innerHTML = `
+    <div class="portal-stats" style="margin-bottom:20px">
+      <div class="stat-card"><div class="label">总问题数</div><div class="value">${list.length}</div></div>
+      <div class="stat-card red"><div class="label">未整改</div><div class="value">${list.filter(i=>i.status==='未整改').length}</div></div>
+      <div class="stat-card orange"><div class="label">整改中</div><div class="value">${list.filter(i=>i.status==='整改中').length}</div></div>
+      <div class="stat-card green"><div class="label">已整改</div><div class="value">${list.filter(i=>i.status==='已整改').length}</div></div>
+    </div>
+    <div class="card"><div class="card-body">
+      <table><thead><tr><th>编号</th><th>来源项目</th><th>问题描述</th><th>风险等级</th><th>责任部门</th><th>整改期限</th><th>状态</th><th>操作</th></tr></thead>
+      <tbody>${list.map(i=>`<tr>
+        <td>${i.id}</td><td style="font-size:12px">${i.source}</td><td style="max-width:250px">${i.desc}</td>
+        <td><span class="status ${i.risk==='高'?'danger':i.risk==='中'?'warning':'pending'}">${i.risk}</span></td>
+        <td>${i.dept}</td><td>${i.deadline}</td>
+        <td><span class="status ${i.status==='已整改'?'approved':i.status==='整改中'?'warning':'pending'}">${i.status}</span></td>
+        <td><a href="#" onclick="updateIssueStatus('${i.id}');return false" style="color:var(--primary);font-size:13px;text-decoration:none">更新</a></td>
+      </tr>`).join('')}</tbody></table>
+    </div></div>`;
+}
+
+function showNewIssue() {
+  const fields = [
+    {name:'source',label:'来源审计项目',required:true},
+    {name:'desc',label:'问题描述',type:'textarea',full:true,required:true},
+    {name:'risk',label:'风险等级',type:'select',options:['高','中','低'],required:true},
+    {name:'dept',label:'责任部门',type:'select',options:['采购部','财务管理部','项目交付部','法务合规部','行政综合部','技术研发部'],required:true},
+    {name:'deadline',label:'整改期限',type:'date',required:true},
+  ];
+  const html = Form.render(fields) + `<div style="margin-top:20px;text-align:right">
+    <button class="btn" style="background:#f3f4f6;color:#374151" onclick="Modal.close(this.closest('[id^=modal]').id)">取消</button>
+    <button class="btn btn-primary" onclick="saveIssue()">录入问题</button></div>`;
+  Modal.show('➕ 录入审计问题', html, {width:'560px'});
+}
+
+function saveIssue() {
+  const data = Form.getData();
+  if (!data.source || !data.desc) { Modal.toast('请填写必填项', 'warning'); return; }
+  const list = DB.get('aud_issues');
+  list.unshift({...data, id:DB.genId('WH'), status:'未整改'});
+  DB.set('aud_issues', list);
+  document.querySelectorAll('[id^=modal-]').forEach(m=>m.remove());
+  Modal.toast('✅ 审计问题已录入'); renderContent();
+}
+
+function updateIssueStatus(id) {
+  const issue = DB.get('aud_issues').find(i=>i.id===id);
+  if (!issue) return;
+  const html = `<div style="margin-bottom:12px">
+    <p style="font-size:14px;color:var(--gray-700)">${issue.desc}</p>
+    <p style="font-size:12px;color:var(--gray-400);margin-top:4px">责任部门：${issue.dept} | 整改期限：${issue.deadline}</p>
+  </div>
+  <div><label style="display:block;font-size:13px;color:#4b5563;margin-bottom:6px;font-weight:500">整改状态</label>
+    <select id="issue-status" style="width:100%;padding:8px 12px;border:1px solid #d1d5db;border-radius:6px">
+      <option ${issue.status==='未整改'?'selected':''}>未整改</option>
+      <option ${issue.status==='整改中'?'selected':''}>整改中</option>
+      <option ${issue.status==='已整改'?'selected':''}>已整改</option>
+    </select></div>
+  <div style="margin-top:12px"><label style="display:block;font-size:13px;color:#4b5563;margin-bottom:6px;font-weight:500">整改说明</label>
+    <textarea id="issue-note" rows="3" style="width:100%;padding:8px 12px;border:1px solid #d1d5db;border-radius:6px" placeholder="填写整改情况说明..."></textarea></div>`;
+  Modal.show(`更新问题状态 - ${id}`, html, {width:'520px', footer:`<button class="btn" style="background:#f3f4f6;color:#374151" onclick="Modal.close(this.closest('[id^=modal]').id)">取消</button><button class="btn btn-primary" onclick="saveIssueStatus('${id}')">保存</button>`});
+}
+
+function saveIssueStatus(id) {
+  const list = DB.get('aud_issues');
+  const item = list.find(i=>i.id===id);
+  if (item) { item.status = document.getElementById('issue-status').value; DB.set('aud_issues', list); document.querySelectorAll('[id^=modal-]').forEach(m=>m.remove()); Modal.toast('✅ 问题状态已更新'); renderContent(); }
+}
+
+renderContent();
+</script>
 </body>
 </html>
