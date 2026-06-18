@@ -472,25 +472,183 @@ function renderSalary(el){
 }
 
 // ===== 社保公积金 =====
+const socSecEmployees=[
+  {id:'HX001',name:'张伟',gender:'男',dept:'技术研发部',salary:18500,pensionBase:18500,pensionPersonal:1480.0,pensionCompany:2960.0,medicalPersonal:370.0,medicalCompany:1813.0,unemploymentPersonal:92.5,unemploymentCompany:92.5,injuryCompany:74.0,maternityCompany:148.0,housingBase:18500,housingPersonal:2220.0,housingCompany:2220.0,totalPersonal:4162.5,totalCompany:7307.5,total:11470.0},
+  {id:'HX002',name:'李娜',gender:'女',dept:'市场营销部',salary:25000,pensionBase:25000,pensionPersonal:2000.0,pensionCompany:4000.0,medicalPersonal:500.0,medicalCompany:2450.0,unemploymentPersonal:125.0,unemploymentCompany:125.0,injuryCompany:100.0,maternityCompany:200.0,housingBase:25000,housingPersonal:3000.0,housingCompany:3000.0,totalPersonal:5625.0,totalCompany:9875.0,total:15500.0},
+  {id:'HX003',name:'王强',gender:'男',dept:'生产制造部',salary:15000,pensionBase:15000,pensionPersonal:1200.0,pensionCompany:2400.0,medicalPersonal:300.0,medicalCompany:1470.0,unemploymentPersonal:75.0,unemploymentCompany:75.0,injuryCompany:60.0,maternityCompany:120.0,housingBase:15000,housingPersonal:1800.0,housingCompany:1800.0,totalPersonal:3375.0,totalCompany:5925.0,total:9300.0},
+  {id:'HX004',name:'刘芳',gender:'女',dept:'财务管理部',salary:20000,pensionBase:20000,pensionPersonal:1600.0,pensionCompany:3200.0,medicalPersonal:400.0,medicalCompany:1960.0,unemploymentPersonal:100.0,unemploymentCompany:100.0,injuryCompany:80.0,maternityCompany:160.0,housingBase:20000,housingPersonal:2400.0,housingCompany:2400.0,totalPersonal:4500.0,totalCompany:7900.0,total:12400.0},
+  {id:'HX005',name:'陈明',gender:'男',dept:'项目交付部',salary:16000,pensionBase:16000,pensionPersonal:1280.0,pensionCompany:2560.0,medicalPersonal:320.0,medicalCompany:1568.0,unemploymentPersonal:80.0,unemploymentCompany:80.0,injuryCompany:64.0,maternityCompany:128.0,housingBase:16000,housingPersonal:1920.0,housingCompany:1920.0,totalPersonal:3600.0,totalCompany:6320.0,total:9920.0},
+  {id:'HX006',name:'赵丽',gender:'女',dept:'人力资源部',salary:14000,pensionBase:14000,pensionPersonal:1120.0,pensionCompany:2240.0,medicalPersonal:280.0,medicalCompany:1372.0,unemploymentPersonal:70.0,unemploymentCompany:70.0,injuryCompany:56.0,maternityCompany:112.0,housingBase:14000,housingPersonal:1680.0,housingCompany:1680.0,totalPersonal:3150.0,totalCompany:5530.0,total:8680.0},
+  {id:'HX007',name:'孙磊',gender:'男',dept:'行政综合部',salary:13000,pensionBase:13000,pensionPersonal:1040.0,pensionCompany:2080.0,medicalPersonal:260.0,medicalCompany:1274.0,unemploymentPersonal:65.0,unemploymentCompany:65.0,injuryCompany:52.0,maternityCompany:104.0,housingBase:13000,housingPersonal:1560.0,housingCompany:1560.0,totalPersonal:2925.0,totalCompany:5135.0,total:8060.0},
+  {id:'HX008',name:'周婷',gender:'女',dept:'技术研发部',salary:15500,pensionBase:15500,pensionPersonal:1240.0,pensionCompany:2480.0,medicalPersonal:310.0,medicalCompany:1519.0,unemploymentPersonal:77.5,unemploymentCompany:77.5,injuryCompany:62.0,maternityCompany:124.0,housingBase:15500,housingPersonal:1860.0,housingCompany:1860.0,totalPersonal:3487.5,totalCompany:6122.5,total:9610.0},
+  {id:'HX009',name:'吴刚',gender:'男',dept:'法务合规部',salary:16000,pensionBase:16000,pensionPersonal:1280.0,pensionCompany:2560.0,medicalPersonal:320.0,medicalCompany:1568.0,unemploymentPersonal:80.0,unemploymentCompany:80.0,injuryCompany:64.0,maternityCompany:128.0,housingBase:16000,housingPersonal:1920.0,housingCompany:1920.0,totalPersonal:3600.0,totalCompany:6320.0,total:9920.0},
+  {id:'HX010',name:'郑雪',gender:'女',dept:'市场营销部',salary:17000,pensionBase:17000,pensionPersonal:1360.0,pensionCompany:2720.0,medicalPersonal:340.0,medicalCompany:1666.0,unemploymentPersonal:85.0,unemploymentCompany:85.0,injuryCompany:68.0,maternityCompany:136.0,housingBase:17000,housingPersonal:2040.0,housingCompany:2040.0,totalPersonal:3825.0,totalCompany:6715.0,total:10540.0},
+  {id:'HX011',name:'黄海',gender:'男',dept:'生产制造部',salary:9500,pensionBase:9500,pensionPersonal:760.0,pensionCompany:1520.0,medicalPersonal:190.0,medicalCompany:931.0,unemploymentPersonal:47.5,unemploymentCompany:47.5,injuryCompany:38.0,maternityCompany:76.0,housingBase:9500,housingPersonal:1140.0,housingCompany:1140.0,totalPersonal:2137.5,totalCompany:3752.5,total:5890.0},
+  {id:'HX012',name:'马丽',gender:'女',dept:'财务管理部',salary:11000,pensionBase:11000,pensionPersonal:880.0,pensionCompany:1760.0,medicalPersonal:220.0,medicalCompany:1078.0,unemploymentPersonal:55.0,unemploymentCompany:55.0,injuryCompany:44.0,maternityCompany:88.0,housingBase:11000,housingPersonal:1320.0,housingCompany:1320.0,totalPersonal:2475.0,totalCompany:4345.0,total:6820.0},
+  {id:'HX013',name:'李强',gender:'男',dept:'技术研发部',salary:19000,pensionBase:19000,pensionPersonal:1520.0,pensionCompany:3040.0,medicalPersonal:380.0,medicalCompany:1862.0,unemploymentPersonal:95.0,unemploymentCompany:95.0,injuryCompany:76.0,maternityCompany:152.0,housingBase:19000,housingPersonal:2280.0,housingCompany:2280.0,totalPersonal:4275.0,totalCompany:7505.0,total:11780.0},
+  {id:'HX014',name:'王芳',gender:'女',dept:'质量管理部',salary:12500,pensionBase:12500,pensionPersonal:1000.0,pensionCompany:2000.0,medicalPersonal:250.0,medicalCompany:1225.0,unemploymentPersonal:62.5,unemploymentCompany:62.5,injuryCompany:50.0,maternityCompany:100.0,housingBase:12500,housingPersonal:1500.0,housingCompany:1500.0,totalPersonal:2812.5,totalCompany:4937.5,total:7750.0},
+  {id:'HX015',name:'刘洋',gender:'男',dept:'采购部',salary:11500,pensionBase:11500,pensionPersonal:920.0,pensionCompany:1840.0,medicalPersonal:230.0,medicalCompany:1127.0,unemploymentPersonal:57.5,unemploymentCompany:57.5,injuryCompany:46.0,maternityCompany:92.0,housingBase:11500,housingPersonal:1380.0,housingCompany:1380.0,totalPersonal:2587.5,totalCompany:4542.5,total:7130.0},
+  {id:'HX016',name:'陈丽',gender:'女',dept:'市场营销部',salary:16500,pensionBase:16500,pensionPersonal:1320.0,pensionCompany:2640.0,medicalPersonal:330.0,medicalCompany:1617.0,unemploymentPersonal:82.5,unemploymentCompany:82.5,injuryCompany:66.0,maternityCompany:132.0,housingBase:16500,housingPersonal:1980.0,housingCompany:1980.0,totalPersonal:3712.5,totalCompany:6517.5,total:10230.0},
+  {id:'HX017',name:'赵刚',gender:'男',dept:'技术研发部',salary:22000,pensionBase:22000,pensionPersonal:1760.0,pensionCompany:3520.0,medicalPersonal:440.0,medicalCompany:2156.0,unemploymentPersonal:110.0,unemploymentCompany:110.0,injuryCompany:88.0,maternityCompany:176.0,housingBase:22000,housingPersonal:2640.0,housingCompany:2640.0,totalPersonal:4950.0,totalCompany:8690.0,total:13640.0},
+  {id:'HX018',name:'孙雪',gender:'女',dept:'人力资源部',salary:13500,pensionBase:13500,pensionPersonal:1080.0,pensionCompany:2160.0,medicalPersonal:270.0,medicalCompany:1323.0,unemploymentPersonal:67.5,unemploymentCompany:67.5,injuryCompany:54.0,maternityCompany:108.0,housingBase:13500,housingPersonal:1620.0,housingCompany:1620.0,totalPersonal:3037.5,totalCompany:5332.5,total:8370.0},
+  {id:'HX019',name:'周明',gender:'男',dept:'生产制造部',salary:10000,pensionBase:10000,pensionPersonal:800.0,pensionCompany:1600.0,medicalPersonal:200.0,medicalCompany:980.0,unemploymentPersonal:50.0,unemploymentCompany:50.0,injuryCompany:40.0,maternityCompany:80.0,housingBase:10000,housingPersonal:1200.0,housingCompany:1200.0,totalPersonal:2250.0,totalCompany:3950.0,total:6200.0},
+  {id:'HX020',name:'吴芳',gender:'女',dept:'行政综合部',salary:10500,pensionBase:10500,pensionPersonal:840.0,pensionCompany:1680.0,medicalPersonal:210.0,medicalCompany:1029.0,unemploymentPersonal:52.5,unemploymentCompany:52.5,injuryCompany:42.0,maternityCompany:84.0,housingBase:10500,housingPersonal:1260.0,housingCompany:1260.0,totalPersonal:2362.5,totalCompany:4147.5,total:6510.0},
+  {id:'HX021',name:'郑强',gender:'男',dept:'法务合规部',salary:18000,pensionBase:18000,pensionPersonal:1440.0,pensionCompany:2880.0,medicalPersonal:360.0,medicalCompany:1764.0,unemploymentPersonal:90.0,unemploymentCompany:90.0,injuryCompany:72.0,maternityCompany:144.0,housingBase:18000,housingPersonal:2160.0,housingCompany:2160.0,totalPersonal:4050.0,totalCompany:7110.0,total:11160.0},
+  {id:'HX022',name:'黄丽',gender:'女',dept:'质量管理部',salary:12000,pensionBase:12000,pensionPersonal:960.0,pensionCompany:1920.0,medicalPersonal:240.0,medicalCompany:1176.0,unemploymentPersonal:60.0,unemploymentCompany:60.0,injuryCompany:48.0,maternityCompany:96.0,housingBase:12000,housingPersonal:1440.0,housingCompany:1440.0,totalPersonal:2700.0,totalCompany:4740.0,total:7440.0},
+  {id:'HX023',name:'马强',gender:'男',dept:'采购部',salary:10800,pensionBase:10800,pensionPersonal:864.0,pensionCompany:1728.0,medicalPersonal:216.0,medicalCompany:1058.4,unemploymentPersonal:54.0,unemploymentCompany:54.0,injuryCompany:43.2,maternityCompany:86.4,housingBase:10800,housingPersonal:1296.0,housingCompany:1296.0,totalPersonal:2430.0,totalCompany:4266.0,total:6696.0},
+  {id:'HX024',name:'李芳',gender:'女',dept:'技术研发部',salary:17500,pensionBase:17500,pensionPersonal:1400.0,pensionCompany:2800.0,medicalPersonal:350.0,medicalCompany:1715.0,unemploymentPersonal:87.5,unemploymentCompany:87.5,injuryCompany:70.0,maternityCompany:140.0,housingBase:17500,housingPersonal:2100.0,housingCompany:2100.0,totalPersonal:3937.5,totalCompany:6912.5,total:10850.0},
+  {id:'HX025',name:'王磊',gender:'男',dept:'项目交付部',salary:14500,pensionBase:14500,pensionPersonal:1160.0,pensionCompany:2320.0,medicalPersonal:290.0,medicalCompany:1421.0,unemploymentPersonal:72.5,unemploymentCompany:72.5,injuryCompany:58.0,maternityCompany:116.0,housingBase:14500,housingPersonal:1740.0,housingCompany:1740.0,totalPersonal:3262.5,totalCompany:5727.5,total:8990.0},
+  {id:'HX026',name:'赵敏',gender:'女',dept:'财务管理部',salary:16000,pensionBase:16000,pensionPersonal:1280.0,pensionCompany:2560.0,medicalPersonal:320.0,medicalCompany:1568.0,unemploymentPersonal:80.0,unemploymentCompany:80.0,injuryCompany:64.0,maternityCompany:128.0,housingBase:16000,housingPersonal:1920.0,housingCompany:1920.0,totalPersonal:3600.0,totalCompany:6320.0,total:9920.0},
+  {id:'HX027',name:'孙强',gender:'男',dept:'生产制造部',salary:11000,pensionBase:11000,pensionPersonal:880.0,pensionCompany:1760.0,medicalPersonal:220.0,medicalCompany:1078.0,unemploymentPersonal:55.0,unemploymentCompany:55.0,injuryCompany:44.0,maternityCompany:88.0,housingBase:11000,housingPersonal:1320.0,housingCompany:1320.0,totalPersonal:2475.0,totalCompany:4345.0,total:6820.0},
+  {id:'HX028',name:'周华',gender:'女',dept:'市场营销部',salary:15000,pensionBase:15000,pensionPersonal:1200.0,pensionCompany:2400.0,medicalPersonal:300.0,medicalCompany:1470.0,unemploymentPersonal:75.0,unemploymentCompany:75.0,injuryCompany:60.0,maternityCompany:120.0,housingBase:15000,housingPersonal:1800.0,housingCompany:1800.0,totalPersonal:3375.0,totalCompany:5925.0,total:9300.0},
+  {id:'HX029',name:'吴丽',gender:'女',dept:'人力资源部',salary:13000,pensionBase:13000,pensionPersonal:1040.0,pensionCompany:2080.0,medicalPersonal:260.0,medicalCompany:1274.0,unemploymentPersonal:65.0,unemploymentCompany:65.0,injuryCompany:52.0,maternityCompany:104.0,housingBase:13000,housingPersonal:1560.0,housingCompany:1560.0,totalPersonal:2925.0,totalCompany:5135.0,total:8060.0},
+  {id:'HX030',name:'郑伟',gender:'男',dept:'技术研发部',salary:21000,pensionBase:21000,pensionPersonal:1680.0,pensionCompany:3360.0,medicalPersonal:420.0,medicalCompany:2058.0,unemploymentPersonal:105.0,unemploymentCompany:105.0,injuryCompany:84.0,maternityCompany:168.0,housingBase:21000,housingPersonal:2520.0,housingCompany:2520.0,totalPersonal:4725.0,totalCompany:8295.0,total:13020.0},
+  {id:'HX031',name:'黄磊',gender:'男',dept:'行政综合部',salary:11500,pensionBase:11500,pensionPersonal:920.0,pensionCompany:1840.0,medicalPersonal:230.0,medicalCompany:1127.0,unemploymentPersonal:57.5,unemploymentCompany:57.5,injuryCompany:46.0,maternityCompany:92.0,housingBase:11500,housingPersonal:1380.0,housingCompany:1380.0,totalPersonal:2587.5,totalCompany:4542.5,total:7130.0},
+  {id:'HX032',name:'马芳',gender:'女',dept:'法务合规部',salary:14000,pensionBase:14000,pensionPersonal:1120.0,pensionCompany:2240.0,medicalPersonal:280.0,medicalCompany:1372.0,unemploymentPersonal:70.0,unemploymentCompany:70.0,injuryCompany:56.0,maternityCompany:112.0,housingBase:14000,housingPersonal:1680.0,housingCompany:1680.0,totalPersonal:3150.0,totalCompany:5530.0,total:8680.0},
+];
+if(!DB.get('hr_socsec').length)DB.set('hr_socsec',socSecEmployees);
+const socSecMonths=[
+  {month:'2026-06',totalPersonal:839671.56,totalCompany:1203549.86,bankDeducted:2045811.33,status:'待申报',confirmStatus:'待确认'},
+  {month:'2026-05',totalPersonal:867857.67,totalCompany:1268986.08,bankDeducted:2139295.89,status:'已完成',confirmStatus:'已完成'},
+  {month:'2026-04',totalPersonal:822857.39,totalCompany:1228430.53,bankDeducted:2054219.89,status:'已完成',confirmStatus:'已完成'},
+  {month:'2026-03',totalPersonal:828043.85,totalCompany:1265235.85,bankDeducted:2091979.44,status:'已完成',confirmStatus:'已完成'},
+  {month:'2026-02',totalPersonal:847578.67,totalCompany:1292570.7,bankDeducted:2140974.92,status:'已完成',confirmStatus:'已完成'},
+  {month:'2026-01',totalPersonal:820167.13,totalCompany:1211918.72,bankDeducted:2031058.98,status:'已完成',confirmStatus:'已完成'},
+];
+if(!DB.get('hr_socsec_months').length)DB.set('hr_socsec_months',socSecMonths);
+const socSecBankRecords=[
+  {date:'2026-06-20',month:'2026-06',desc:'社保公积金代扣-2026-06',amount:2103261.03,status:'待扣款',bank:'工商银行0128****6789',batchNo:'SB202606001'},
+  {date:'2026-05-20',month:'2026-05',desc:'社保公积金代扣-2026-05',amount:2055384.96,status:'已扣款',bank:'工商银行0128****6789',batchNo:'SB202605001'},
+  {date:'2026-04-20',month:'2026-04',desc:'社保公积金代扣-2026-04',amount:2068209.01,status:'已扣款',bank:'工商银行0128****6789',batchNo:'SB202604001'},
+  {date:'2026-03-20',month:'2026-03',desc:'社保公积金代扣-2026-03',amount:2141931.51,status:'已扣款',bank:'工商银行0128****6789',batchNo:'SB202603001'},
+  {date:'2026-02-20',month:'2026-02',desc:'社保公积金代扣-2026-02',amount:2027161.83,status:'已扣款',bank:'工商银行0128****6789',batchNo:'SB202602001'},
+  {date:'2026-01-20',month:'2026-01',desc:'社保公积金代扣-2026-01',amount:2077992.44,status:'已扣款',bank:'工商银行0128****6789',batchNo:'SB202601001'},
+];
+
 function renderSocial(el){
-  el.innerHTML=`<div class="card"><div class="card-header"><h3>🏥 2026年社保公积金基数</h3></div><div class="card-body padded">
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px">
-      <div style="padding:16px;background:var(--gray-50);border-radius:8px;text-align:center"><div style="font-size:12px;color:var(--gray-400)">养老保险（个人）</div><div style="font-size:20px;font-weight:700;color:var(--primary)">8%</div></div>
-      <div style="padding:16px;background:var(--gray-50);border-radius:8px;text-align:center"><div style="font-size:12px;color:var(--gray-400)">医疗保险（个人）</div><div style="font-size:20px;font-weight:700;color:var(--primary)">2%</div></div>
-      <div style="padding:16px;background:var(--gray-50);border-radius:8px;text-align:center"><div style="font-size:12px;color:var(--gray-400)">失业保险（个人）</div><div style="font-size:20px;font-weight:700;color:var(--primary)">0.5%</div></div>
-      <div style="padding:16px;background:var(--gray-50);border-radius:8px;text-align:center"><div style="font-size:12px;color:var(--gray-400)">住房公积金（个人）</div><div style="font-size:20px;font-weight:700;color:var(--success)">12%</div></div>
-      <div style="padding:16px;background:var(--gray-50);border-radius:8px;text-align:center"><div style="font-size:12px;color:var(--gray-400)">社保基数上限</div><div style="font-size:20px;font-weight:700">¥35,283</div></div>
-      <div style="padding:16px;background:var(--gray-50);border-radius:8px;text-align:center"><div style="font-size:12px;color:var(--gray-400)">社保基数下限</div><div style="font-size:20px;font-weight:700">¥6,326</div></div>
+  const socList=DB.get('hr_socsec');
+  const months=DB.get('hr_socsec_months');
+  const tp=months[0]?months[0].totalPersonal:0;
+  const tc=months[0]?months[0].totalCompany:0;
+  el.innerHTML=`<div class="portal-stats" style="margin-bottom:20px">
+    <div class="stat-card"><div class="label">参保人数</div><div class="value">${socList.length}</div></div>
+    <div class="stat-card green"><div class="label">本月个人缴纳</div><div class="value">¥${(tp/10000).toFixed(1)}万</div></div>
+    <div class="stat-card orange"><div class="label">本月单位缴纳</div><div class="value">¥${(tc/10000).toFixed(1)}万</div></div>
+    <div class="stat-card"><div class="label">缴费基数上限</div><div class="value">¥35,283</div></div>
+  </div>
+  <div class="card" style="margin-bottom:20px"><div class="card-header"><h3>📋 缴费比例</h3></div><div class="card-body">
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px">
+      <div style="padding:12px;background:var(--gray-50);border-radius:8px;text-align:center"><div style="font-size:12px;color:var(--gray-400)">养老保险（个人）</div><div style="font-size:18px;font-weight:700;color:var(--primary)">8%</div></div>
+      <div style="padding:12px;background:var(--gray-50);border-radius:8px;text-align:center"><div style="font-size:12px;color:var(--gray-400)">医疗保险（个人）</div><div style="font-size:18px;font-weight:700;color:var(--primary)">2%</div></div>
+      <div style="padding:12px;background:var(--gray-50);border-radius:8px;text-align:center"><div style="font-size:12px;color:var(--gray-400)">失业保险（个人）</div><div style="font-size:18px;font-weight:700;color:var(--primary)">0.5%</div></div>
+      <div style="padding:12px;background:var(--gray-50);border-radius:8px;text-align:center"><div style="font-size:12px;color:var(--gray-400)">住房公积金（个人）</div><div style="font-size:18px;font-weight:700;color:var(--success)">12%</div></div>
+      <div style="padding:12px;background:var(--gray-50);border-radius:8px;text-align:center"><div style="font-size:12px;color:var(--gray-400)">社保基数上限</div><div style="font-size:18px;font-weight:700">¥35,283</div></div>
+      <div style="padding:12px;background:var(--gray-50);border-radius:8px;text-align:center"><div style="font-size:12px;color:var(--gray-400)">社保基数下限</div><div style="font-size:18px;font-weight:700">¥6,326</div></div>
     </div>
     <h4 style="font-size:14px;margin-bottom:12px">企业承担比例</h4>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
-      <div style="padding:12px;border:1px solid var(--gray-200);border-radius:8px;text-align:center"><div style="font-size:13px;color:var(--gray-600)">养老保险（企业）</div><div style="font-size:16px;font-weight:700">16%</div></div>
-      <div style="padding:12px;border:1px solid var(--gray-200);border-radius:8px;text-align:center"><div style="font-size:13px;color:var(--gray-600)">医疗保险（企业）</div><div style="font-size:16px;font-weight:700">9.8%</div></div>
-      <div style="padding:12px;border:1px solid var(--gray-200);border-radius:8px;text-align:center"><div style="font-size:13px;color:var(--gray-600)">工伤保险（企业）</div><div style="font-size:16px;font-weight:700">0.4%</div></div>
-    </div></div></div>`;
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+      <div style="padding:10px;border:1px solid var(--gray-200);border-radius:8px;text-align:center"><div style="font-size:12px;color:var(--gray-600)">养老保险（企业）</div><div style="font-size:15px;font-weight:700">16%</div></div>
+      <div style="padding:10px;border:1px solid var(--gray-200);border-radius:8px;text-align:center"><div style="font-size:12px;color:var(--gray-600)">医疗保险（企业）</div><div style="font-size:15px;font-weight:700">9.8%</div></div>
+      <div style="padding:10px;border:1px solid var(--gray-200);border-radius:8px;text-align:center"><div style="font-size:12px;color:var(--gray-600)">工伤保险（企业）</div><div style="font-size:15px;font-weight:700">0.4%</div></div>
+      <div style="padding:10px;border:1px solid var(--gray-200);border-radius:8px;text-align:center"><div style="font-size:12px;color:var(--gray-600)">生育保险（企业）</div><div style="font-size:15px;font-weight:700">0.8%</div></div>
+      <div style="padding:10px;border:1px solid var(--gray-200);border-radius:8px;text-align:center"><div style="font-size:12px;color:var(--gray-600)">失业保险（企业）</div><div style="font-size:15px;font-weight:700">0.5%</div></div>
+      <div style="padding:10px;border:1px solid var(--gray-200);border-radius:8px;text-align:center"><div style="font-size:12px;color:var(--gray-600)">住房公积金（企业）</div><div style="font-size:15px;font-weight:700">12%</div></div>
+    </div>
+  </div></div>
+  <div class="card" style="margin-bottom:20px"><div class="card-header" style="display:flex;justify-content:space-between;align-items:center"><h3>📊 每月申报与银行扣款</h3>
+    <button class="btn btn-primary" onclick="showNewSocSecMonth()">➕ 发起月度申报</button></div><div class="card-body">
+    <table><thead><tr><th>所属月份</th><th>个人缴纳</th><th>单位缴纳</th><th>应缴总额</th><th>银行扣款</th><th>申报状态</th><th>财务确认</th><th>操作</th></tr></thead>
+    <tbody>${socSecMonths.map(m=>`<tr><td><strong>${m.month}</strong></td><td>¥${m.totalPersonal.toLocaleString()}</td><td>¥${m.totalCompany.toLocaleString()}</td>
+    <td style="font-weight:600">¥${(m.totalPersonal+m.totalCompany).toLocaleString()}</td><td>¥${m.bankDeducted.toLocaleString()}</td>
+    <td><span class="status ${m.status==='已完成'?'approved':'pending'}">${m.status}</span></td>
+    <td><span class="status ${m.confirmStatus==='已完成'?'approved':'processing'}">${m.confirmStatus}</span></td>
+    <td>${m.status==='待申报'?`<button class="btn btn-sm btn-primary" onclick="doSocSecDeclare('${m.month}')">申报</button>`:
+    m.confirmStatus==='待确认'?`<button class="btn btn-sm btn-success" onclick="doSocSecConfirm('${m.month}')">确认入账</button>`:
+    `<a href="#" onclick="viewSocSecMonth('${m.month}');return false" style="color:var(--primary);font-size:13px;text-decoration:none">详情</a>`}</td></tr>`).join('')}</tbody></table>
+  </div></div>
+  <div class="card" style="margin-bottom:20px"><div class="card-header"><h3>🔗 与财务系统对接流水</h3></div><div class="card-body">
+    <table><thead><tr><th>日期</th><th>摘要</th><th>金额</th><th>银行账号</th><th>批次号</th><th>状态</th></tr></thead>
+    <tbody>${socSecBankRecords.map(b=>`<tr><td>${b.date}</td><td>${b.desc}</td><td style="font-weight:600">¥${b.amount.toLocaleString()}</td><td>${b.bank}</td><td>${b.batchNo}</td>
+    <td><span class="status ${b.status==='已扣款'?'approved':'processing'}">${b.status}</span></td></tr>`).join('')}</tbody></table>
+  </div></div>
+  <div class="card"><div class="card-header" style="display:flex;justify-content:space-between;align-items:center"><h3>👥 员工社保公积金明细</h3>
+    <button class="btn btn-primary" onclick="doSalaryCalc()">🧮 批量核算工资</button></div>
+    <div class="filter-bar"><input type="text" id="soc-sec-kw" placeholder="搜索姓名/部门..." oninput="renderSocSecList()" style="padding:6px 12px;border:1px solid var(--gray-200);border-radius:6px;font-size:13px;width:200px"></div>
+    <div class="card-body"><div id="soc-sec-list"></div></div></div>`;
+  renderSocSecList();
+}
+function renderSocSecList(){
+  const socList=DB.get('hr_socsec');
+  const kw=(document.getElementById('soc-sec-kw')?.value||'').toLowerCase();
+  let list=socList;
+  if(kw)list=list.filter(i=>i.name.toLowerCase().includes(kw)||i.dept.toLowerCase().includes(kw));
+  document.getElementById('soc-sec-list').innerHTML=`<table><thead><tr><th>工号</th><th>姓名</th><th>部门</th><th>工资基数</th><th>养老(个人)</th><th>医疗(个人)</th><th>公积金(个人)</th><th>个人小计</th><th>单位小计</th><th>操作</th></tr></thead>
+  <tbody>${list.map(e=>`<tr><td>${e.id}</td><td><strong>${e.name}</strong></td><td>${e.dept}</td><td>¥${e.salary.toLocaleString()}</td>
+  <td>¥${e.pensionPersonal.toLocaleString()}</td><td>¥${e.medicalPersonal.toLocaleString()}</td><td>¥${e.housingPersonal.toLocaleString()}</td>
+  <td style="font-weight:600;color:var(--danger)">¥${e.totalPersonal.toLocaleString()}</td><td style="font-weight:600;color:var(--warning)">¥${e.totalCompany.toLocaleString()}</td>
+  <td><a href="#" onclick="viewSocSecEmployee('${e.id}');return false" style="color:var(--primary);font-size:13px;text-decoration:none">明细</a></td></tr>`).join('')}</tbody></table>
+  <div style="padding:16px;text-align:center;color:var(--gray-400);font-size:13px">共 ${list.length} 条 | 个人合计 ¥${list.reduce((s,e)=>s+e.totalPersonal,0).toLocaleString()} | 单位合计 ¥${list.reduce((s,e)=>s+e.totalCompany,0).toLocaleString()}</div>`;
+}
+function viewSocSecEmployee(id){
+  const e=socSecEmployees.find(x=>x.id===id);if(!e)return;
+  const housing=Math.round(e.salary*0.12);const tax=Math.max(0,Math.round((e.salary-e.totalPersonal-housing-5000)*0.1));const real=e.salary-e.totalPersonal-housing-tax;
+  const html=`<div><div style="background:linear-gradient(135deg,#059669,#10b981);color:white;padding:20px;border-radius:10px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center">
+    <div><div style="font-size:18px;font-weight:700">${e.name}</div><div style="opacity:0.8;font-size:13px">${e.dept} | ${e.id} | 月工资 ¥${e.salary.toLocaleString()}</div></div>
+    <div style="text-align:right"><div style="font-size:12px;opacity:0.7">月缴费总额</div><div style="font-size:22px;font-weight:700">¥${e.total.toLocaleString()}</div></div></div>
+    <h4 style="font-size:14px;margin-bottom:10px;color:var(--gray-700)">养老/医疗/失业保险</h4>
+    <table><thead><tr><th>险种</th><th>缴费基数</th><th>个人比例</th><th>个人金额</th><th>单位比例</th><th>单位金额</th></tr></thead>
+    <tbody><tr><td>养老保险</td><td>¥${e.pensionBase.toLocaleString()}</td><td>8%</td><td style="color:var(--danger)">¥${e.pensionPersonal.toLocaleString()}</td><td>16%</td><td style="color:var(--warning)">¥${e.pensionCompany.toLocaleString()}</td></tr>
+    <tr><td>医疗保险</td><td>¥${e.pensionBase.toLocaleString()}</td><td>2%</td><td style="color:var(--danger)">¥${e.medicalPersonal.toLocaleString()}</td><td>9.8%</td><td style="color:var(--warning)">¥${e.medicalCompany.toLocaleString()}</td></tr>
+    <tr><td>失业保险</td><td>¥${e.pensionBase.toLocaleString()}</td><td>0.5%</td><td style="color:var(--danger)">¥${e.unemploymentPersonal.toLocaleString()}</td><td>0.5%</td><td style="color:var(--warning)">¥${e.unemploymentCompany.toLocaleString()}</td></tr>
+    <tr><td>工伤保险</td><td>-</td><td>-</td><td>-</td><td>0.4%</td><td style="color:var(--warning)">¥${e.injuryCompany.toLocaleString()}</td></tr>
+    <tr><td>生育保险</td><td>-</td><td>-</td><td>-</td><td>0.8%</td><td style="color:var(--warning)">¥${e.maternityCompany.toLocaleString()}</td></tr></tbody></table>
+    <h4 style="font-size:14px;margin:14px 0 10px;color:var(--gray-700)">住房公积金</h4>
+    <table><thead><tr><th>缴费基数</th><th>个人比例</th><th>个人金额</th><th>单位比例</th><th>单位金额</th></tr></thead>
+    <tbody><tr><td>¥${e.housingBase.toLocaleString()}</td><td>12%</td><td style="color:var(--danger)">¥${e.housingPersonal.toLocaleString()}</td><td>12%</td><td style="color:var(--warning)">¥${e.housingCompany.toLocaleString()}</td></tr></tbody></table>
+    <div style="margin-top:14px;padding:14px;background:var(--gray-50);border-radius:8px;display:grid;grid-template-columns:repeat(3,1fr);gap:14px;text-align:center">
+      <div><div style="font-size:11px;color:var(--gray-400)">个人合计</div><div style="font-size:17px;font-weight:700;color:var(--danger)">¥${e.totalPersonal.toLocaleString()}</div></div>
+      <div><div style="font-size:11px;color:var(--gray-400)">单位合计</div><div style="font-size:17px;font-weight:700;color:var(--warning)">¥${e.totalCompany.toLocaleString()}</div></div>
+      <div><div style="font-size:11px;color:var(--gray-400)">月缴费总额</div><div style="font-size:17px;font-weight:700;color:var(--primary)">¥${e.total.toLocaleString()}</div></div></div>
+    <div style="margin-top:14px;padding:10px;background:#dbeafe;border-radius:6px;font-size:12px;color:#1e40af">💡 <strong>工资扣款：</strong>¥${e.salary.toLocaleString()} - ¥${e.totalPersonal.toLocaleString()}(个人社保) - ¥${housing}(公积金) - ¥${tax}(个税) = <strong>¥${real.toLocaleString()}</strong></div></div>`;
+  Modal.show(`🏥 社保公积金明细 - ${e.name}`,html,{width:'620px'});
+}
+function doSocSecDeclare(month){const months=DB.get('hr_socsec_months');const m=months.find(x=>x.month===month);if(m){m.status='已完成';DB.set('hr_socsec_months',months);Modal.toast('✅ '+month+' 已申报');renderContent();}}
+function doSocSecConfirm(month){const months=DB.get('hr_socsec_months');const m=months.find(x=>x.month===month);if(m){m.confirmStatus='已完成';DB.set('hr_socsec_months',months);Modal.toast('✅ '+month+' 财务入账确认');renderContent();}}
+function viewSocSecMonth(month){
+  const m=socSecMonths.find(x=>x.month===month);if(!m)return;
+  const html=`<div><div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:14px;margin-bottom:16px">
+    <div><strong>所属月份：</strong>${m.month}</div><div><strong>状态：</strong><span class="status ${m.status==='已完成'?'approved':'pending'}">${m.status}</span></div>
+    <div><strong>个人缴纳：</strong>¥${m.totalPersonal.toLocaleString()}</div><div><strong>单位缴纳：</strong>¥${m.totalCompany.toLocaleString()}</div>
+    <div><strong>应缴总额：</strong><span style="color:var(--primary);font-weight:700">¥${(m.totalPersonal+m.totalCompany).toLocaleString()}</span></div>
+    <div><strong>银行实际扣款：</strong>¥${m.bankDeducted.toLocaleString()}</div>
+    <div><strong>差异：</strong><span style="color:${Math.abs(m.totalPersonal+m.totalCompany-m.bankDeducted)>100?'var(--danger)':'var(--success)'};font-weight:700">¥${Math.abs(m.totalPersonal+m.totalCompany-m.bankDeducted).toFixed(2)}</span></div>
+    <div><strong>财务确认：</strong>${m.confirmStatus}</div></div></div>`;
+  Modal.show('📊 月度详情 - '+m.month,html,{width:'520px'});
+}
+function showNewSocSecMonth(){
+  const html=`<div style="text-align:center;padding:20px"><div style="font-size:48px;margin-bottom:12px">📋</div>
+    <h3 style="font-size:16px;margin-bottom:8px">发起2026-07月度社保公积金申报</h3>
+    <p style="font-size:13px;color:var(--gray-500)">系统将自动从员工花名册提取最新基数</p></div>`;
+  Modal.show('📋 月度申报',html,{width:'420px',footer:`<button class="btn" style="background:#f3f4f6;color:#374151" onclick="Modal.close(this.closest('[id^=modal]').id)">取消</button><button class="btn btn-primary" onclick="confirmNewSocSecMonth()">确认申报</button>`});
+}
+function confirmNewSocSecMonth(){const months=DB.get('hr_socsec_months');months.unshift({month:'2026-07',totalPersonal:872340,totalCompany:1256780,bankDeducted:0,status:'待申报',confirmStatus:'待确认'});DB.set('hr_socsec_months',months);document.querySelectorAll('[id^=modal-]').forEach(m=>m.remove());Modal.toast('✅ 2026-07已创建');renderContent();}
+function doSalaryCalc(){
+  const socList=DB.get('hr_socsec');
+  let totalReal=0,totalTax=0,totalHousing=0;
+  let html=`<div style="max-height:55vh;overflow-y:auto"><table><thead><tr><th>姓名</th><th>工资</th><th>个人社保</th><th>公积金</th><th>个税</th><th>实发</th></tr></thead><tbody>`;
+  socList.forEach(e=>{
+    const h=Math.round(e.salary*0.12);const t=Math.max(0,Math.round((e.salary-e.totalPersonal-h-5000)*0.1));const r=e.salary-e.totalPersonal-h-t;
+    totalReal+=r;totalTax+=t;totalHousing+=h;
+    html+=`<tr><td><strong>${e.name}</strong></td><td>¥${e.salary.toLocaleString()}</td><td style="color:var(--danger)">-¥${e.totalPersonal.toLocaleString()}</td><td style="color:var(--danger)">-¥${h.toLocaleString()}</td><td style="color:var(--danger)">-¥${t.toLocaleString()}</td><td style="color:var(--success);font-weight:600">¥${r.toLocaleString()}</td></tr>`;
+  });
+  html+=`</tbody></table></div><div style="margin-top:12px;padding:12px;background:var(--gray-50);border-radius:8px;font-size:13px;display:flex;gap:24px;justify-content:center">
+    <span>实发总额：<strong style="color:var(--success)">¥${totalReal.toLocaleString()}</strong></span>
+    <span>社保扣款：<strong>¥${socList.reduce((s,e)=>s+e.totalPersonal,0).toLocaleString()}</strong></span>
+    <span>公积金扣款：<strong>¥${totalHousing.toLocaleString()}</strong></span>
+    <span>个税总额：<strong>¥${totalTax.toLocaleString()}</strong></span></div>`;
+  Modal.show('🧮 批量工资核算',html,{width:'680px'});
 }
 
-// ===== 培训管理 =====
 function renderTraining(el){
   const list=DB.get('hr_trainings');
   const totalEnrolled=Summary.calc(list,'enrolled');

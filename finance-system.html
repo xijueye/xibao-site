@@ -57,6 +57,9 @@
     <div class="menu-group"><div class="menu-title">资金管理</div>
       <a class="menu-item" href="#" onclick="switchTab('bank')"><span class="icon">🏦</span> 银行对账</a>
     </div>
+    <div class="menu-group"><div class="menu-title">结算管理</div>
+      <a class="menu-item" href="#" onclick="switchTab('settlement')"><span class="icon">💸</span> 付款结算</a>
+    </div>
   </div>
   <div class="main-content">
     <div class="page-header"><div><div class="breadcrumb">财务云系统</div><h2 id="page-title">📒 凭证管理</h2></div>
@@ -69,24 +72,70 @@
 <script src="assets/app.js"></script>
 <script>
 const defaultExpenses=[
-  {id:'BX202606001',applicant:'张伟',dept:'技术研发部',type:'差旅费',amount:8560,date:'2026-06-16',status:'待审核',items:[{desc:'北京-上海高铁票',amount:553},{desc:'上海酒店2晚',amount:1200},{desc:'出租车费',amount:180},{desc:'出差补贴',amount:600}],level:1},
-  {id:'BX202606002',applicant:'李娜',dept:'市场营销部',type:'招待费',amount:3200,date:'2026-06-15',status:'待审核',items:[{desc:'客户晚宴（全聚德）',amount:2800},{desc:'礼品',amount:400}],level:1},
-  {id:'BX202606003',applicant:'王强',dept:'生产制造部',type:'办公费',amount:1850,date:'2026-06-15',status:'待审核',items:[{desc:'文件夹、打印纸等',amount:850},{desc:'墨盒硒鼓',amount:1000}],level:1},
-  {id:'BX202606004',applicant:'陈明',dept:'项目交付部',type:'差旅费',amount:12300,date:'2026-06-14',status:'部门经理已审',level:2},
-  {id:'BX202606005',applicant:'赵丽',dept:'人力资源部',type:'培训费',amount:5600,date:'2026-06-13',status:'已通过',approvedBy:'席宝',level:3},
-  {id:'BX202606006',applicant:'孙磊',dept:'行政综合部',type:'交通费',amount:780,date:'2026-06-12',status:'已通过',approvedBy:'席宝',level:3},
-  {id:'BX202606007',applicant:'周婷',dept:'技术研发部',type:'办公费',amount:2100,date:'2026-06-11',status:'已驳回',rejectReason:'发票不合规',level:1},
-  {id:'BX202606008',applicant:'吴刚',dept:'法务合规部',type:'差旅费',amount:4500,date:'2026-06-10',status:'已通过',approvedBy:'席宝',level:3},
+  {id:'BX2026001',applicant:'李娜',dept:'市场营销部',type:'维修费',amount:9871,date:'2026-06-18',status:'待审核'},
+  {id:'BX2026002',applicant:'张伟',dept:'技术研发部',type:'交通费',amount:3576,date:'2026-06-17',status:'部门经理已审'},
+  {id:'BX2026003',applicant:'李娜',dept:'市场营销部',type:'维修费',amount:5623,date:'2026-06-16',status:'财务审核中'},
+  {id:'BX2026004',applicant:'孙磊',dept:'行政综合部',type:'交通费',amount:13493,date:'2026-06-15',status:'已通过'},
+  {id:'BX2026005',applicant:'吴刚',dept:'法务合规部',type:'培训费',amount:2414,date:'2026-06-14',status:'已驳回'},
+  {id:'BX2026006',applicant:'刘芳',dept:'财务管理部',type:'检测费',amount:1492,date:'2026-06-13',status:'已通过'},
+  {id:'BX2026007',applicant:'李娜',dept:'市场营销部',type:'招待费',amount:4058,date:'2026-06-12',status:'已通过'},
+  {id:'BX2026008',applicant:'王强',dept:'生产制造部',type:'办公费',amount:12708,date:'2026-06-11',status:'已通过'},
+  {id:'BX2026009',applicant:'刘芳',dept:'财务管理部',type:'检测费',amount:4100,date:'2026-06-10',status:'待审核'},
+  {id:'BX2026010',applicant:'赵丽',dept:'人力资源部',type:'交通费',amount:518,date:'2026-06-09',status:'部门经理已审'},
+  {id:'BX2026011',applicant:'陈明',dept:'项目交付部',type:'交通费',amount:11754,date:'2026-06-08',status:'财务审核中'},
+  {id:'BX2026012',applicant:'吴刚',dept:'法务合规部',type:'维修费',amount:8839,date:'2026-06-07',status:'已通过'},
+  {id:'BX2026013',applicant:'王强',dept:'生产制造部',type:'交通费',amount:6867,date:'2026-06-06',status:'已驳回'},
+  {id:'BX2026014',applicant:'赵丽',dept:'人力资源部',type:'检测费',amount:4443,date:'2026-06-05',status:'已通过'},
+  {id:'BX2026015',applicant:'李娜',dept:'市场营销部',type:'招待费',amount:2490,date:'2026-06-04',status:'已通过'},
+  {id:'BX2026016',applicant:'陈明',dept:'项目交付部',type:'差旅费',amount:7388,date:'2026-06-03',status:'已通过'},
+  {id:'BX2026017',applicant:'陈明',dept:'项目交付部',type:'检测费',amount:5500,date:'2026-06-02',status:'待审核'},
+  {id:'BX2026018',applicant:'李娜',dept:'市场营销部',type:'差旅费',amount:6754,date:'2026-06-01',status:'部门经理已审'},
+  {id:'BX2026019',applicant:'王强',dept:'生产制造部',type:'通讯费',amount:4684,date:'2026-06-01',status:'财务审核中'},
+  {id:'BX2026020',applicant:'郑雪',dept:'市场营销部',type:'差旅费',amount:12249,date:'2026-06-01',status:'已通过'},
+  {id:'BX2026021',applicant:'张伟',dept:'技术研发部',type:'培训费',amount:8840,date:'2026-06-01',status:'已驳回'},
+  {id:'BX2026022',applicant:'吴刚',dept:'法务合规部',type:'检测费',amount:10012,date:'2026-06-01',status:'已通过'},
+  {id:'BX2026023',applicant:'李娜',dept:'市场营销部',type:'差旅费',amount:9176,date:'2026-06-01',status:'已通过'},
+  {id:'BX2026024',applicant:'孙磊',dept:'行政综合部',type:'通讯费',amount:14413,date:'2026-06-01',status:'已通过'},
+  {id:'BX2026025',applicant:'李娜',dept:'市场营销部',type:'差旅费',amount:5215,date:'2026-06-01',status:'待审核'},
+  {id:'BX2026026',applicant:'周婷',dept:'技术研发部',type:'办公费',amount:9112,date:'2026-06-01',status:'部门经理已审'},
+  {id:'BX2026027',applicant:'郑雪',dept:'市场营销部',type:'招待费',amount:5858,date:'2026-06-01',status:'财务审核中'},
+  {id:'BX2026028',applicant:'李娜',dept:'市场营销部',type:'检测费',amount:1502,date:'2026-06-01',status:'已通过'},
+  {id:'BX2026029',applicant:'陈明',dept:'项目交付部',type:'通讯费',amount:7498,date:'2026-06-01',status:'已驳回'},
+  {id:'BX2026030',applicant:'陈明',dept:'项目交付部',type:'维修费',amount:6663,date:'2026-06-01',status:'已通过'},
 ];
 if(!DB.get('fin_expenses').length) DB.set('fin_expenses',defaultExpenses);
 
 const defaultInvoices=[
-  {id:'INV001',number:'08945621',code:'011002600311',type:'增值税专票',direction:'销项',counterparty:'北京中科信息技术有限公司',amount:280000,tax:36400,date:'2026-06-16',status:'正常',uploadDate:'2026-06-16'},
-  {id:'INV002',number:'08945622',code:'011002600311',type:'增值税专票',direction:'销项',counterparty:'上海恒远建设工程有限公司',amount:156000,tax:20280,date:'2026-06-15',status:'正常',uploadDate:'2026-06-15'},
-  {id:'INV003',number:'FP202606012',code:'电子发票',type:'电子普票',direction:'进项',counterparty:'腾讯科技（深圳）有限公司',amount:45000,tax:2700,date:'2026-06-14',status:'待认证',uploadDate:'2026-06-14'},
-  {id:'INV004',number:'08945623',code:'011002600311',type:'增值税专票',direction:'销项',counterparty:'广州华南装备制造集团',amount:380000,tax:49400,date:'2026-06-13',status:'正常',uploadDate:'2026-06-13'},
-  {id:'INV005',number:'FP202606008',code:'电子发票',type:'电子普票',direction:'进项',counterparty:'中国石油天然气股份有限公司',amount:12500,tax:0,date:'2026-06-12',status:'已认证',uploadDate:'2026-06-12'},
-  {id:'INV006',number:'FP202606005',code:'电子发票',type:'增值税专票',direction:'进项',counterparty:'华为技术有限公司',amount:186000,tax:24180,date:'2026-06-08',status:'待认证',uploadDate:'2026-06-08'},
+  {id:'INV001',number:'0894560021',code:'011002600311',type:'增值税普票',direction:'进项',counterparty:'上海恒远建设工程有限公司',amount:161495,tax:9690,date:'2026-06-18',status:'已认证',uploadDate:'2026-06-18'},
+  {id:'INV002',number:'0894560022',code:'011002600311',type:'增值税普票',direction:'销项',counterparty:'腾讯科技（深圳）有限公司',amount:398329,tax:23900,date:'2026-06-17',status:'已红冲',uploadDate:'2026-06-17'},
+  {id:'INV003',number:'FP20260023',code:'011002600311',type:'电子普票',direction:'进项',counterparty:'中国石油天然气股份有限公司',amount:358047,tax:21483,date:'2026-06-16',status:'正常',uploadDate:'2026-06-16'},
+  {id:'INV004',number:'0894560024',code:'011002600311',type:'增值税专票',direction:'进项',counterparty:'百度在线网络技术有限公司',amount:341501,tax:23273,date:'2026-06-15',status:'正常',uploadDate:'2026-06-15'},
+  {id:'INV005',number:'0894560025',code:'011002600311',type:'增值税专票',direction:'销项',counterparty:'上海恒远建设工程有限公司',amount:438250,tax:28643,date:'2026-06-14',status:'已红冲',uploadDate:'2026-06-14'},
+  {id:'INV006',number:'0894560026',code:'011002600311',type:'增值税专票',direction:'进项',counterparty:'中国石油天然气股份有限公司',amount:213016,tax:20387,date:'2026-06-13',status:'已认证',uploadDate:'2026-06-13'},
+  {id:'INV007',number:'0894560027',code:'011002600311',type:'增值税专票',direction:'进项',counterparty:'华为技术有限公司',amount:474815,tax:50072,date:'2026-06-12',status:'待认证',uploadDate:'2026-06-12'},
+  {id:'INV008',number:'FP20260028',code:'011002600311',type:'电子普票',direction:'销项',counterparty:'深圳前海数字科技有限公司',amount:155595,tax:9336,date:'2026-06-11',status:'已红冲',uploadDate:'2026-06-11'},
+  {id:'INV009',number:'0894560029',code:'011002600311',type:'增值税专票',direction:'销项',counterparty:'联想集团',amount:465368,tax:38129,date:'2026-06-10',status:'正常',uploadDate:'2026-06-10'},
+  {id:'INV010',number:'0894560030',code:'011002600311',type:'增值税专票',direction:'销项',counterparty:'联想集团',amount:113197,tax:12951,date:'2026-06-09',status:'已红冲',uploadDate:'2026-06-09'},
+  {id:'INV011',number:'0894560031',code:'011002600311',type:'增值税专票',direction:'进项',counterparty:'广州华南装备制造集团',amount:263479,tax:24034,date:'2026-06-08',status:'待认证',uploadDate:'2026-06-08'},
+  {id:'INV012',number:'FP20260032',code:'011002600311',type:'电子普票',direction:'销项',counterparty:'广州华南装备制造集团',amount:461226,tax:27674,date:'2026-06-07',status:'已红冲',uploadDate:'2026-06-07'},
+  {id:'INV013',number:'FP20260033',code:'011002600311',type:'电子普票',direction:'进项',counterparty:'广州华南装备制造集团',amount:131329,tax:7880,date:'2026-06-06',status:'待认证',uploadDate:'2026-06-06'},
+  {id:'INV014',number:'FP20260034',code:'011002600311',type:'电子普票',direction:'销项',counterparty:'腾讯科技（深圳）有限公司',amount:19646,tax:1179,date:'2026-06-05',status:'正常',uploadDate:'2026-06-05'},
+  {id:'INV015',number:'0894560035',code:'011002600311',type:'增值税普票',direction:'销项',counterparty:'中国移动通信集团',amount:381125,tax:22868,date:'2026-06-04',status:'已红冲',uploadDate:'2026-06-04'},
+  {id:'INV016',number:'0894560036',code:'011002600311',type:'增值税普票',direction:'销项',counterparty:'广州华南装备制造集团',amount:417201,tax:25032,date:'2026-06-03',status:'正常',uploadDate:'2026-06-03'},
+  {id:'INV017',number:'FP20260037',code:'011002600311',type:'电子普票',direction:'销项',counterparty:'华为技术有限公司',amount:307004,tax:18420,date:'2026-06-02',status:'已红冲',uploadDate:'2026-06-02'},
+  {id:'INV018',number:'0894560038',code:'011002600311',type:'增值税普票',direction:'进项',counterparty:'阿里云计算有限公司',amount:221759,tax:13306,date:'2026-06-01',status:'已认证',uploadDate:'2026-06-01'},
+  {id:'INV019',number:'0894560039',code:'011002600311',type:'增值税普票',direction:'销项',counterparty:'华为技术有限公司',amount:121809,tax:7309,date:'2026-06-01',status:'正常',uploadDate:'2026-06-01'},
+  {id:'INV020',number:'FP20260040',code:'011002600311',type:'电子普票',direction:'销项',counterparty:'中国石油天然气股份有限公司',amount:95143,tax:5709,date:'2026-06-01',status:'正常',uploadDate:'2026-06-01'},
+  {id:'INV021',number:'FP20260041',code:'011002600311',type:'电子普票',direction:'销项',counterparty:'阿里云计算有限公司',amount:142676,tax:8561,date:'2026-06-01',status:'已红冲',uploadDate:'2026-06-01'},
+  {id:'INV022',number:'FP20260042',code:'011002600311',type:'电子普票',direction:'销项',counterparty:'百度在线网络技术有限公司',amount:350007,tax:21000,date:'2026-06-01',status:'正常',uploadDate:'2026-06-01'},
+  {id:'INV023',number:'0894560043',code:'011002600311',type:'增值税普票',direction:'进项',counterparty:'中国移动通信集团',amount:296180,tax:17771,date:'2026-06-01',status:'已认证',uploadDate:'2026-06-01'},
+  {id:'INV024',number:'FP20260044',code:'011002600311',type:'电子普票',direction:'进项',counterparty:'华为技术有限公司',amount:486559,tax:29194,date:'2026-06-01',status:'已认证',uploadDate:'2026-06-01'},
+  {id:'INV025',number:'FP20260045',code:'011002600311',type:'电子普票',direction:'销项',counterparty:'华为技术有限公司',amount:453898,tax:27234,date:'2026-06-01',status:'已红冲',uploadDate:'2026-06-01'},
+  {id:'INV026',number:'0894560046',code:'011002600311',type:'增值税普票',direction:'进项',counterparty:'腾讯科技（深圳）有限公司',amount:262801,tax:15768,date:'2026-06-01',status:'正常',uploadDate:'2026-06-01'},
+  {id:'INV027',number:'0894560047',code:'011002600311',type:'增值税专票',direction:'进项',counterparty:'中国石油天然气股份有限公司',amount:94446,tax:10659,date:'2026-06-01',status:'待认证',uploadDate:'2026-06-01'},
+  {id:'INV028',number:'0894560048',code:'011002600311',type:'增值税专票',direction:'销项',counterparty:'京东集团股份有限公司',amount:95358,tax:7134,date:'2026-06-01',status:'正常',uploadDate:'2026-06-01'},
+  {id:'INV029',number:'0894560049',code:'011002600311',type:'增值税专票',direction:'进项',counterparty:'阿里云计算有限公司',amount:405683,tax:27888,date:'2026-06-01',status:'已认证',uploadDate:'2026-06-01'},
+  {id:'INV030',number:'0894560050',code:'011002600311',type:'增值税普票',direction:'进项',counterparty:'百度在线网络技术有限公司',amount:491075,tax:29464,date:'2026-06-01',status:'待认证',uploadDate:'2026-06-01'},
 ];
 if(!DB.get('fin_invoices').length) DB.set('fin_invoices',defaultInvoices);
 
@@ -101,12 +150,38 @@ const defaultAssets=[
 if(!DB.get('fin_assets').length) DB.set('fin_assets',defaultAssets);
 
 const vouchers=[
-  {id:'PZ2026-0618-001',date:'2026-06-18',summary:'收到中科信息货款',debit:'银行存款-工行',credit:'应收账款',amount:840000,prepBy:'马丽',authBy:'刘芳'},
-  {id:'PZ2026-0618-002',date:'2026-06-18',summary:'支付办公用品采购款',debit:'管理费用-办公费',credit:'银行存款-工行',amount:18500,prepBy:'马丽',authBy:'刘芳'},
-  {id:'PZ2026-0617-003',date:'2026-06-17',summary:'计提6月折旧',debit:'管理费用-折旧',credit:'累计折旧',amount:47030,prepBy:'马丽',authBy:'刘芳'},
-  {id:'PZ2026-0617-004',date:'2026-06-17',summary:'收到前海数字预付款',debit:'银行存款-工行',credit:'预收账款',amount:520000,prepBy:'马丽',authBy:'刘芳'},
-  {id:'PZ2026-0616-005',date:'2026-06-16',summary:'报销差旅费（陈明）',debit:'项目成本-差旅费',credit:'银行存款-工行',amount:12300,prepBy:'马丽',authBy:'刘芳'},
+  {id:'PZ2026-0018-001',date:'2026-06-18',summary:'收到中科信息货款',debit:'银行存款-工行',credit:'应收账款',amount:840000,prepBy:'马丽',authBy:'刘芳',status:'已审核'},
+  {id:'PZ2026-0018-002',date:'2026-06-18',summary:'支付办公用品采购款',debit:'管理费用-办公费',credit:'银行存款-工行',amount:18500,prepBy:'马丽',authBy:'刘芳',status:'已审核'},
+  {id:'PZ2026-0018-003',date:'2026-06-18',summary:'计提6月折旧',debit:'管理费用-折旧',credit:'累计折旧',amount:47030,prepBy:'马丽',authBy:'刘芳',status:'已审核'},
+  {id:'PZ2026-0017-004',date:'2026-06-17',summary:'收到前海数字预付款',debit:'银行存款-工行',credit:'预收账款',amount:520000,prepBy:'马丽',authBy:'刘芳',status:'已审核'},
+  {id:'PZ2026-0017-005',date:'2026-06-17',summary:'报销差旅费（陈明）',debit:'项目成本-差旅费',credit:'银行存款-工行',amount:12300,prepBy:'马丽',authBy:'刘芳',status:'已审核'},
+  {id:'PZ2026-0017-006',date:'2026-06-17',summary:'收到华南装备合同款',debit:'银行存款-工行',credit:'应收账款',amount:280000,prepBy:'马丽',authBy:'刘芳',status:'已审核'},
+  {id:'PZ2026-0016-007',date:'2026-06-16',summary:'支付阿里云服务费',debit:'管理费用-服务费',credit:'银行存款-工行',amount:45000,prepBy:'马丽',authBy:'刘芳',status:'已审核'},
+  {id:'PZ2026-0016-008',date:'2026-06-16',summary:'支付员工工资',debit:'应付职工薪酬',credit:'银行存款-工行',amount:1860000,prepBy:'马丽',authBy:'刘芳',status:'已审核'},
+  {id:'PZ2026-0016-009',date:'2026-06-16',summary:'收到恒远建设预付款',debit:'银行存款-工行',credit:'应收账款',amount:156000,prepBy:'马丽',authBy:'刘芳',status:'已审核'},
+  {id:'PZ2026-0015-010',date:'2026-06-15',summary:'支付设备维修费',debit:'管理费用-维修费',credit:'银行存款-工行',amount:8500,prepBy:'马丽',authBy:'刘芳',status:'已审核'},
+  {id:'PZ2026-0015-011',date:'2026-06-15',summary:'计提坏账准备',debit:'资产减值损失',credit:'坏账准备',amount:35000,prepBy:'马丽',authBy:'刘芳',status:'已审核'},
+  {id:'PZ2026-0015-012',date:'2026-06-15',summary:'收到税款返还',debit:'银行存款-工行',credit:'营业外收入',amount:186420,prepBy:'马丽',authBy:'刘芳',status:'已审核'},
+  {id:'PZ2026-0014-013',date:'2026-06-14',summary:'支付物业管理费',debit:'管理费用-物业费',credit:'银行存款-工行',amount:12800,prepBy:'马丽',authBy:'刘芳',status:'已审核'},
+  {id:'PZ2026-0014-014',date:'2026-06-14',summary:'收到中科信息尾款',debit:'银行存款-工行',credit:'应收账款',amount:420000,prepBy:'马丽',authBy:'刘芳',status:'已审核'},
+  {id:'PZ2026-0014-015',date:'2026-06-14',summary:'支付网络带宽费',debit:'管理费用-通讯费',credit:'银行存款-工行',amount:6800,prepBy:'马丽',authBy:'刘芳',status:'已审核'},
+  {id:'PZ2026-0013-016',date:'2026-06-13',summary:'收到前海数字验收款',debit:'银行存款-工行',credit:'预收账款',amount:380000,prepBy:'马丽',authBy:'刘芳',status:'已审核'},
+  {id:'PZ2026-0013-017',date:'2026-06-13',summary:'报销差旅费（张伟）',debit:'项目成本-差旅费',credit:'银行存款-工行',amount:8560,prepBy:'马丽',authBy:'刘芳',status:'已审核'},
+  {id:'PZ2026-0013-018',date:'2026-06-13',summary:'支付供应商货款',debit:'应付账款',credit:'银行存款-工行',amount:230000,prepBy:'马丽',authBy:'刘芳',status:'已审核'},
+  {id:'PZ2026-0012-019',date:'2026-06-12',summary:'收到利息收入',debit:'银行存款-工行',credit:'财务费用-利息',amount:3200,prepBy:'马丽',authBy:'刘芳',status:'已审核'},
+  {id:'PZ2026-0012-020',date:'2026-06-12',summary:'支付社保公积金',debit:'应付职工薪酬',credit:'银行存款-工行',amount:1256780,prepBy:'马丽',authBy:'刘芳',status:'已审核'},
+  {id:'PZ2026-0012-021',date:'2026-06-12',summary:'支付广告推广费',debit:'销售费用-广告费',credit:'银行存款-工行',amount:28000,prepBy:'马丽',authBy:'刘芳',status:'已审核'},
+  {id:'PZ2026-0011-022',date:'2026-06-11',summary:'收到政府补贴',debit:'银行存款-工行',credit:'营业外收入',amount:500000,prepBy:'马丽',authBy:'刘芳',status:'已审核'},
+  {id:'PZ2026-0011-023',date:'2026-06-11',summary:'计提长期待摊',debit:'长期待摊费用',credit:'银行存款-工行',amount:24000,prepBy:'马丽',authBy:'刘芳',status:'已审核'},
+  {id:'PZ2026-0011-024',date:'2026-06-11',summary:'支付培训费用',debit:'管理费用-培训费',credit:'银行存款-工行',amount:5600,prepBy:'马丽',authBy:'刘芳',status:'已审核'},
+  {id:'PZ2026-0010-025',date:'2026-06-10',summary:'收到华南装备尾款',debit:'银行存款-工行',credit:'应收账款',amount:190000,prepBy:'马丽',authBy:'刘芳',status:'已审核'},
+  {id:'PZ2026-0010-026',date:'2026-06-10',summary:'差旅借款回收',debit:'其他应收款',credit:'库存现金',amount:15000,prepBy:'马丽',authBy:'刘芳',status:'已审核'},
+  {id:'PZ2026-0010-027',date:'2026-06-10',summary:'报销招待费（李娜）',debit:'管理费用-招待费',credit:'银行存款-工行',amount:3200,prepBy:'马丽',authBy:'刘芳',status:'已审核'},
+  {id:'PZ2026-0009-028',date:'2026-06-09',summary:'支付法律顾问费',debit:'管理费用-律师费',credit:'银行存款-工行',amount:45000,prepBy:'马丽',authBy:'刘芳',status:'已审核'},
+  {id:'PZ2026-0009-029',date:'2026-06-09',summary:'收到客户违约金',debit:'银行存款-工行',credit:'营业外收入',amount:8000,prepBy:'马丽',authBy:'刘芳',status:'已审核'},
+  {id:'PZ2026-0009-030',date:'2026-06-09',summary:'支付车辆保险费',debit:'管理费用-保险费',credit:'银行存款-工行',amount:4200,prepBy:'马丽',authBy:'刘芳',status:'已审核'},
 ];
+
 
 const banks=[
   {date:'2026-06-18',desc:'收到货款-中科信息',debit:840000,credit:0,balance:15680000,matched:true},
@@ -123,22 +198,58 @@ const budgets=[
   {dept:'项目交付部',total:150,used:96.7},{dept:'法务合规部',total:20,used:8.5},
 ];
 
+const defaultSettlements=[
+  {id:'JS2026001',vendor:'浪潮集团',desc:'浪潮集团-采购结算',amount:383376,date:'2026-06-18',status:'待初审',firstReviewer:'马丽',secondReviewer:'刘芳',invoiceNo:'INV023',contractNo:'HT2026171',paymentMethod:'银行转账'},
+  {id:'JS2026002',vendor:'安普布线',desc:'安普布线-采购结算',amount:409976,date:'2026-06-17',status:'初审通过',firstReviewer:'马丽',secondReviewer:'刘芳',invoiceNo:'INV007',contractNo:'HT2026129',paymentMethod:'银行转账'},
+  {id:'JS2026003',vendor:'百度在线',desc:'百度在线-采购结算',amount:247965,date:'2026-06-16',status:'待复审',firstReviewer:'马丽',secondReviewer:'刘芳',invoiceNo:'INV007',contractNo:'HT2026194',paymentMethod:'银行转账'},
+  {id:'JS2026004',vendor:'用友网络',desc:'用友网络-采购结算',amount:467247,date:'2026-06-15',status:'复审通过',firstReviewer:'马丽',secondReviewer:'刘芳',invoiceNo:'INV022',contractNo:'HT2026137',paymentMethod:'银行转账'},
+  {id:'JS2026005',vendor:'浪潮集团',desc:'浪潮集团-采购结算',amount:424135,date:'2026-06-14',status:'已付款',firstReviewer:'马丽',secondReviewer:'刘芳',invoiceNo:'INV015',contractNo:'HT2026143',paymentMethod:'银行转账'},
+  {id:'JS2026006',vendor:'安普布线',desc:'安普布线-采购结算',amount:183770,date:'2026-06-13',status:'已驳回',firstReviewer:'马丽',secondReviewer:'刘芳',invoiceNo:'INV019',contractNo:'HT2026190',paymentMethod:'银行转账'},
+  {id:'JS2026007',vendor:'华为技术',desc:'华为技术-采购结算',amount:155663,date:'2026-06-12',status:'待初审',firstReviewer:'马丽',secondReviewer:'刘芳',invoiceNo:'INV027',contractNo:'HT2026173',paymentMethod:'银行转账'},
+  {id:'JS2026008',vendor:'网易',desc:'网易-采购结算',amount:24820,date:'2026-06-11',status:'初审通过',firstReviewer:'马丽',secondReviewer:'刘芳',invoiceNo:'INV003',contractNo:'HT2026121',paymentMethod:'银行转账'},
+  {id:'JS2026009',vendor:'浪潮集团',desc:'浪潮集团-采购结算',amount:164796,date:'2026-06-10',status:'待复审',firstReviewer:'马丽',secondReviewer:'刘芳',invoiceNo:'INV008',contractNo:'HT2026174',paymentMethod:'银行转账'},
+  {id:'JS2026010',vendor:'百度在线',desc:'百度在线-采购结算',amount:272740,date:'2026-06-09',status:'复审通过',firstReviewer:'马丽',secondReviewer:'刘芳',invoiceNo:'INV001',contractNo:'HT2026186',paymentMethod:'银行转账'},
+  {id:'JS2026011',vendor:'安普布线',desc:'安普布线-采购结算',amount:387773,date:'2026-06-08',status:'已付款',firstReviewer:'马丽',secondReviewer:'刘芳',invoiceNo:'INV009',contractNo:'HT2026105',paymentMethod:'银行转账'},
+  {id:'JS2026012',vendor:'中兴通讯',desc:'中兴通讯-采购结算',amount:445503,date:'2026-06-07',status:'已驳回',firstReviewer:'马丽',secondReviewer:'刘芳',invoiceNo:'INV013',contractNo:'HT2026143',paymentMethod:'银行转账'},
+  {id:'JS2026013',vendor:'中兴通讯',desc:'中兴通讯-采购结算',amount:106010,date:'2026-06-06',status:'待初审',firstReviewer:'马丽',secondReviewer:'刘芳',invoiceNo:'INV004',contractNo:'HT2026146',paymentMethod:'银行转账'},
+  {id:'JS2026014',vendor:'中国移动',desc:'中国移动-采购结算',amount:444337,date:'2026-06-05',status:'初审通过',firstReviewer:'马丽',secondReviewer:'刘芳',invoiceNo:'INV012',contractNo:'HT2026122',paymentMethod:'银行转账'},
+  {id:'JS2026015',vendor:'百度在线',desc:'百度在线-采购结算',amount:408134,date:'2026-06-04',status:'待复审',firstReviewer:'马丽',secondReviewer:'刘芳',invoiceNo:'INV011',contractNo:'HT2026171',paymentMethod:'银行转账'},
+  {id:'JS2026016',vendor:'网易',desc:'网易-采购结算',amount:268048,date:'2026-06-03',status:'复审通过',firstReviewer:'马丽',secondReviewer:'刘芳',invoiceNo:'INV003',contractNo:'HT2026148',paymentMethod:'银行转账'},
+  {id:'JS2026017',vendor:'阿里云科技',desc:'阿里云科技-采购结算',amount:286759,date:'2026-06-02',status:'已付款',firstReviewer:'马丽',secondReviewer:'刘芳',invoiceNo:'INV007',contractNo:'HT2026133',paymentMethod:'银行转账'},
+  {id:'JS2026018',vendor:'网易',desc:'网易-采购结算',amount:119108,date:'2026-06-01',status:'已驳回',firstReviewer:'马丽',secondReviewer:'刘芳',invoiceNo:'INV001',contractNo:'HT2026154',paymentMethod:'银行转账'},
+  {id:'JS2026019',vendor:'用友网络',desc:'用友网络-采购结算',amount:496455,date:'2026-06-01',status:'待初审',firstReviewer:'马丽',secondReviewer:'刘芳',invoiceNo:'INV001',contractNo:'HT2026107',paymentMethod:'银行转账'},
+  {id:'JS2026020',vendor:'百度在线',desc:'百度在线-采购结算',amount:50597,date:'2026-06-01',status:'初审通过',firstReviewer:'马丽',secondReviewer:'刘芳',invoiceNo:'INV002',contractNo:'HT2026106',paymentMethod:'银行转账'},
+  {id:'JS2026021',vendor:'金山办公',desc:'金山办公-采购结算',amount:287948,date:'2026-06-01',status:'待复审',firstReviewer:'马丽',secondReviewer:'刘芳',invoiceNo:'INV024',contractNo:'HT2026165',paymentMethod:'银行转账'},
+  {id:'JS2026022',vendor:'联想集团',desc:'联想集团-采购结算',amount:274495,date:'2026-06-01',status:'复审通过',firstReviewer:'马丽',secondReviewer:'刘芳',invoiceNo:'INV011',contractNo:'HT2026110',paymentMethod:'银行转账'},
+  {id:'JS2026023',vendor:'中国移动',desc:'中国移动-采购结算',amount:91016,date:'2026-06-01',status:'已付款',firstReviewer:'马丽',secondReviewer:'刘芳',invoiceNo:'INV022',contractNo:'HT2026174',paymentMethod:'银行转账'},
+  {id:'JS2026024',vendor:'华为技术',desc:'华为技术-采购结算',amount:470539,date:'2026-06-01',status:'已驳回',firstReviewer:'马丽',secondReviewer:'刘芳',invoiceNo:'INV030',contractNo:'HT2026170',paymentMethod:'银行转账'},
+  {id:'JS2026025',vendor:'深信服科技',desc:'深信服科技-采购结算',amount:492773,date:'2026-06-01',status:'待初审',firstReviewer:'马丽',secondReviewer:'刘芳',invoiceNo:'INV009',contractNo:'HT2026150',paymentMethod:'银行转账'},
+  {id:'JS2026026',vendor:'浪潮集团',desc:'浪潮集团-采购结算',amount:45754,date:'2026-06-01',status:'初审通过',firstReviewer:'马丽',secondReviewer:'刘芳',invoiceNo:'INV024',contractNo:'HT2026164',paymentMethod:'银行转账'},
+  {id:'JS2026027',vendor:'腾讯科技',desc:'腾讯科技-采购结算',amount:151908,date:'2026-06-01',status:'待复审',firstReviewer:'马丽',secondReviewer:'刘芳',invoiceNo:'INV007',contractNo:'HT2026151',paymentMethod:'银行转账'},
+  {id:'JS2026028',vendor:'中兴通讯',desc:'中兴通讯-采购结算',amount:48663,date:'2026-06-01',status:'复审通过',firstReviewer:'马丽',secondReviewer:'刘芳',invoiceNo:'INV022',contractNo:'HT2026130',paymentMethod:'银行转账'},
+  {id:'JS2026029',vendor:'金山办公',desc:'金山办公-采购结算',amount:351829,date:'2026-06-01',status:'已付款',firstReviewer:'马丽',secondReviewer:'刘芳',invoiceNo:'INV008',contractNo:'HT2026106',paymentMethod:'银行转账'},
+  {id:'JS2026030',vendor:'腾讯科技',desc:'腾讯科技-采购结算',amount:36932,date:'2026-06-01',status:'已驳回',firstReviewer:'马丽',secondReviewer:'刘芳',invoiceNo:'INV012',contractNo:'HT2026102',paymentMethod:'银行转账'},
+];
+if(!DB.get('fin_settlements').length) DB.set('fin_settlements',defaultSettlements);
+
 let currentTab='gl';
 function switchTab(tab){
   currentTab=tab;
   document.querySelectorAll('.menu-item').forEach(m=>m.classList.remove('active'));
   event.target.closest('.menu-item')?.classList.add('active');
   const ab=document.getElementById('add-btn');ab.style.display='';
-  const map={gl:['新建凭证',()=>Modal.toast('📝 凭证录入（模拟）')],expense:['新建报销',showNewExpense],invoice:['上传发票',showUploadInvoice],report:['导出报表',()=>Modal.toast('📥 导出中...')],receivable:['-',null],payable:['-',null],asset:['新增资产',showNewAsset],budget:['-',null],bank:['-',null]};
+  const map={gl:['新建凭证',showNewVoucher],expense:['新建报销',showNewExpense],invoice:['上传发票',showUploadInvoice],report:['导出报表',()=>Modal.toast('📥 导出中...')],receivable:['-',null],payable:['-',null],asset:['新增资产',showNewAsset],budget:['-',null],bank:['-',null],settlement:['新建结算单',showNewSettlement]};
   const m=map[tab];if(m[0]==='-')ab.style.display='none';else{ab.textContent='➕ '+m[0];ab.onclick=m[1]||(()=>{});}
-  const titles={gl:'📒 凭证管理',expense:'🧾 费用报销',invoice:'📄 发票台账',receivable:'📥 应收账款',payable:'📤 应付账款',asset:'🏠 固定资产',budget:'📊 预算执行',report:'📊 财务报表',bank:'🏦 银行对账'};
+  const titles={gl:'📒 凭证管理',expense:'🧾 费用报销',invoice:'📄 发票台账',receivable:'📥 应收账款',payable:'📤 应付账款',asset:'🏠 固定资产',budget:'📊 预算执行',report:'📊 财务报表',bank:'🏦 银行对账',settlement:'💸 付款结算'};
   document.getElementById('page-title').textContent=titles[tab]||'';
-  ({gl:renderGL,expense:renderExpense,invoice:renderInvoice,receivable:renderReceivable,payable:renderPayable,asset:renderAsset,budget:renderBudget,report:renderReport,bank:renderBank})[tab]?.(document.getElementById('tab-content'));
+  ({gl:renderGL,expense:renderExpense,invoice:renderInvoice,receivable:renderReceivable,payable:renderPayable,asset:renderAsset,budget:renderBudget,report:renderReport,bank:renderBank,settlement:renderSettlement})[tab]?.(document.getElementById('tab-content'));
 }
 
 function renderGL(el){
-  el.innerHTML=`<div class="card"><div class="card-body"><table><thead><tr><th>凭证号</th><th>日期</th><th>摘要</th><th>借方科目</th><th>贷方科目</th><th>金额</th><th>制单</th><th>审核</th></tr></thead>
-  <tbody>${vouchers.map(v=>`<tr><td style="font-size:12px">${v.id}</td><td>${v.date}</td><td><strong>${v.summary}</strong></td><td>${v.debit}</td><td>${v.credit}</td><td style="font-weight:600">¥${v.amount.toLocaleString()}</td><td>${v.prepBy}</td><td>${v.authBy}</td></tr>`).join('')}</tbody></table>
+  el.innerHTML=`<div class="card"><div class="card-body"><div style="overflow-x:auto"><table><thead><tr><th>凭证号</th><th>日期</th><th>摘要</th><th>借方科目</th><th>贷方科目</th><th>金额</th><th>制单</th><th>审核</th><th>状态</th><th>操作</th></tr></thead>
+  <tbody>${vouchers.map(v=>`<tr><td style="font-size:12px">${v.id}</td><td>${v.date}</td><td><strong>${v.summary}</strong></td><td style="font-size:12px">${v.debit}</td><td style="font-size:12px">${v.credit}</td><td style="font-weight:600">¥${v.amount.toLocaleString()}</td><td>${v.prepBy}</td><td>${v.authBy}</td>
+  <td><span class="status ${v.status==='已审核'?'approved':'pending'}">${v.status}</span></td>
+  <td><a href="#" onclick="viewVoucher('${v.id}');return false" style="color:var(--primary);font-size:13px;text-decoration:none">查看</a></td></tr>`).join('')}</tbody></table></div>
   <div style="padding:16px;text-align:center;color:var(--gray-400);font-size:13px">共 ${vouchers.length} 条凭证</div></div></div>`;
 }
 
@@ -281,6 +392,97 @@ function renderBank(el){
 }
 
 renderContent();
+
+// ===== 凭证查看 =====
+function viewVoucher(id){const v=vouchers.find(x=>x.id===id);if(!v)return;
+  const html=`<div style="font-size:14px"><div style="background:linear-gradient(135deg,#1a56db,#3b82f6);color:white;padding:14px 18px;border-radius:10px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center">
+    <div><div style="font-size:16px;font-weight:700">${v.id}</div><div style="opacity:0.8;font-size:12px">${v.date}</div></div>
+    <span class="status ${v.status==='已审核'?'approved':'pending'}">${v.status}</span></div>
+    <p><strong>摘要：</strong>${v.summary}</p>
+    <table><thead><tr><th>科目</th><th>借方</th><th>贷方</th></tr></thead><tbody>
+    <tr><td>${v.debit}</td><td style="font-weight:600">¥${v.amount.toLocaleString()}</td><td>-</td></tr>
+    <tr><td>${v.credit}</td><td>-</td><td style="font-weight:600">¥${v.amount.toLocaleString()}</td></tr></tbody></table>
+    <div style="margin-top:14px;font-size:13px;color:var(--gray-500)">制单：${v.prepBy} | 审核：${v.authBy} | 日期：${v.date}</div></div>`;
+  Modal.show('📒 凭证详情',html,{width:'520px'});
+}
+function showNewVoucher(){
+  const fields=[{name:'date',label:'凭证日期',type:'date',required:true},{name:'summary',label:'摘要',full:true,required:true},
+    {name:'debit',label:'借方科目',required:true},{name:'credit',label:'贷方科目',required:true},
+    {name:'amount',label:'金额',type:'number',required:true},{name:'prepBy',label:'制单人',required:true},{name:'authBy',label:'审核人',required:true}];
+  const html=Form.render(fields)+`<div style="margin-top:16px;text-align:right"><button class="btn" style="background:#f3f4f6;color:#374151" onclick="Modal.close(this.closest('[id^=modal]').id)">取消</button><button class="btn btn-primary" onclick="saveVoucher()">保存</button></div>`;
+  Modal.show('📝 新建凭证',html,{width:'560px'});
+}
+function saveVoucher(){const d=Form.getData();if(!d.summary||!d.amount){Modal.toast('请填写必填项','warning');return;}vouchers.unshift({id:DB.genId('PZ'),date:d.date||new Date().toISOString().slice(0,10),summary:d.summary,debit:d.debit,credit:d.credit,amount:parseFloat(d.amount),prepBy:d.prepBy,authBy:d.authBy,status:'待审核'});document.querySelectorAll('[id^=modal-]').forEach(m=>m.remove());Modal.toast('✅ 凭证已保存');renderContent();}
+
+// ===== 费用报销详情增强 =====
+function viewExpense(id){const e=DB.get('fin_expenses').find(i=>i.id===id);if(!e)return;
+  const steps=['提交申请','部门经理审核','财务审核','CFO审批','出纳付款','完成'];
+  const si=['待审核','部门经理已审','财务审核中','CFO审批','已通过','已驳回'].indexOf(e.status);
+  const html=`<div><div style="display:flex;gap:6px;margin-bottom:16px">${steps.map((s,i)=>`<div style="flex:1;text-align:center;padding:6px 4px;background:${i<=si?(e.status==='已驳回'?'#fee2e2':'#d1fae5'):'var(--gray-50)'};border-radius:6px;font-size:11px"><div>${i<si?'✅':i===si?'🔄':'⏳'}</div>${s}</div>`).join('')}</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:14px">
+    <div><strong>单号：</strong>${e.id}</div><div><strong>报销人：</strong>${e.applicant}</div>
+    <div><strong>部门：</strong>${e.dept}</div><div><strong>类型：</strong>${e.type}</div>
+    <div><strong>金额：</strong><span style="color:var(--primary);font-weight:700">¥${e.amount.toLocaleString()}</span></div>
+    <div><strong>日期：</strong>${e.date}</div>
+    <div style="grid-column:1/-1"><strong>状态：</strong><span class="status ${e.status==='已通过'?'approved':e.status==='已驳回'?'rejected':'pending'}">${e.status}</span></div></div></div>`;
+  Modal.show(`🧾 报销单详情 - ${e.id}`,html,{width:'520px'});
+}
+
+// ===== 结算管理 =====
+function renderSettlement(el){
+  const list=DB.get('fin_settlements');
+  const pending=list.filter(i=>i.status==='待初审').length;
+  const review=list.filter(i=>i.status==='待复审').length;
+  const paid=list.filter(i=>i.status==='已付款').length;
+  el.innerHTML=`<div class="portal-stats" style="margin-bottom:20px">
+    <div class="stat-card"><div class="label">待初审</div><div class="value">${pending}</div></div>
+    <div class="stat-card orange"><div class="label">待复审</div><div class="value">${review}</div></div>
+    <div class="stat-card green"><div class="label">已付款</div><div class="value">${paid}</div></div>
+    <div class="stat-card"><div class="label">本月结算总额</div><div class="value">¥${(list.reduce((s,i)=>s+i.amount,0)/10000).toFixed(1)}万</div></div>
+  </div>
+  <div class="card" style="margin-bottom:20px"><div class="card-header"><h3>📋 结算审批流程</h3></div><div class="card-body padded" style="font-size:13px;color:var(--gray-600)">
+    <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
+      <span style="padding:4px 12px;background:var(--primary-light);color:var(--primary);border-radius:4px;font-weight:600">①提交结算</span>→
+      <span style="padding:4px 12px;background:#fef3c7;color:#92400e;border-radius:4px;font-weight:600">②初审（财务专员）</span>→
+      <span style="padding:4px 12px;background:#e0e7ff;color:#3730a3;border-radius:4px;font-weight:600">③复审（财务经理）</span>→
+      <span style="padding:4px 12px;background:#d1fae5;color:#065f46;border-radius:4px;font-weight:600">④出纳付款</span>
+    </div>
+    <div style="color:var(--gray-400);font-size:12px">初审核对发票与合同 → 复审审批金额与付款方式 → 出纳执行银行付款</div>
+  </div></div>
+  <div class="card"><div class="card-body"><div style="overflow-x:auto"><table><thead><tr><th>结算单号</th><th>供应商</th><th>摘要</th><th>金额</th><th>发票号</th><th>合同号</th><th>日期</th><th>状态</th><th>操作</th></tr></thead>
+  <tbody>${list.map(s=>`<tr><td style="font-size:12px">${s.id}</td><td><strong>${s.vendor}</strong></td><td style="font-size:12px;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${s.desc}</td>
+    <td style="font-weight:600">¥${s.amount.toLocaleString()}</td><td style="font-size:12px">${s.invoiceNo}</td><td style="font-size:12px">${s.contractNo}</td><td>${s.date}</td>
+    <td><span class="status ${s.status==='已付款'?'approved':s.status.includes('已审')?'processing':s.status==='已驳回'?'rejected':'pending'}">${s.status}</span></td>
+    <td>${s.status==='待初审'?`<button class="btn btn-sm btn-primary" onclick="doFirstReview('${s.id}')">初审</button>`:''}${s.status==='初审通过'||s.status==='待复审'?`<button class="btn btn-sm btn-success" onclick="doSecondReview('${s.id}')">复审</button>`:''}${s.status==='复审通过'?`<button class="btn btn-sm btn-success" onclick="doPayment('${s.id}')">付款</button>`:''}
+    <a href="#" onclick="viewSettlement('${s.id}');return false" style="color:var(--primary);font-size:13px;text-decoration:none;margin-left:2px">查看</a></td></tr>`).join('')}</tbody></table></div>
+  <div style="padding:16px;text-align:center;color:var(--gray-400);font-size:13px">共 ${list.length} 条记录</div></div></div>`;
+}
+function viewSettlement(id){const s=DB.get('fin_settlements').find(x=>x.id===id);if(!s)return;
+  const steps=['提交结算','初审（财务专员）','复审（财务经理）','出纳付款'];
+  const sm={'待初审':0,'初审通过':1,'待复审':1,'复审通过':2,'已付款':3,'已驳回':-1};
+  const cs=sm[s.status]||0;
+  const html=`<div><div style="display:flex;gap:6px;margin-bottom:16px">${steps.map((st,i)=>`<div style="flex:1;text-align:center;padding:6px;background:${i<=cs?(s.status==='已驳回'?'#fee2e2':'#d1fae5'):'var(--gray-50)'};border-radius:6px;font-size:11px;font-weight:${i===cs?'700':'400'}"><div>${i<cs?'✅':i===cs?'🔄':'⏳'}</div>${st}</div>`).join('')}</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:14px;margin-bottom:14px">
+      <div><strong>供应商：</strong>${s.vendor}</div><div><strong>金额：</strong><span style="color:var(--primary);font-weight:700">¥${s.amount.toLocaleString()}</span></div>
+      <div><strong>发票号：</strong>${s.invoiceNo}</div><div><strong>合同号：</strong>${s.contractNo}</div>
+      <div><strong>日期：</strong>${s.date}</div><div><strong>付款方式：</strong>${s.paymentMethod}</div>
+      <div style="grid-column:1/-1"><strong>摘要：</strong>${s.desc}</div></div>
+    <div style="padding:10px;background:var(--gray-50);border-radius:8px;font-size:13px">初审人：${s.firstReviewer} | 复审人：${s.secondReviewer}</div></div>`;
+  Modal.show(`💸 结算单详情 - ${s.id}`,html,{width:'560px'});
+}
+function doFirstReview(id){const l=DB.get('fin_settlements');const s=l.find(x=>x.id===id);if(s){s.status='初审通过';DB.set('fin_settlements',l);Modal.toast('✅ 初审通过');renderContent();}}
+function doSecondReview(id){const l=DB.get('fin_settlements');const s=l.find(x=>x.id===id);if(s){s.status='复审通过';DB.set('fin_settlements',l);Modal.toast('✅ 复审通过');renderContent();}}
+function doPayment(id){const l=DB.get('fin_settlements');const s=l.find(x=>x.id===id);if(s){s.status='已付款';DB.set('fin_settlements',l);Modal.toast('✅ 付款完成');renderContent();}}
+function showNewSettlement(){
+  const fields=[{name:'vendor',label:'供应商',required:true},{name:'desc',label:'摘要',full:true,required:true},
+    {name:'amount',label:'金额',type:'number',required:true},{name:'invoiceNo',label:'发票号',required:true},
+    {name:'contractNo',label:'合同号',required:true},{name:'date',label:'日期',type:'date',required:true},
+    {name:'firstReviewer',label:'初审人',required:true},{name:'secondReviewer',label:'复审人',required:true},
+    {name:'paymentMethod',label:'付款方式',type:'select',options:['银行转账','承兑汇票','现金','支票'],required:true}];
+  const html=Form.render(fields)+`<div style="margin-top:16px;text-align:right"><button class="btn" style="background:#f3f4f6;color:#374151" onclick="Modal.close(this.closest('[id^=modal]').id)">取消</button><button class="btn btn-primary" onclick="saveSettlement()">提交结算</button></div>`;
+  Modal.show('💸 新建结算单',html,{width:'580px'});
+}
+function saveSettlement(){const d=Form.getData();if(!d.vendor||!d.amount){Modal.toast('请填写必填项','warning');return;}const l=DB.get('fin_settlements');l.unshift({...d,id:DB.genId('JS'),status:'待初审'});DB.set('fin_settlements',l);document.querySelectorAll('[id^=modal-]').forEach(m=>m.remove());Modal.toast('✅ 结算单已提交');renderContent();}
 </script>
 </body>
 </html>
