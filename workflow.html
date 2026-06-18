@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>流程中心 - 华信集团</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+.wf-card{background:white;border-radius:10px;padding:20px;box-shadow:var(--shadow-sm);margin-bottom:16px;border-left:4px solid var(--primary);cursor:pointer;transition:all .2s}
+.wf-card:hover{box-shadow:var(--shadow-md);transform:translateY(-1px)}
+.wf-card.completed{border-left-color:var(--success);opacity:.8}
+.wf-card.rejected{border-left-color:var(--danger);opacity:.7}
+.wf-card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.wf-card-title{font-size:15px;font-weight:600;color:var(--gray-800)}
+.wf-card-meta{display:flex;gap:16px;font-size:12px;color:var(--gray-400);margin-top:8px}
+.wf-step{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:4px;font-size:11px;margin:2px}
+.wf-step.done{background:#d1fae5;color:#065f46}
+.wf-step.pending{background:#f3f4f6;color:#6b7280}
+.wf-step.active{background:#dbeafe;color:#1e40af;font-weight:600}
+.wf-step.rejected{background:#fee2e2;color:#991b1b}
+.flow-type-badge{padding:4px 10px;border-radius:12px;font-size:11px;font-weight:600}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="logo"><span class="icon">🔄</span><span>跨系统流程中心</span></div>
+  <div class="nav-links"><a href="index.html">← 返回门户</a></div>
+  <div class="user-info"><div class="avatar">席</div><span>席宝 | 流程管理</span></div>
+</div>
+<div class="layout">
+  <div class="sidebar">
+    <div class="menu-group"><div class="menu-title">流程管理</div>
+      <a class="menu-item active" href="#" onclick="showTab('all')"><span class="icon">📋</span> 全部流程</a>
+      <a class="menu-item" href="#" onclick="showTab('active')"><span class="icon">🔄</span> 进行中</a>
+      <a class="menu-item" href="#" onclick="showTab('completed')"><span class="icon">✅</span> 已完成</a>
+    </div>
+    <div class="menu-group"><div class="menu-title">发起流程</div>
+      <a class="menu-item" href="#" onclick="startProcurement()"><span class="icon">🛒</span> 采购全流程</a>
+      <a class="menu-item" href="#" onclick="startSales()"><span class="icon">📈</span> 销售全流程</a>
+    </div>
+    <div class="menu-group"><div class="menu-title">快捷入口</div>
+      <a class="menu-item" href="oa-system.html"><span class="icon">📝</span> OA审批</a>
+      <a class="menu-item" href="inventory-system.html"><span class="icon">📦</span> 出入库</a>
+      <a class="menu-item" href="finance-system.html"><span class="icon">💰</span> 财务云</a>
+      <a class="menu-item" href="legal-system.html"><span class="icon">⚖️</span> 法务管理</a>
+      <a class="menu-item" href="production-system.html"><span class="icon">🏭</span> 生产经营</a>
+    </div>
+  </div>
+  <div class="main-content">
+    <div class="page-header"><div><div class="breadcrumb">流程中心</div><h2 id="page-title">📋 全部流程</h2></div></div>
+    <div id="tab-content"></div>
+    <div class="footer">华信集团 · 跨系统流程中心 V1.0.0 © 2026</div>
+  </div>
+</div>
+<script src="assets/app.js"></script>
+<script>
+let currentTab = 'all';
+function showTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.menu-item').forEach(m=>m.classList.remove('active'));
+  event.target.closest('.menu-item')?.classList.add('active');
+  const titles = {all:'📋 全部流程',active:'🔄 进行中',completed:'✅ 已完成'};
+  document.getElementById('page-title').textContent = titles[tab]||'';
+  renderWfList();
+}
+
+function renderWfList() {
+  const allWf = WorkflowEngine.getAll();
+  let list = allWf;
+  if (currentTab === 'active') list = allWf.filter(w => w.status === 'active');
+  if (currentTab === 'completed') list = allWf.filter(w => w.status === 'completed');
+  
+  const el = document.getElementById('tab-content');
+  el.innerHTML = `
+    <div class="portal-stats" style="margin-bottom:20px">
+      <div class="stat-card"><div class="label">总流程数</div><div class="value">${allWf.length}</div></div>
+      <div class="stat-card orange"><div class="label">进行中</div><div class="value">${allWf.filter(w=>w.status==='active').length}</div></div>
+      <div class="stat-card green"><div class="label">已完成</div><div class="value">${allWf.filter(w=>w.status==='completed').length}</div></div>
+    </div>
+    ${list.length ? list.map(wf => {
+      const isProcurement = wf.type === 'procurement';
+      const badgeColor = isProcurement ? '#dbeafe;color:#1e40af' : '#d1fae5;color:#065f46';
+      const badgeLabel = isProcurement ? '🛒 采购流程' : '📈 销售流程';
+      const doneCount = wf.steps.filter(s => s.status === 'done').length;
+      return `<div class="wf-card ${wf.status}" onclick="viewWfDetail('${wf.id}')">
+        <div class="wf-card-header">
+          <div><div class="wf-card-title">${wf.title}</div>
+            <div class="wf-card-meta">
+              <span>${wf.id}</span><span>发起：${wf.createdAt}</span><span>更新：${wf.updatedAt}</span>
+              <span>进度：${doneCount}/${wf.steps.length}</span>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span class="flow-type-badge" style="background:${badgeColor}">${badgeLabel}</span>
+            <span class="status ${wf.status==='active'?'processing':wf.status==='completed'?'approved':'rejected'}">${wf.status==='active'?'进行中':wf.status==='completed'?'已完成':'已驳回'}</span>
+          </div>
+        </div>
+        <div>${wf.steps.map(s => `<span class="wf-step ${s.status}">${s.status==='done'?'✅':s.status==='rejected'?'❌':wf.currentStep===s.key?'🔄':'⏳'} ${s.label}</span>`).join('')}</div>
+      </div>`;
+    }).join('') : '<div style="padding:60px;text-align:center;color:var(--gray-400)">暂无流程</div>'}
+  `;
+}
+
+function viewWfDetail(id) {
+  const wf = WorkflowEngine.getById(id);
+  if (!wf) return;
+  const isProcurement = wf.type === 'procurement';
+  
+  const stepsHtml = wf.steps.map((s, i) => {
+    const icon = s.status === 'done' ? '✅' : s.status === 'rejected' ? '❌' : wf.currentStep === s.key ? '🔄' : '⏳';
+    const statusText = s.status === 'done' ? `完成于 ${s.doneAt} by ${s.doneBy||''}` : 
+      s.status === 'rejected' ? `驳回：${s.rejectReason||''}` :
+      wf.currentStep === s.key ? '⚡ 当前待处理' : '等待中';
+    const systemLink = s.system ? `<a href="${s.system}" style="color:var(--primary);font-size:11px;text-decoration:none" onclick="event.stopPropagation()">进入系统 →</a>` : '';
+    return `<div style="display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--gray-100)">
+      <div style="width:32px;height:32px;border-radius:50%;background:${s.status==='done'?'#d1fae5':s.status==='rejected'?'#fee2e2':wf.currentStep===s.key?'#dbeafe':'#f3f4f6'};display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">${icon}</div>
+      <div style="flex:1"><div style="font-weight:600;font-size:13px;color:var(--gray-800)">${i+1}. ${s.label}</div>
+        <div style="font-size:12px;color:var(--gray-400);margin-top:2px">${statusText}</div>
+        ${s.data ? `<div style="font-size:11px;color:var(--gray-500);margin-top:4px;background:var(--gray-50);padding:6px 8px;border-radius:4px">${
+          Object.entries(s.data).map(([k,v]) => `${k}: ${v}`).join(' | ')
+        }</div>` : ''}
+      </div>
+      <div style="text-align:right;flex-shrink:0">${systemLink}
+        ${wf.status === 'active' && wf.currentStep === s.key ? 
+          `<button class="btn btn-sm btn-primary" style="margin-top:4px" onclick="event.stopPropagation();advanceWf('${wf.id}','${s.key}')">推进</button>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+  
+  const html = `<div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <div><span class="flow-type-badge" style="background:${isProcurement?'#dbeafe;color:#1e40af':'#d1fae5;color:#065f46'}">${isProcurement?'🛒 采购全流程':'📈 销售全流程'}</span>
+      <span class="status ${wf.status==='active'?'processing':wf.status==='completed'?'approved':'rejected'}" style="margin-left:8px">${wf.status==='active'?'进行中':wf.status==='completed'?'已完成':'已驳回'}</span></div>
+    </div>
+    <div style="font-size:13px;color:var(--gray-500);margin-bottom:16px">创建：${wf.createdAt} | 更新：${wf.updatedAt} | 完成 ${wf.steps.filter(s=>s.status==='done').length}/${wf.steps.length} 步</div>
+    <h4 style="font-size:14px;color:var(--gray-700);margin-bottom:12px">流程步骤</h4>
+    ${stepsHtml}
+  </div>`;
+  Modal.show(`🔄 流程详情 - ${wf.title}`, html, {width:'640px'});
+}
+
+function advanceWf(wfId, stepKey) {
+  WorkflowEngine.advance(wfId, stepKey);
+  Modal.toast('✅ 流程步骤已推进');
+  document.querySelectorAll('[id^=modal-]').forEach(m=>m.remove());
+  renderWfList();
+}
+
+function startProcurement() {
+  const fields = [
+    {name:'item',label:'采购内容',full:true,required:true,placeholder:'如：ThinkPad T14 50台'},
+    {name:'vendor',label:'供应商',required:true,placeholder:'如：联想集团'},
+    {name:'amount',label:'预算金额（元）',type:'number',required:true},
+    {name:'reason',label:'采购原因',type:'textarea',full:true,required:true},
+  ];
+  const html = Form.render(fields) + `<div style="margin-top:16px;text-align:right">
+    <button class="btn" style="background:#f3f4f6;color:#374151" onclick="Modal.close(this.closest('[id^=modal]').id)">取消</button>
+    <button class="btn btn-primary" onclick="doStartProcurement()">发起采购流程</button></div>`;
+  Modal.show('🛒 发起采购全流程', html, {width:'520px'});
+}
+function doStartProcurement() {
+  const d = Form.getData();
+  if (!d.item || !d.amount) { Modal.toast('请填写必填项','warning'); return; }
+  WorkflowEngine.startWorkflow('procurement', d.item + ' 采购', d);
+  document.querySelectorAll('[id^=modal-]').forEach(m=>m.remove());
+  Modal.toast('✅ 采购流程已发起'); renderWfList();
+}
+
+function startSales() {
+  const fields = [
+    {name:'customer',label:'客户名称',required:true},
+    {name:'items',label:'销售产品',full:true,required:true,placeholder:'如：华为交换机S5735 × 20台'},
+    {name:'amount',label:'合同金额（元）',type:'number',required:true},
+    {name:'contractNo',label:'合同编号',required:true},
+  ];
+  const html = Form.render(fields) + `<div style="margin-top:16px;text-align:right">
+    <button class="btn" style="background:#f3f4f6;color:#374151" onclick="Modal.close(this.closest('[id^=modal]').id)">取消</button>
+    <button class="btn btn-primary" onclick="doStartSales()">发起销售流程</button></div>`;
+  Modal.show('📈 发起销售全流程', html, {width:'520px'});
+}
+function doStartSales() {
+  const d = Form.getData();
+  if (!d.customer || !d.amount) { Modal.toast('请填写必填项','warning'); return; }
+  WorkflowEngine.startWorkflow('sales', d.items + ' 销售', d);
+  document.querySelectorAll('[id^=modal-]').forEach(m=>m.remove());
+  Modal.toast('✅ 销售流程已发起'); renderWfList();
+}
+
+renderWfList();
+</script>
+</body>
+</html>
