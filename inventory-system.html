@@ -49,28 +49,55 @@ const defaultStock = [
   {code:'WH-001',name:'六类网线',spec:'安普 305米/箱',warehouse:'A区-原材料仓',qty:5,safety:20,unit:'箱',cost:480},
   {code:'WH-002',name:'光纤跳线',spec:'LC-LC 单模 3米',warehouse:'A区-原材料仓',qty:180,safety:50,unit:'条',cost:35},
   {code:'WH-003',name:'服务器硬盘',spec:'希捷银河 8TB SAS',warehouse:'A区-原材料仓',qty:45,safety:20,unit:'块',cost:1850},
+  {code:'WH-004',name:'超五类网线',spec:'安普 305米/箱',warehouse:'A区-原材料仓',qty:35,safety:15,unit:'箱',cost:320},
+  {code:'WH-005',name:'机柜理线架',spec:'1U标准',warehouse:'A区-原材料仓',qty:22,safety:10,unit:'个',cost:180},
+  {code:'WH-006',name:'水晶头',spec:'RJ45 六类 100个/盒',warehouse:'A区-原材料仓',qty:8,safety:10,unit:'盒',cost:65},
+  {code:'WH-007',name:'光纤熔接盘',spec:'24芯',warehouse:'A区-原材料仓',qty:12,safety:5,unit:'个',cost:280},
+  {code:'WH-008',name:'网络配线架',spec:'24口',warehouse:'A区-原材料仓',qty:15,safety:8,unit:'个',cost:350},
   {code:'WH-010',name:'ThinkPad T14',spec:'i7/16G/512G',warehouse:'C区-办公用品仓',qty:38,safety:10,unit:'台',cost:6800},
   {code:'WH-011',name:'A4打印纸',spec:'Double A 70g 500张/包',warehouse:'C区-办公用品仓',qty:12,safety:50,unit:'箱',cost:120},
   {code:'WH-012',name:'USB-C转接头',spec:'Type-C转HDMI',warehouse:'C区-办公用品仓',qty:18,safety:30,unit:'个',cost:85},
+  {code:'WH-013',name:'激光墨盒',spec:'HP 26A 黑色',warehouse:'C区-办公用品仓',qty:6,safety:8,unit:'个',cost:450},
+  {code:'WH-014',name:'文件柜',spec:'铁皮四层',warehouse:'C区-办公用品仓',qty:20,safety:5,unit:'个',cost:680},
+  {code:'WH-015',name:'白板笔',spec:'得力 白色 10支/盒',warehouse:'C区-办公用品仓',qty:25,safety:10,unit:'盒',cost:35},
   {code:'WH-020',name:'交换机',spec:'S5735-L24T4X',warehouse:'D区-设备仓',qty:15,safety:5,unit:'台',cost:3200},
   {code:'WH-021',name:'防火墙',spec:'USG6555E',warehouse:'D区-设备仓',qty:8,safety:3,unit:'台',cost:28000},
+  {code:'WH-022',name:'UPS电源',spec:'3KVA在线式',warehouse:'D区-设备仓',qty:4,safety:3,unit:'台',cost:4500},
+  {code:'WH-023',name:'网线钳',spec:'专业级',warehouse:'D区-设备仓',qty:10,safety:5,unit:'把',cost:85},
+  {code:'WH-024',name:'标签打印机',spec:'兄弟 TD-4550DNWB',warehouse:'D区-设备仓',qty:3,safety:2,unit:'台',cost:2800},
 ];
 if (!DB.get('inv_stock').length) DB.set('inv_stock', defaultStock);
+
 
 const defaultInbounds = [
   {id:'RK20260618001',item:'ThinkPad T14 笔记本',spec:'i7-1365U/16G/512G',supplier:'联想集团',qty:50,unitPrice:6800,warehouse:'C区-办公用品仓',date:'2026-06-18',status:'待验收'},
   {id:'RK20260618002',item:'华为交换机',spec:'S5735-L24T4X',supplier:'华为技术',qty:20,unitPrice:3200,warehouse:'D区-设备仓',date:'2026-06-18',status:'运输中'},
   {id:'RK20260617005',item:'服务器硬盘',spec:'希捷银河 8TB',supplier:'希捷科技',qty:100,unitPrice:1850,warehouse:'A区-原材料仓',date:'2026-06-17',status:'已入库',receivedBy:'席宝'},
   {id:'RK20260617004',item:'网线（六类）',spec:'安普 六类 305米/箱',supplier:'安普布线',qty:30,unitPrice:480,warehouse:'A区-原材料仓',date:'2026-06-17',status:'已入库',receivedBy:'席宝'},
+  {id:'RK20260615006',item:'防火墙',spec:'USG6555E',supplier:'华为技术',qty:5,unitPrice:28000,warehouse:'D区-设备仓',date:'2026-06-15',status:'已入库',receivedBy:'席宝'},
+  {id:'RK20260612007',item:'UPS电源',spec:'3KVA在线式',supplier:'华为技术',qty:3,unitPrice:4500,warehouse:'D区-设备仓',date:'2026-06-12',status:'已入库',receivedBy:'席宝'},
+  {id:'RK20260610008',item:'A4打印纸',spec:'Double A 70g',supplier:'得力办公',qty:100,unitPrice:120,warehouse:'C区-办公用品仓',date:'2026-06-10',status:'已入库',receivedBy:'席宝'},
+  {id:'RK20260608009',item:'文件柜',spec:'铁皮四层',supplier:'得力办公',qty:10,unitPrice:680,warehouse:'C区-办公用品仓',date:'2026-06-08',status:'已入库',receivedBy:'席宝'},
+  {id:'RK20260605010',item:'网线（超五类）',spec:'安普 超五类',supplier:'安普布线',qty:20,unitPrice:320,warehouse:'A区-原材料仓',date:'2026-06-05',status:'已入库',receivedBy:'席宝'},
+  {id:'RK20260603011',item:'光纤跳线',spec:'LC-LC 单模',supplier:'安普布线',qty:200,unitPrice:35,warehouse:'A区-原材料仓',date:'2026-06-03',status:'已入库',receivedBy:'席宝'},
 ];
 if (!DB.get('inv_inbounds').length) DB.set('inv_inbounds', defaultInbounds);
+
 
 const defaultOutbounds = [
   {id:'CK20260618001',item:'ThinkPad T14 笔记本',qty:5,dept:'技术研发部',applicant:'张伟',date:'2026-06-18',purpose:'新员工入职',status:'已出库'},
   {id:'CK20260617003',item:'A4打印纸',qty:10,dept:'行政综合部',applicant:'孙磊',date:'2026-06-17',purpose:'日常办公',status:'已出库'},
   {id:'CK20260616005',item:'服务器硬盘',qty:20,dept:'技术研发部',applicant:'周婷',date:'2026-06-16',purpose:'数据中心扩容',status:'已出库'},
+  {id:'CK20260615006',item:'交换机',qty:3,dept:'技术研发部',applicant:'张伟',date:'2026-06-15',purpose:'网络设备部署',status:'已出库'},
+  {id:'CK20260613007',item:'六类网线',qty:5,dept:'技术研发部',applicant:'王强',date:'2026-06-13',purpose:'综合布线',status:'已出库'},
+  {id:'CK20260612008',item:'USB-C转接头',qty:10,dept:'市场营销部',applicant:'李娜',date:'2026-06-12',purpose:'出差携带',status:'已出库'},
+  {id:'CK20260610009',item:'ThinkPad T14 笔记本',qty:3,dept:'项目交付部',applicant:'陈明',date:'2026-06-10',purpose:'项目现场部署',status:'已出库'},
+  {id:'CK20260608010',item:'白板笔',qty:5,dept:'人力资源部',applicant:'席宝',date:'2026-06-08',purpose:'培训教室使用',status:'已出库'},
+  {id:'CK20260605011',item:'文件柜',qty:2,dept:'财务管理部',applicant:'刘芳',date:'2026-06-05',purpose:'档案存放',status:'已出库'},
+  {id:'CK20260603012',item:'网线（六类）',qty:8,dept:'技术研发部',applicant:'张伟',date:'2026-06-03',purpose:'机房改造',status:'已出库'},
 ];
 if (!DB.get('inv_outbounds').length) DB.set('inv_outbounds', defaultOutbounds);
+
 
 let currentTab = 'inbound';
 

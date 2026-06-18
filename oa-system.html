@@ -51,6 +51,7 @@
 <script>
 const typeIcon={请假:'🏖️',用车:'🚗',用印:'📮',出差:'✈️',招待:'🍽️',采购:'🛒'};
 const defaultApprovals=[
+  // ===== 待审批（席宝需审批的）=====
   {id:'SP001',type:'请假',applicant:'赵丽',dept:'人力资源部',summary:'年假3天（6/20-6/22）',date:'2026-06-18 09:30',urgency:'普通',status:'待审批',detail:{leaveType:'年假',start:'2026-06-20',end:'2026-06-22',days:3,reason:'回老家探亲'}},
   {id:'SP002',type:'用车',applicant:'孙磊',dept:'行政综合部',summary:'6/19 北京-天津出差',date:'2026-06-18 09:15',urgency:'普通',status:'待审批',detail:{date:'2026-06-19',from:'公司',to:'天津滨海新区',purpose:'客户拜访'}},
   {id:'SP003',type:'用印',applicant:'吴刚',dept:'法务合规部',summary:'中科信息合作协议盖章',date:'2026-06-18 08:50',urgency:'紧急',status:'待审批',detail:{contract:'中科信息合作协议',pages:12,copies:3,sealType:'合同专用章'}},
@@ -61,8 +62,37 @@ const defaultApprovals=[
   {id:'SP008',type:'用印',applicant:'刘芳',dept:'财务管理部',summary:'银行开户许可证盖章',date:'2026-06-17 11:30',urgency:'普通',status:'待审批'},
   {id:'SP009',type:'出差',applicant:'王强',dept:'生产制造部',summary:'广州供应商考察3天',date:'2026-06-16 17:00',urgency:'普通',status:'待审批'},
   {id:'SP010',type:'请假',applicant:'马丽',dept:'财务管理部',summary:'调休半天（6/18下午）',date:'2026-06-16 10:00',urgency:'普通',status:'待审批'},
+  {id:'SP011',type:'采购',applicant:'张伟',dept:'技术研发部',summary:'华为交换机20台 ¥64,000',date:'2026-06-18 10:00',urgency:'普通',status:'待审批'},
+  {id:'SP012',type:'出差',applicant:'周婷',dept:'技术研发部',summary:'深圳腾讯拜访3天',date:'2026-06-18 10:30',urgency:'普通',status:'待审批'},
+  {id:'SP013',type:'用车',applicant:'陈明',dept:'项目交付部',summary:'6/20 北京南站接送客户',date:'2026-06-18 11:00',urgency:'紧急',status:'待审批'},
+  {id:'SP014',type:'招待',applicant:'王强',dept:'生产制造部',summary:'供应商晚宴 ¥1,500',date:'2026-06-17 16:00',urgency:'普通',status:'待审批'},
+  // ===== 席宝已审批通过的 =====
+  {id:'SP015',type:'请假',applicant:'郑雪',dept:'市场营销部',summary:'年假5天（6/10-6/14）',date:'2026-06-08 09:00',urgency:'普通',status:'已通过',approvedBy:'席宝',detail:{leaveType:'年假',days:5,reason:'旅游'}},
+  {id:'SP016',type:'采购',applicant:'张伟',dept:'技术研发部',summary:'Dell服务器2台 ¥170,000',date:'2026-06-05 14:00',urgency:'普通',status:'已通过',approvedBy:'席宝'},
+  {id:'SP017',type:'用印',applicant:'吴刚',dept:'法务合规部',summary:'华南装备销售合同盖章',date:'2026-06-04 10:30',urgency:'紧急',status:'已通过',approvedBy:'席宝'},
+  {id:'SP018',type:'出差',applicant:'李娜',dept:'市场营销部',summary:'上海展会5天',date:'2026-06-03 09:00',urgency:'普通',status:'已通过',approvedBy:'席宝'},
+  {id:'SP019',type:'用车',applicant:'孙磊',dept:'行政综合部',summary:'6/5 公司-首都机场',date:'2026-06-04 08:00',urgency:'普通',status:'已通过',approvedBy:'席宝'},
+  {id:'SP020',type:'请假',applicant:'王芳',dept:'质量管理部',summary:'事假2天（6/3-6/4）',date:'2026-06-02 11:00',urgency:'普通',status:'已通过',approvedBy:'席宝'},
+  {id:'SP021',type:'招待',applicant:'李娜',dept:'市场营销部',summary:'客户接待（前海数字）¥3,500',date:'2026-06-01 15:00',urgency:'普通',status:'已通过',approvedBy:'席宝'},
+  {id:'SP022',type:'采购',applicant:'周婷',dept:'技术研发部',summary:'服务器硬盘100块 ¥185,000',date:'2026-05-28 09:00',urgency:'紧急',status:'已通过',approvedBy:'席宝'},
+  {id:'SP023',type:'出差',applicant:'陈明',dept:'项目交付部',summary:'广州华为拜访2天',date:'2026-05-25 14:00',urgency:'普通',status:'已通过',approvedBy:'席宝'},
+  // ===== 席宝已驳回的 =====
+  {id:'SP024',type:'招待',applicant:'孙磊',dept:'行政综合部',summary:'部门聚餐 ¥8,000',date:'2026-06-10 16:00',urgency:'普通',status:'已驳回',rejectReason:'金额超标，请按标准执行'},
+  {id:'SP025',type:'出差',applicant:'黄海',dept:'生产制造部',summary:'海南旅游考察',date:'2026-06-09 10:00',urgency:'普通',status:'已驳回',rejectReason:'非业务出差，不予批准'},
+  // ===== 席宝自己发起的 =====
+  {id:'SP026',type:'请假',applicant:'席宝',dept:'人力资源部',summary:'年假2天（6/25-6/26）',date:'2026-06-18 08:00',urgency:'普通',status:'已通过',approvedBy:'刘芳'},
+  {id:'SP027',type:'采购',applicant:'席宝',dept:'人力资源部',summary:'培训资料印刷 ¥2,800',date:'2026-06-15 09:00',urgency:'普通',status:'待审批'},
+  {id:'SP028',type:'用车',applicant:'席宝',dept:'人力资源部',summary:'6/20 北京-雄安新区出差',date:'2026-06-16 14:00',urgency:'紧急',status:'已通过',approvedBy:'孙磊'},
+  {id:'SP029',type:'出差',applicant:'席宝',dept:'人力资源部',summary:'上海招聘3天（6/22-6/24）',date:'2026-06-14 11:00',urgency:'普通',status:'已通过',approvedBy:'刘芳'},
+  {id:'SP030',type:'用印',applicant:'席宝',dept:'人力资源部',summary:'劳动合同盖章（5人）',date:'2026-06-12 10:00',urgency:'普通',status:'已通过',approvedBy:'吴刚'},
+  {id:'SP031',type:'采购',applicant:'席宝',dept:'人力资源部',summary:'面试间装修 ¥12,000',date:'2026-06-10 09:00',urgency:'普通',status:'已通过',approvedBy:'刘芳'},
+  {id:'SP032',type:'招待',applicant:'席宝',dept:'人力资源部',summary:'校招宣讲会 ¥5,000',date:'2026-06-08 14:00',urgency:'普通',status:'已通过',approvedBy:'刘芳'},
+  {id:'SP033',type:'请假',applicant:'席宝',dept:'人力资源部',summary:'调休1天（6/13）',date:'2026-06-11 09:00',urgency:'普通',status:'已通过',approvedBy:'刘芳'},
+  {id:'SP034',type:'出差',applicant:'席宝',dept:'人力资源部',summary:'成都校招2天',date:'2026-06-05 10:00',urgency:'普通',status:'已通过',approvedBy:'刘芳'},
+  {id:'SP035',type:'用车',applicant:'席宝',dept:'人力资源部',summary:'6/12 培训中心接送讲师',date:'2026-06-10 16:00',urgency:'普通',status:'已通过',approvedBy:'孙磊'},
 ];
 if(!DB.get('oa_approvals').length) DB.set('oa_approvals',defaultApprovals);
+
 
 const defaultDocs=[
   {id:'GW2026018',title:'关于2026年端午节放假通知',type:'通知',dept:'行政综合部',author:'孙磊',date:'2026-06-18',status:'审核中',level:'普通'},

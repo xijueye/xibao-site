@@ -47,8 +47,17 @@ const defaultInvoices = [
   {id:'FP20260614005',code:'电子发票',number:'FP202606008',type:'电子普票',direction:'进项',counterparty:'中国石油天然气股份有限公司',amount:12500,tax:0,date:'2026-06-12',status:'已认证'},
   {id:'FP20260613006',code:'011002600311',number:'08945624',type:'增值税专票',direction:'销项',counterparty:'深圳前海数字科技有限公司',amount:520000,tax:67600,date:'2026-06-10',status:'正常'},
   {id:'FP20260612007',code:'电子发票',number:'FP202606005',type:'增值税专票',direction:'进项',counterparty:'华为技术有限公司',amount:186000,tax:24180,date:'2026-06-08',status:'待认证'},
+  {id:'FP20260610008',code:'011002600311',number:'08945625',type:'增值税专票',direction:'销项',counterparty:'北京中科信息技术有限公司',amount:420000,tax:54600,date:'2026-06-06',status:'正常'},
+  {id:'FP20260608009',code:'电子发票',number:'FP202606015',type:'电子普票',direction:'进项',counterparty:'联想集团',amount:340000,tax:44200,date:'2026-06-05',status:'待认证'},
+  {id:'FP20260605010',code:'011002600311',number:'08945626',type:'增值税专票',direction:'销项',counterparty:'上海恒远建设工程有限公司',amount:280000,tax:36400,date:'2026-06-03',status:'正常'},
+  {id:'FP20260603011',code:'电子发票',number:'FP202606018',type:'电子普票',direction:'进项',counterparty:'阿里云计算有限公司',amount:45000,tax:2700,date:'2026-06-01',status:'已认证'},
+  {id:'FP20260601012',code:'011002600311',number:'08945627',type:'增值税专票',direction:'销项',counterparty:'广州华南装备制造集团',amount:156000,tax:20280,date:'2026-05-28',status:'正常'},
+  {id:'FP20260528013',code:'电子发票',number:'FP202605020',type:'增值税专票',direction:'进项',counterparty:'深信服科技股份有限公司',amount:120000,tax:15600,date:'2026-05-25',status:'已认证'},
+  {id:'FP20260525014',code:'011002600311',number:'08945628',type:'增值税专票',direction:'销项',counterparty:'深圳前海数字科技有限公司',amount:380000,tax:49400,date:'2026-05-22',status:'正常'},
+  {id:'FP20260522015',code:'电子发票',number:'FP202605025',type:'电子普票',direction:'进项',counterparty:'中国移动通信集团',amount:8500,tax:0,date:'2026-05-20',status:'已认证'},
 ];
 if (!DB.get('tax_invoices').length) DB.set('tax_invoices', defaultInvoices);
+
 
 const defaultFilings = [
   {tax:'增值税',period:'2026年5月',deadline:'2026-06-20',amount:186420,status:'待申报'},

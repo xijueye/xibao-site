@@ -43,8 +43,13 @@ const defaultAudits = [
   {id:'AUD2026004',name:'信息技术部经济责任审计',type:'经济责任',leader:'刘芳',period:'2026.05-2026.07',progress:40,status:'实施中'},
   {id:'AUD2026005',name:'2026年Q1财务收支审计',type:'财务审计',leader:'马丽',period:'2026.05-2026.06',progress:60,status:'实施中'},
   {id:'AUD2026006',name:'税务合规专项审计',type:'合规审计',leader:'吴刚',period:'2026.06-2026.08',progress:15,status:'实施中'},
+  {id:'AUD2026007',name:'供应链管理审计',type:'专项审计',leader:'马丽',period:'2026.06-2026.08',progress:10,status:'计划中'},
+  {id:'AUD2026008',name:'人力资源管理审计',type:'专项审计',leader:'刘芳',period:'2026.07-2026.09',progress:0,status:'计划中'},
+  {id:'AUD2026009',name:'市场营销部费用审计',type:'财务审计',leader:'马丽',period:'2026.05-2026.06',progress:85,status:'实施中'},
+  {id:'AUD2026010',name:'数据中心建设审计',type:'专项审计',leader:'吴刚',period:'2026.06-2026.09',progress:5,status:'计划中'},
 ];
 if (!DB.get('aud_projects').length) DB.set('aud_projects', defaultAudits);
+
 
 const defaultIssues = [
   {id:'WH2026001',source:'采购合规审计',desc:'部分采购未履行招标程序，涉及金额86万元',risk:'高',dept:'采购部',deadline:'2026-06-30',status:'整改中'},
@@ -52,8 +57,14 @@ const defaultIssues = [
   {id:'WH2026003',source:'财务报表审计',desc:'关联交易披露不充分',risk:'高',dept:'财务管理部',deadline:'2026-07-15',status:'未整改'},
   {id:'WH2026004',source:'采购合规审计',desc:'合同签订时间晚于实际执行时间',risk:'低',dept:'法务合规部',deadline:'2026-07-31',status:'已整改'},
   {id:'WH2026005',source:'工程项目审计',desc:'3个项目存在超预算支出，合计超支127万元',risk:'高',dept:'项目交付部',deadline:'2026-07-15',status:'整改中'},
+  {id:'WH2026006',source:'财务收支审计',desc:'部分费用报销缺少原始发票附件',risk:'中',dept:'财务管理部',deadline:'2026-07-31',status:'整改中'},
+  {id:'WH2026007',source:'税务合规审计',desc:'增值税进项税额抵扣计算有误，少计税额2.3万元',risk:'高',dept:'财务管理部',deadline:'2026-06-30',status:'未整改'},
+  {id:'WH2026008',source:'采购合规审计',desc:'办公用品采购未执行比价程序',risk:'低',dept:'行政综合部',deadline:'2026-08-15',status:'已整改'},
+  {id:'WH2026009',source:'财务收支审计',desc:'招待费超标32%，超预算审批手续不全',risk:'中',dept:'市场营销部',deadline:'2026-07-31',status:'整改中'},
+  {id:'WH2026010',source:'税务合规审计',desc:'个人所得税代扣代缴基数不准确',risk:'中',dept:'人力资源部',deadline:'2026-07-15',status:'未整改'},
 ];
 if (!DB.get('aud_issues').length) DB.set('aud_issues', defaultIssues);
+
 
 let currentTab = 'project';
 function switchTab(tab) {

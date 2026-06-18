@@ -55,8 +55,16 @@ const defaultPurchases = [
   {id:'CG20260618001',item:'ThinkPad T14 笔记本 50台',supplier:'联想集团',amount:340000,applicant:'孙磊',date:'2026-06-18',status:'待审批',reason:'项目交付部新员工配备'},
   {id:'CG20260617003',item:'华为交换机 20台',supplier:'华为技术',amount:64000,applicant:'张伟',date:'2026-06-17',status:'待审批',reason:'数据中心扩容'},
   {id:'CG20260615005',item:'服务器硬盘 100块',supplier:'希捷科技',amount:185000,applicant:'周婷',date:'2026-06-15',status:'已通过',reason:'存储扩容'},
+  {id:'CG20260612006',item:'防火墙 USG6555E 5台',supplier:'华为技术',amount:140000,applicant:'张伟',date:'2026-06-12',status:'已通过',reason:'网络安全升级'},
+  {id:'CG20260610007',item:'六类网线 50箱',supplier:'安普布线',amount:24000,applicant:'王强',date:'2026-06-10',status:'已通过',reason:'布线工程'},
+  {id:'CG20260608008',item:'Dell服务器 R750 3台',supplier:'联想集团',amount:255000,applicant:'张伟',date:'2026-06-08',status:'已通过',reason:'新项目部署'},
+  {id:'CG20260605009',item:'UPS电源 3台',supplier:'华为技术',amount:66000,applicant:'周婷',date:'2026-06-05',status:'已通过',reason:'机房备用电源'},
+  {id:'CG20260603010',item:'A4打印纸 200箱',supplier:'得力办公',amount:24000,applicant:'孙磊',date:'2026-06-03',status:'已通过',reason:'办公用品采购'},
+  {id:'CG20260601011',item:'交换机 S5735 10台',supplier:'华为技术',amount:32000,applicant:'张伟',date:'2026-06-01',status:'已通过',reason:'网络设备更新'},
+  {id:'CG20260528012',item:'激光打印机 8台',supplier:'联想集团',amount:32000,applicant:'孙磊',date:'2026-05-28',status:'已通过',reason:'行政办公'},
 ];
 if (!DB.get('biz_purchases').length) DB.set('biz_purchases', defaultPurchases);
+
 
 let currentTab = 'project';
 function switchTab(tab) {

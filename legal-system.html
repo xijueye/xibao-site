@@ -50,10 +50,14 @@ const defaultContracts = [
 if (!DB.get('leg_contracts').length) DB.set('leg_contracts', defaultContracts);
 
 const defaultCases = [
-  {id:'LS2026001',name:'华信诉中科信息合同纠纷案',counterparty:'北京中科信息技术有限公司',cause:'合同违约',amount:180,status:'审理中',nextHearing:'2026-07-12'},
-  {id:'LS2026002',name:'华信诉恒远建设货款纠纷',counterparty:'上海恒远建设工程有限公司',cause:'货款拖欠',amount:85,status:'调解中',nextHearing:'-'},
-  {id:'LS2025008',name:'前海数字诉华信著作权纠纷',counterparty:'深圳前海数字科技有限公司',cause:'知识产权',amount:55,status:'审理中',nextHearing:'2026-08-05'},
-  {id:'LS2026003',name:'华信诉前海数字合同纠纷案',counterparty:'深圳前海数字科技有限公司',cause:'合同违约',amount:320,status:'已立案',nextHearing:'待定'},
+  {id:'LS2026001',name:'华信诉中科信息合同纠纷案',counterparty:'北京中科信息技术有限公司',cause:'合同违约',amount:180,status:'审理中',nextHearing:'2026-07-12',court:'北京海淀区人民法院',filingDate:'2026-05-15'},
+  {id:'LS2026002',name:'华信诉恒远建设货款纠纷',counterparty:'上海恒远建设工程有限公司',cause:'货款拖欠',amount:85,status:'调解中',nextHearing:'-',court:'北京朝阳区人民法院',filingDate:'2026-04-20'},
+  {id:'LS2025008',name:'前海数字诉华信著作权纠纷',counterparty:'深圳前海数字科技有限公司',cause:'知识产权',amount:55,status:'审理中',nextHearing:'2026-08-05',court:'北京知识产权法院',filingDate:'2026-03-10'},
+  {id:'LS2026003',name:'华信诉前海数字合同纠纷案',counterparty:'深圳前海数字科技有限公司',cause:'合同违约',amount:320,status:'已立案',nextHearing:'待定',court:'北京朝阳区人民法院',filingDate:'2026-06-01'},
+  {id:'LS2026004',name:'员工竞业限制违约案',counterparty:'前员工 张某',cause:'劳动争议',amount:20,status:'已结案',nextHearing:'-',court:'北京海淀区劳动仲裁委',filingDate:'2026-02-15'},
+  {id:'LS2026005',name:'华信诉深信服设备质量索赔',counterparty:'深圳市深信服科技股份有限公司',cause:'质量纠纷',amount:12,status:'和解中',nextHearing:'-',court:'深圳南山区人民法院',filingDate:'2026-04-20'},
+  {id:'LS2026006',name:'安全生产事故赔偿案',counterparty:'受伤员工家属',cause:'侵权纠纷',amount:35,status:'已结案',nextHearing:'-',court:'北京丰台区人民法院',filingDate:'2026-01-10'},
+  {id:'LS2026007',name:'华信诉安普布线货款纠纷',counterparty:'安普布线（中国）有限公司',cause:'合同纠纷',amount:8.6,status:'调解中',nextHearing:'-',court:'北京朝阳区人民法院',filingDate:'2026-06-10'},
 ];
 if (!DB.get('leg_cases').length) DB.set('leg_cases', defaultCases);
 
