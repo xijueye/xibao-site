@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>华信集团 · 统一业务门户</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .quick-actions { display: flex; gap: 12px; margin-bottom: 32px; }
+  .quick-action {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: white;
+    padding: 16px 20px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    color: inherit;
+  }
+  .quick-action:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+  .quick-action .qa-icon {
+    width: 44px; height: 44px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center; font-size: 22px;
+  }
+  .quick-action .qa-text h4 { font-size: 14px; color: var(--gray-800); }
+  .quick-action .qa-text p { font-size: 12px; color: var(--gray-400); }
+  .notice-section { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+  .notice-list { list-style: none; }
+  .notice-list li {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--gray-100);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 14px;
+  }
+  .notice-list li:last-child { border-bottom: none; }
+  .notice-list .tag {
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+  .notice-list .tag.urgent { background: #fee2e2; color: #991b1b; }
+  .notice-list .tag.normal { background: #dbeafe; color: #1e40af; }
+  .notice-list .tag.info { background: #d1fae5; color: #065f46; }
+  .notice-list .date { margin-left: auto; color: var(--gray-400); font-size: 12px; white-space: nowrap; }
+  .weather-widget {
+    background: linear-gradient(135deg, #0ea5e9, #2563eb);
+    border-radius: var(--radius);
+    padding: 20px;
+    color: white;
+  }
+  .weather-widget .temp { font-size: 36px; font-weight: 700; }
+  .weather-widget .desc { font-size: 14px; opacity: 0.85; }
+  .weather-widget .details { margin-top: 12px; font-size: 12px; opacity: 0.7; }
+  .approval-quick {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    padding: 20px;
+    margin-top: 20px;
+  }
+  .approval-quick h4 { font-size: 14px; margin-bottom: 12px; color: var(--gray-700); }
+  .approval-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--gray-100);
+    font-size: 13px;
+  }
+  .approval-item:last-child { border-bottom: none; }
+  .approval-item .info { display: flex; align-items: center; gap: 10px; }
+  .approval-item .count {
+    background: var(--danger);
+    color: white;
+    border-radius: 10px;
+    padding: 2px 8px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+</style>
+</head>
+<body>
+<!-- 顶部导航 -->
+<div class="topbar">
+  <div class="logo">
+    <span class="icon">🏢</span>
+    <span>华信集团 · 统一业务门户</span>
+  </div>
+  <div class="nav-links">
+    <a href="index.html" class="active">门户首页</a>
+    <a href="#">工作台</a>
+    <a href="#">消息中心</a>
+    <a href="#">数据分析</a>
+  </div>
+  <div class="user-info">
+    <span>2026年6月18日 周三</span>
+    <span>|</span>
+    <div class="avatar">席</div>
+    <span>席宝</span>
+  </div>
+</div>
+
+<!-- 主内容 -->
+<div style="padding: 24px; max-width: 1400px; margin: 0 auto;">
+
+  <!-- Hero区 -->
+  <div class="portal-hero">
+    <h1>👋 欢迎回来，席宝</h1>
+    <p>华信集团统一业务管理平台 · 共有 <strong>9</strong> 个业务系统在线运行 · 今日待办 <strong>12</strong> 项</p>
+  </div>
+
+  <!-- 统计卡片 -->
+  <div class="portal-stats">
+    <div class="stat-card">
+      <div class="label">待审批事项</div>
+      <div class="value">12</div>
+      <div class="change">↑ 较昨日增加3项</div>
+    </div>
+    <div class="stat-card green">
+      <div class="label">本月已完成</div>
+      <div class="value">86</div>
+      <div class="change">↑ 完成率 92%</div>
+    </div>
+    <div class="stat-card orange">
+      <div class="label">本月营收（万元）</div>
+      <div class="value">2,847</div>
+      <div class="change">↑ 12.3%</div>
+    </div>
+    <div class="stat-card red">
+      <div class="label">预警事项</div>
+      <div class="value">3</div>
+      <div class="change down">需及时处理</div>
+    </div>
+  </div>
+
+  <!-- 快捷入口 -->
+  <div class="quick-actions">
+    <a class="quick-action" href="oa-system.html">
+      <div class="qa-icon" style="background:#dbeafe;color:#1a56db;">📝</div>
+      <div class="qa-text"><h4>我的待办</h4><p>12项审批待处理</p></div>
+    </a>
+    <a class="quick-action" href="finance-system.html">
+      <div class="qa-icon" style="background:#fef3c7;color:#d97706;">💰</div>
+      <div class="qa-text"><h4>费用报销</h4><p>3单待审核</p></div>
+    </a>
+    <a class="quick-action" href="hr-system.html">
+      <div class="qa-icon" style="background:#d1fae5;color:#059669;">👥</div>
+      <div class="qa-text"><h4>人事服务</h4><p>考勤/薪酬查询</p></div>
+    </a>
+    <a class="quick-action" href="inventory-system.html">
+      <div class="qa-icon" style="background:#ede9fe;color:#7c3aed;">📦</div>
+      <div class="qa-text"><h4>库存预警</h4><p>3项库存不足</p></div>
+    </a>
+  </div>
+
+  <!-- 业务系统入口 -->
+  <h2 style="font-size:18px; margin-bottom:16px; color:var(--gray-700);">📋 业务系统</h2>
+  <div class="portal-grid">
+    <a class="system-card" href="hr-system.html">
+      <div class="card-icon blue">👥</div>
+      <h3>人力资源系统</h3>
+      <p>员工管理 · 考勤 · 薪酬 · 招聘</p>
+      <span class="badge running">● 运行中</span>
+    </a>
+    <a class="system-card" href="finance-system.html">
+      <div class="card-icon green">💰</div>
+      <h3>财务云系统</h3>
+      <p>总账 · 报销 · 应收应付 · 预算</p>
+      <span class="badge running">● 运行中</span>
+    </a>
+    <a class="system-card" href="production-system.html">
+      <div class="card-icon orange">🏭</div>
+      <h3>生产经营系统</h3>
+      <p>项目 · 合同 · 采购 · 生产计划</p>
+      <span class="badge running">● 运行中</span>
+    </a>
+    <a class="system-card" href="oa-system.html">
+      <div class="card-icon purple">📝</div>
+      <h3>OA审批系统</h3>
+      <p>公文 · 请假 · 用车 · 用印</p>
+      <span class="badge running">● 运行中</span>
+    </a>
+    <a class="system-card" href="tax-system.html">
+      <div class="card-icon cyan">🧾</div>
+      <h3>税务管理系统</h3>
+      <p>发票 · 申报 · 台账 · 税率</p>
+      <span class="badge running">● 运行中</span>
+    </a>
+    <a class="system-card" href="audit-system.html">
+      <div class="card-icon red">🔍</div>
+      <h3>审计管理系统</h3>
+      <p>审计计划 · 项目 · 报告 · 整改</p>
+      <span class="badge running">● 运行中</span>
+    </a>
+    <a class="system-card" href="legal-system.html">
+      <div class="card-icon pink">⚖️</div>
+      <h3>法务管理系统</h3>
+      <p>合同审核 · 诉讼 · 合规 · 法律咨询</p>
+      <span class="badge running">● 运行中</span>
+    </a>
+    <a class="system-card" href="inventory-system.html">
+      <div class="card-icon teal">📦</div>
+      <h3>出入库管理系统</h3>
+      <p>入库 · 出库 · 盘点 · 预警</p>
+      <span class="badge running">● 运行中</span>
+    </a>
+  </div>
+
+  <!-- 通知 + 待办 -->
+  <div class="notice-section">
+    <div class="card">
+      <div class="card-header">
+        <h3>📢 企业公告</h3>
+        <a href="#" style="font-size:13px;color:var(--primary);text-decoration:none;">查看全部 →</a>
+      </div>
+      <div class="card-body padded">
+        <ul class="notice-list">
+          <li><span class="tag urgent">紧急</span>关于2026年年中财务审计工作的通知<span class="date">06-18</span></li>
+          <li><span class="tag normal">通知</span>集团OA系统将于6月20日凌晨进行升级维护<span class="date">06-17</span></li>
+          <li><span class="tag info">公告</span>2026年第二季度安全生产检查结果通报<span class="date">06-16</span></li>
+          <li><span class="tag normal">通知</span>关于调整差旅费报销标准的通知（2026版）<span class="date">06-15</span></li>
+          <li><span class="tag info">公告</span>集团2026年校园招聘拟录用人员公示<span class="date">06-14</span></li>
+          <li><span class="tag urgent">紧急</span>关于开展税务合规自查工作的紧急通知<span class="date">06-13</span></li>
+        </ul>
+      </div>
+    </div>
+    <div>
+      <div class="weather-widget">
+        <div style="font-size:13px;opacity:0.7;">北京 · 今日天气</div>
+        <div class="temp">32°</div>
+        <div class="desc">晴转多云 ☁️</div>
+        <div class="details">湿度 45% · 东南风3级 · AQI 68 良</div>
+      </div>
+      <div class="approval-quick">
+        <h4>⚡ 待办速览</h4>
+        <div class="approval-item">
+          <div class="info">📝 OA审批</div>
+          <div class="count">12</div>
+        </div>
+        <div class="approval-item">
+          <div class="info">💰 费用报销</div>
+          <div class="count">3</div>
+        </div>
+        <div class="approval-item">
+          <div class="info">📋 合同审核</div>
+          <div class="count">5</div>
+        </div>
+        <div class="approval-item">
+          <div class="info">🧾 发票核验</div>
+          <div class="count">8</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    华信集团 · 统一业务管理平台 V3.2.0 © 2026 &nbsp;|&nbsp; 信息中心 技术支持：010-88888888
+  </div>
+</div>
+</body>
+</html>

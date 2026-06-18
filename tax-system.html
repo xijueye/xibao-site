@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>税务管理系统 - 华信集团</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="topbar">
+  <div class="logo"><span class="icon">🧾</span><span>税务管理系统</span></div>
+  <div class="nav-links"><a href="index.html">← 返回门户</a></div>
+  <div class="user-info"><div class="avatar">席</div><span>席宝 | 税务专员</span></div>
+</div>
+<div class="layout">
+  <div class="sidebar">
+    <div class="menu-group">
+      <div class="menu-title">发票管理</div>
+      <a class="menu-item active" href="#"><span class="icon">📄</span> 发票台账</a>
+      <a class="menu-item" href="#"><span class="icon">📥</span> 进项发票</a>
+      <a class="menu-item" href="#"><span class="icon">📤</span> 销项发票</a>
+      <a class="menu-item" href="#"><span class="icon">🔍</span> 发票验真</a>
+    </div>
+    <div class="menu-group">
+      <div class="menu-title">纳税申报</div>
+      <a class="menu-item" href="#"><span class="icon">📋</span> 申报计划</a>
+      <a class="menu-item" href="#"><span class="icon">📊</span> 申报台账</a>
+      <a class="menu-item" href="#"><span class="icon">⚠️</span> 申报预警</a>
+    </div>
+    <div class="menu-group">
+      <div class="menu-title">税务台账</div>
+      <a class="menu-item" href="#"><span class="icon">📒</span> 增值税台账</a>
+      <a class="menu-item" href="#"><span class="icon">📒</span> 企业所得税台账</a>
+      <a class="menu-item" href="#"><span class="icon">📒</span> 印花税台账</a>
+    </div>
+    <div class="menu-group">
+      <div class="menu-title">税务筹划</div>
+      <a class="menu-item" href="#"><span class="icon">📈</span> 税负分析</a>
+      <a class="menu-item" href="#"><span class="icon">📑</span> 税收优惠</a>
+    </div>
+  </div>
+  <div class="main-content">
+    <div class="page-header">
+      <div>
+        <div class="breadcrumb">税务管理系统 / 发票管理</div>
+        <h2>📄 发票台账</h2>
+      </div>
+      <div class="btn-group">
+        <button class="btn btn-primary">📥 导入发票</button>
+      </div>
+    </div>
+
+    <div class="portal-stats" style="margin-bottom:20px;">
+      <div class="stat-card"><div class="label">待认证进项发票</div><div class="value">23</div><div class="change down">金额 ¥156,800</div></div>
+      <div class="stat-card green"><div class="label">本月已开销项</div><div class="value">128</div><div class="change">金额 ¥2,340,000</div></div>
+      <div class="stat-card orange"><div class="label">即将到期申报</div><div class="value">2</div><div class="change down">6/20前需完成</div></div>
+      <div class="stat-card"><div class="label">本月税负率</div><div class="value">3.82%</div><div class="change">行业均值 3.5%</div></div>
+    </div>
+
+    <div class="tabs">
+      <div class="tab active">全部发票</div>
+      <div class="tab">进项发票</div>
+      <div class="tab">销项发票</div>
+      <div class="tab">异常发票</div>
+    </div>
+
+    <div class="card">
+      <div class="filter-bar">
+        <select><option>发票类型</option><option>增值税专用发票</option><option>增值税普通发票</option><option>电子发票</option></select>
+        <select><option>进项/销项</option><option>进项</option><option>销项</option></select>
+        <select><option>2026年6月</option><option>2026年5月</option></select>
+        <input type="text" placeholder="搜索发票号/购方名称...">
+        <button class="btn btn-primary">🔍 搜索</button>
+      </div>
+      <table>
+        <thead><tr><th>发票号码</th><th>发票代码</th><th>类型</th><th>方向</th><th>购方/销方</th><th>金额（元）</th><th>税额</th><th>开票日期</th><th>状态</th></tr></thead>
+        <tbody>
+          <tr><td>08945621</td><td>011002600311</td><td>增值税专票</td><td>销项</td><td>北京中科信息技术有限公司</td><td>280,000.00</td><td>36,400.00</td><td>2026-06-16</td><td><span class="status approved">正常</span></td></tr>
+          <tr><td>08945622</td><td>011002600311</td><td>增值税专票</td><td>销项</td><td>上海恒远建设工程有限公司</td><td>156,000.00</td><td>20,280.00</td><td>2026-06-15</td><td><span class="status approved">正常</span></td></tr>
+          <tr><td>FP202606012</td><td>电子发票</td><td>电子普票</td><td>进项</td><td>腾讯科技（深圳）有限公司</td><td>45,000.00</td><td>2,700.00</td><td>2026-06-14</td><td><span class="status pending">待认证</span></td></tr>
+          <tr><td>08945623</td><td>011002600311</td><td>增值税专票</td><td>销项</td><td>广州华南装备制造集团</td><td>380,000.00</td><td>49,400.00</td><td>2026-06-13</td><td><span class="status approved">正常</span></td></tr>
+          <tr><td>FP202606008</td><td>电子发票</td><td>电子普票</td><td>进项</td><td>中国石油天然气股份有限公司</td><td>12,500.00</td><td>0.00</td><td>2026-06-12</td><td><span class="status approved">已认证</span></td></tr>
+          <tr><td>08945624</td><td>011002600311</td><td>增值税专票</td><td>销项</td><td>深圳前海数字科技有限公司</td><td>520,000.00</td><td>67,600.00</td><td>2026-06-10</td><td><span class="status approved">正常</span></td></tr>
+          <tr><td>FP202606005</td><td>电子发票</td><td>增值税专票</td><td>进项</td><td>华为技术有限公司</td><td>186,000.00</td><td>24,180.00</td><td>2026-06-08</td><td><span class="status pending">待认证</span></td></tr>
+          <tr><td>FP202606003</td><td>电子发票</td><td>电子普票</td><td>进项</td><td>滴滴出行科技有限公司</td><td>3,200.00</td><td>0.00</td><td>2026-06-05</td><td><span class="status approved">已认证</span></td></tr>
+        </tbody>
+      </table>
+      <div style="padding:16px;text-align:center;color:var(--gray-400);font-size:13px;">共 1,256 条记录 · 第 1/105 页</div>
+    </div>
+
+    <!-- 申报日历 -->
+    <div class="card" style="margin-top:20px;">
+      <div class="card-header"><h3>⚠️ 申报提醒日历</h3></div>
+      <div class="card-body padded">
+        <table>
+          <thead><tr><th>税种</th><th>所属期</th><th>申报截止日</th><th>应纳税额（元）</th><th>状态</th></tr></thead>
+          <tbody>
+            <tr><td>增值税</td><td>2026年5月</td><td>2026-06-20</td><td>186,420.00</td><td><span class="status warning">待申报</span></td></tr>
+            <tr><td>企业所得税（季度）</td><td>2026年Q2</td><td>2026-07-15</td><td>-</td><td><span class="status processing">未到期</span></td></tr>
+            <tr><td>个人所得税</td><td>2026年5月</td><td>2026-06-20</td><td>52,380.00</td><td><span class="status warning">待申报</span></td></tr>
+            <tr><td>印花税</td><td>2026年Q2</td><td>2026-07-15</td><td>8,640.00</td><td><span class="status processing">未到期</span></td></tr>
+            <tr><td>城建税及附加</td><td>2026年5月</td><td>2026-06-20</td><td>22,370.40</td><td><span class="status warning">待申报</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

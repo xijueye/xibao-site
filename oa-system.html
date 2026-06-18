@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OA审批系统 - 华信集团</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="topbar">
+  <div class="logo"><span class="icon">📝</span><span>OA办公审批系统</span></div>
+  <div class="nav-links"><a href="index.html">← 返回门户</a></div>
+  <div class="user-info"><div class="avatar">席</div><span>席宝 | 综合管理</span></div>
+</div>
+<div class="layout">
+  <div class="sidebar">
+    <div class="menu-group">
+      <div class="menu-title">审批中心</div>
+      <a class="menu-item active" href="#"><span class="icon">📥</span> 我的待办</a>
+      <a class="menu-item" href="#"><span class="icon">📤</span> 我的已办</a>
+      <a class="menu-item" href="#"><span class="icon">📋</span> 我发起的</a>
+      <a class="menu-item" href="#"><span class="icon">🔄</span> 抄送给我</a>
+    </div>
+    <div class="menu-group">
+      <div class="menu-title">日常审批</div>
+      <a class="menu-item" href="#"><span class="icon">🏖️</span> 请假申请</a>
+      <a class="menu-item" href="#"><span class="card-icon">🚗</span> 用车申请</a>
+      <a class="menu-item" href="#"><span class="icon">📮</span> 用印审批</a>
+      <a class="menu-item" href="#"><span class="icon">📝</span> 出差申请</a>
+      <a class="menu-item" href="#"><span class="icon">🏠</span> 招待申请</a>
+    </div>
+    <div class="menu-group">
+      <div class="menu-title">公文管理</div>
+      <a class="menu-item" href="#"><span class="icon">📄</span> 发文管理</a>
+      <a class="menu-item" href="#"><span class="icon">📥</span> 收文管理</a>
+      <a class="menu-item" href="#"><span class="icon">📋</span> 公文台账</a>
+    </div>
+    <div class="menu-group">
+      <div class="menu-title">会议管理</div>
+      <a class="menu-item" href="#"><span class="icon">📅</span> 会议室预约</a>
+      <a class="menu-item" href="#"><span class="icon">📋</span> 会议安排</a>
+    </div>
+  </div>
+  <div class="main-content">
+    <div class="page-header">
+      <div>
+        <div class="breadcrumb">OA审批系统 / 审批中心</div>
+        <h2>📥 我的待办（12项）</h2>
+      </div>
+      <div class="btn-group">
+        <button class="btn btn-primary">➕ 发起审批</button>
+      </div>
+    </div>
+
+    <!-- 待办概览 -->
+    <div class="dashboard-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:20px;">
+      <div class="mini-stat" style="border-left:4px solid var(--danger);">
+        <div class="num" style="color:var(--danger);">12</div>
+        <div class="desc">待审批</div>
+      </div>
+      <div class="mini-stat" style="border-left:4px solid var(--warning);">
+        <div class="num" style="color:var(--warning);">5</div>
+        <div class="desc">即将超时</div>
+      </div>
+      <div class="mini-stat" style="border-left:4px solid var(--success);">
+        <div class="num" style="color:var(--success);">86</div>
+        <div class="desc">本月已办</div>
+      </div>
+      <div class="mini-stat" style="border-left:4px solid var(--primary);">
+        <div class="num" style="color:var(--primary);">15</div>
+        <div class="desc">我发起的</div>
+      </div>
+    </div>
+
+    <!-- 待办列表 -->
+    <div class="card">
+      <div class="card-header"><h3>待审批事项</h3><span style="font-size:13px;color:var(--gray-400);">按提交时间排序</span></div>
+      <div class="card-body">
+        <table>
+          <thead><tr><th>审批编号</th><th>类型</th><th>申请人</th><th>部门</th><th>摘要</th><th>提交时间</th><th>紧急度</th><th>操作</th></tr></thead>
+          <tbody>
+            <tr><td>SP20260618-001</td><td>🏖️ 请假</td><td>赵丽</td><td>人力资源部</td><td>年假申请3天（6/20-6/22）</td><td>06-18 09:30</td><td><span class="status pending">普通</span></td><td><a href="#" style="color:var(--primary);text-decoration:none;font-size:13px;">审批</a></td></tr>
+            <tr><td>SP20260618-002</td><td>🚗 用车</td><td>孙磊</td><td>行政综合部</td><td>6/19 北京-天津出差用车</td><td>06-18 09:15</td><td><span class="status pending">普通</span></td><td><a href="#" style="color:var(--primary);text-decoration:none;font-size:13px;">审批</a></td></tr>
+            <tr><td>SP20260618-003</td><td>📮 用印</td><td>吴刚</td><td>法务合规部</td><td>合同用印审批（与中科信息合作协议）</td><td>06-18 08:50</td><td><span class="status warning">紧急</span></td><td><a href="#" style="color:var(--primary);text-decoration:none;font-size:13px;">审批</a></td></tr>
+            <tr><td>SP20260617-008</td><td>📝 出差</td><td>陈明</td><td>项目交付部</td><td>上海出差5天（6/21-6/25）</td><td>06-17 16:30</td><td><span class="status pending">普通</span></td><td><a href="#" style="color:var(--primary);text-decoration:none;font-size:13px;">审批</a></td></tr>
+            <tr><td>SP20260617-007</td><td>🏠 招待</td><td>李娜</td><td>市场营销部</td><td>客户接待餐费2000元</td><td>06-17 15:20</td><td><span class="status pending">普通</span></td><td><a href="#" style="color:var(--primary);text-decoration:none;font-size:13px;">审批</a></td></tr>
+            <tr><td>SP20260617-006</td><td>🏖️ 请假</td><td>黄海</td><td>生产制造部</td><td>病假申请1天（6/18）</td><td>06-17 14:00</td><td><span class="status warning">紧急</span></td><td><a href="#" style="color:var(--primary);text-decoration:none;font-size:13px;">审批</a></td></tr>
+            <tr><td>SP20260617-005</td><td>📮 用印</td><td>刘芳</td><td>财务管理部</td><td>银行开户许可证盖章</td><td>06-17 11:30</td><td><span class="status pending">普通</span></td><td><a href="#" style="color:var(--primary);text-decoration:none;font-size:13px;">审批</a></td></tr>
+            <tr><td>SP20260616-012</td><td>📝 出差</td><td>王强</td><td>生产制造部</td><td>广州供应商考察3天</td><td>06-16 17:00</td><td><span class="status pending">普通</span></td><td><a href="#" style="color:var(--primary);text-decoration:none;font-size:13px;">审批</a></td></tr>
+            <tr><td>SP20260616-011</td><td>🚗 用车</td><td>郑雪</td><td>市场营销部</td><td>6/18 机场接机用车</td><td>06-16 16:00</td><td><span class="status warning">紧急</span></td><td><a href="#" style="color:var(--primary);text-decoration:none;font-size:13px;">审批</a></td></tr>
+            <tr><td>SP20260616-010</td><td>🏖️ 请假</td><td>马丽</td><td>财务管理部</td><td>调休半天（6/18下午）</td><td>06-16 10:00</td><td><span class="status pending">普通</span></td><td><a href="#" style="color:var(--primary);text-decoration:none;font-size:13px;">审批</a></td></tr>
+            <tr><td>SP20260615-015</td><td>📄 发文</td><td>孙磊</td><td>行政综合部</td><td>关于2026年端午节放假通知</td><td>06-15 14:00</td><td><span class="status warning">紧急</span></td><td><a href="#" style="color:var(--primary);text-decoration:none;font-size:13px;">审批</a></td></tr>
+            <tr><td>SP20260615-014</td><td>📮 用印</td><td>周婷</td><td>技术研发部</td><td>软件著作权登记盖章</td><td>06-15 11:00</td><td><span class="status pending">普通</span></td><td><a href="#" style="color:var(--primary);text-decoration:none;font-size:13px;">审批</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 会议室预约 -->
+    <div class="card" style="margin-top:20px;">
+      <div class="card-header"><h3>📅 今日会议室使用情况</h3></div>
+      <div class="card-body padded">
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;">
+          <div style="padding:12px;border:1px solid var(--gray-200);border-radius:8px;">
+            <div style="font-weight:600;font-size:14px;margin-bottom:8px;">🏢 3F-大会议室A</div>
+            <div style="font-size:12px;color:var(--gray-500);">09:00-11:00 集团周例会</div>
+            <div style="font-size:12px;color:var(--success);margin-top:4px;">14:00-16:00 可预约</div>
+          </div>
+          <div style="padding:12px;border:1px solid var(--gray-200);border-radius:8px;">
+            <div style="font-weight:600;font-size:14px;margin-bottom:8px;">🏢 3F-大会议室B</div>
+            <div style="font-size:12px;color:var(--danger);">全天已预约</div>
+            <div style="font-size:12px;color:var(--gray-400);margin-top:4px;">项目评审会</div>
+          </div>
+          <div style="padding:12px;border:1px solid var(--gray-200);border-radius:8px;">
+            <div style="font-weight:600;font-size:14px;margin-bottom:8px;">🏢 5F-会议室C</div>
+            <div style="font-size:12px;color:var(--success);margin-top:4px;">全天可预约 ✅</div>
+          </div>
+          <div style="padding:12px;border:1px solid var(--gray-200);border-radius:8px;">
+            <div style="font-weight:600;font-size:14px;margin-bottom:8px;">🏢 5F-会议室D</div>
+            <div style="font-size:12px;color:var(--gray-500);">15:00-17:00 技术方案评审</div>
+            <div style="font-size:12px;color:var(--success);margin-top:4px;">上午可预约</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>财务云系统 - 华信集团</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="topbar">
+  <div class="logo"><span class="icon">💰</span><span>财务云管理系统</span></div>
+  <div class="nav-links"><a href="index.html">← 返回门户</a></div>
+  <div class="user-info"><div class="avatar">席</div><span>席宝 | 财务专员</span></div>
+</div>
+<div class="layout">
+  <div class="sidebar">
+    <div class="menu-group">
+      <div class="menu-title">总账管理</div>
+      <a class="menu-item" href="#"><span class="icon">📒</span> 凭证管理</a>
+      <a class="menu-item" href="#"><span class="icon">📊</span> 科目余额表</a>
+      <a class="menu-item" href="#"><span class="icon">📑</span> 财务报表</a>
+    </div>
+    <div class="menu-group">
+      <div class="menu-title">费用管理</div>
+      <a class="menu-item active" href="#"><span class="icon">🧾</span> 费用报销</a>
+      <a class="menu-item" href="#"><span class="icon">💳</span> 应付管理</a>
+      <a class="menu-item" href="#"><span class="icon">📥</span> 应收管理</a>
+    </div>
+    <div class="menu-group">
+      <div class="menu-title">资产管理</div>
+      <a class="menu-item" href="#"><span class="icon">🏠</span> 固定资产</a>
+      <a class="menu-item" href="#"><span class="icon">📉</span> 折旧计提</a>
+    </div>
+    <div class="menu-group">
+      <div class="menu-title">预算管理</div>
+      <a class="menu-item" href="#"><span class="icon">📋</span> 预算编制</a>
+      <a class="menu-item" href="#"><span class="icon">⚠️</span> 预算执行</a>
+      <a class="menu-item" href="#"><span class="icon">📈</span> 预算分析</a>
+    </div>
+    <div class="menu-group">
+      <div class="menu-title">资金管理</div>
+      <a class="menu-item" href="#"><span class="icon">🏦</span> 银行账户</a>
+      <a class="menu-item" href="#"><span class="icon">💸</span> 资金调度</a>
+    </div>
+  </div>
+  <div class="main-content">
+    <div class="page-header">
+      <div>
+        <div class="breadcrumb">财务云系统 / 费用管理</div>
+        <h2>🧾 费用报销单</h2>
+      </div>
+      <div class="btn-group">
+        <button class="btn btn-primary">➕ 新建报销单</button>
+      </div>
+    </div>
+
+    <!-- 财务概览 -->
+    <div class="portal-stats" style="margin-bottom:20px;">
+      <div class="stat-card"><div class="label">待审核</div><div class="value">3</div><div class="change down">需尽快处理</div></div>
+      <div class="stat-card green"><div class="label">本月已报销（元）</div><div class="value">156,820</div><div class="change">↑ 8.5%</div></div>
+      <div class="stat-card orange"><div class="label">预算剩余（万元）</div><div class="value">328.6</div><div class="change">剩余62%</div></div>
+      <div class="stat-card"><div class="label">应收账款（万元）</div><div class="value">1,245</div><div class="change down">3笔逾期</div></div>
+    </div>
+
+    <div class="tabs">
+      <div class="tab active">全部报销单</div>
+      <div class="tab">待审核</div>
+      <div class="tab">已通过</div>
+      <div class="tab">已驳回</div>
+    </div>
+
+    <div class="card">
+      <div class="filter-bar">
+        <select><option>全部类型</option><option>差旅费</option><option>办公费</option><option>招待费</option><option>交通费</option><option>培训费</option></select>
+        <select><option>2026年6月</option><option>2026年5月</option><option>2026年4月</option></select>
+        <input type="text" placeholder="搜索报销单号/报销人...">
+        <button class="btn btn-primary">🔍 搜索</button>
+      </div>
+      <table>
+        <thead>
+          <tr><th>报销单号</th><th>报销人</th><th>部门</th><th>类型</th><th>金额（元）</th><th>提交日期</th><th>审批状态</th><th>操作</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>BX202606001</td><td>张伟</td><td>技术研发部</td><td>差旅费</td><td>8,560.00</td><td>2026-06-16</td><td><span class="status pending">待审核</span></td><td><a href="#" style="color:var(--primary);text-decoration:none;font-size:13px;">审核</a></td></tr>
+          <tr><td>BX202606002</td><td>李娜</td><td>市场营销部</td><td>招待费</td><td>3,200.00</td><td>2026-06-15</td><td><span class="status pending">待审核</span></td><td><a href="#" style="color:var(--primary);text-decoration:none;font-size:13px;">审核</a></td></tr>
+          <tr><td>BX202606003</td><td>王强</td><td>生产制造部</td><td>办公费</td><td>1,850.00</td><td>2026-06-15</td><td><span class="status pending">待审核</span></td><td><a href="#" style="color:var(--primary);text-decoration:none;font-size:13px;">审核</a></td></tr>
+          <tr><td>BX202606004</td><td>陈明</td><td>项目交付部</td><td>差旅费</td><td>12,300.00</td><td>2026-06-14</td><td><span class="status approved">已通过</span></td><td><a href="#" style="color:var(--primary);text-decoration:none;font-size:13px;">查看</a></td></tr>
+          <tr><td>BX202606005</td><td>赵丽</td><td>人力资源部</td><td>培训费</td><td>5,600.00</td><td>2026-06-13</td><td><span class="status approved">已通过</span></td><td><a href="#" style="color:var(--primary);text-decoration:none;font-size:13px;">查看</a></td></tr>
+          <tr><td>BX202606006</td><td>孙磊</td><td>行政综合部</td><td>交通费</td><td>780.00</td><td>2026-06-12</td><td><span class="status approved">已通过</span></td><td><a href="#" style="color:var(--primary);text-decoration:none;font-size:13px;">查看</a></td></tr>
+          <tr><td>BX202606007</td><td>周婷</td><td>技术研发部</td><td>办公费</td><td>2,100.00</td><td>2026-06-11</td><td><span class="status rejected">已驳回</span></td><td><a href="#" style="color:var(--primary);text-decoration:none;font-size:13px;">查看</a></td></tr>
+          <tr><td>BX202606008</td><td>吴刚</td><td>法务合规部</td><td>差旅费</td><td>4,500.00</td><td>2026-06-10</td><td><span class="status approved">已通过</span></td><td><a href="#" style="color:var(--primary);text-decoration:none;font-size:13px;">查看</a></td></tr>
+          <tr><td>BX202606009</td><td>郑雪</td><td>市场营销部</td><td>招待费</td><td>6,800.00</td><td>2026-06-09</td><td><span class="status approved">已通过</span></td><td><a href="#" style="color:var(--primary);text-decoration:none;font-size:13px;">查看</a></td></tr>
+          <tr><td>BX202606010</td><td>黄海</td><td>生产制造部</td><td>交通费</td><td>450.00</td><td>2026-06-08</td><td><span class="status approved">已通过</span></td><td><a href="#" style="color:var(--primary);text-decoration:none;font-size:13px;">查看</a></td></tr>
+        </tbody>
+      </table>
+      <div style="padding:16px;text-align:center;color:var(--gray-400);font-size:13px;">共 86 条记录 · 第 1/9 页</div>
+    </div>
+
+    <!-- 应收账款 -->
+    <div class="card" style="margin-top:20px;">
+      <div class="card-header"><h3>📥 应收账款到期提醒</h3></div>
+      <div class="card-body">
+        <table>
+          <thead><tr><th>客户名称</th><th>合同金额（万元）</th><th>应收金额</th><th>到期日</th><th>逾期天数</th><th>状态</th></tr></thead>
+          <tbody>
+            <tr><td>北京中科信息技术有限公司</td><td>280.00</td><td>84.00</td><td>2026-05-30</td><td>19天</td><td><span class="status danger">逾期</span></td></tr>
+            <tr><td>上海恒远建设工程有限公司</td><td>156.00</td><td>46.80</td><td>2026-06-01</td><td>17天</td><td><span class="status danger">逾期</span></td></tr>
+            <tr><td>深圳前海数字科技有限公司</td><td>520.00</td><td>156.00</td><td>2026-06-15</td><td>3天</td><td><span class="status warning">逾期3天</span></td></tr>
+            <tr><td>广州华南装备制造集团</td><td>380.00</td><td>114.00</td><td>2026-06-30</td><td>-</td><td><span class="status processing">未到期</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

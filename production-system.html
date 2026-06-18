@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>生产经营系统 - 华信集团</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<div class="topbar">
+  <div class="logo"><span class="icon">🏭</span><span>生产经营管理系统</span></div>
+  <div class="nav-links"><a href="index.html">← 返回门户</a></div>
+  <div class="user-info"><div class="avatar">席</div><span>席宝 | 运营专员</span></div>
+</div>
+<div class="layout">
+  <div class="sidebar">
+    <div class="menu-group">
+      <div class="menu-title">项目管理</div>
+      <a class="menu-item active" href="#"><span class="icon">📋</span> 项目总览</a>
+      <a class="menu-item" href="#"><span class="icon">📊</span> 项目进度</a>
+      <a class="menu-item" href="#"><span class="icon">💰</span> 项目预算</a>
+    </div>
+    <div class="menu-group">
+      <div class="menu-title">合同管理</div>
+      <a class="menu-item" href="#"><span class="icon">📄</span> 合同台账</a>
+      <a class="menu-item" href="#"><span class="icon">✅</span> 合同审批</a>
+      <a class="menu-item" href="#"><span class="icon">🔄</span> 合同执行</a>
+    </div>
+    <div class="menu-group">
+      <div class="menu-title">采购管理</div>
+      <a class="menu-item" href="#"><span class="icon">🛒</span> 采购申请</a>
+      <a class="menu-item" href="#"><span class="icon">📦</span> 到货验收</a>
+      <a class="menu-item" href="#"><span class="icon">🏭</span> 供应商库</a>
+    </div>
+    <div class="menu-group">
+      <div class="menu-title">生产管理</div>
+      <a class="menu-item" href="#"><span class="icon">📈</span> 生产计划</a>
+      <a class="menu-item" href="#"><span class="icon">⚙️</span> 产线监控</a>
+      <a class="menu-item" href="#"><span class="icon">🔍</span> 质量检测</a>
+    </div>
+  </div>
+  <div class="main-content">
+    <div class="page-header">
+      <div>
+        <div class="breadcrumb">生产经营系统 / 项目管理</div>
+        <h2>📋 项目总览</h2>
+      </div>
+      <div class="btn-group">
+        <button class="btn btn-primary">➕ 新建项目</button>
+      </div>
+    </div>
+
+    <div class="portal-stats" style="margin-bottom:20px;">
+      <div class="stat-card"><div class="label">进行中项目</div><div class="value">18</div><div class="change">5个本月启动</div></div>
+      <div class="stat-card green"><div class="label">本月完工</div><div class="value">3</div><div class="change">按时交付率 89%</div></div>
+      <div class="stat-card orange"><div class="label">本月合同签订（万元）</div><div class="value">2,180</div><div class="change">↑ 15.2%</div></div>
+      <div class="stat-card red"><div class="label">风险项目</div><div class="value">2</div><div class="change down">进度滞后</div></div>
+    </div>
+
+    <div class="card">
+      <div class="filter-bar">
+        <select><option>全部状态</option><option>进行中</option><option>已完成</option><option>已暂停</option></select>
+        <select><option>全部类型</option><option>工程项目</option><option>软件开发</option><option>咨询服务</option></select>
+        <input type="text" placeholder="搜索项目名称/编号...">
+        <button class="btn btn-primary">🔍 搜索</button>
+      </div>
+      <table>
+        <thead><tr><th>项目编号</th><th>项目名称</th><th>项目经理</th><th>类型</th><th>合同金额（万元）</th><th>进度</th><th>状态</th></tr></thead>
+        <tbody>
+          <tr><td>PRJ2026-001</td><td>智慧城市数据平台建设项目</td><td>陈明</td><td>软件开发</td><td>860.00</td><td><div class="progress-bar" style="width:120px;display:inline-block;vertical-align:middle;"><div class="fill blue" style="width:75%"></div></div> 75%</td><td><span class="status processing">进行中</span></td></tr>
+          <tr><td>PRJ2026-002</td><td>华东区政务云迁移项目</td><td>张伟</td><td>软件开发</td><td>1,200.00</td><td><div class="progress-bar" style="width:120px;display:inline-block;vertical-align:middle;"><div class="fill blue" style="width:60%"></div></div> 60%</td><td><span class="status processing">进行中</span></td></tr>
+          <tr><td>PRJ2026-003</td><td>数据中心扩容工程</td><td>王强</td><td>工程项目</td><td>520.00</td><td><div class="progress-bar" style="width:120px;display:inline-block;vertical-align:middle;"><div class="fill orange" style="width:35%"></div></div> 35%</td><td><span class="status warning">进度滞后</span></td></tr>
+          <tr><td>PRJ2026-004</td><td>ERP系统升级项目</td><td>周婷</td><td>软件开发</td><td>380.00</td><td><div class="progress-bar" style="width:120px;display:inline-block;vertical-align:middle;"><div class="fill blue" style="width:90%"></div></div> 90%</td><td><span class="status processing">进行中</span></td></tr>
+          <tr><td>PRJ2026-005</td><td>供应链优化咨询项目</td><td>李娜</td><td>咨询服务</td><td>150.00</td><td><div class="progress-bar" style="width:120px;display:inline-block;vertical-align:middle;"><div class="fill green" style="width:100%"></div></div> 100%</td><td><span class="status approved">已完成</span></td></tr>
+          <tr><td>PRJ2026-006</td><td>智慧园区物联网平台</td><td>张伟</td><td>软件开发</td><td>680.00</td><td><div class="progress-bar" style="width:120px;display:inline-block;vertical-align:middle;"><div class="fill blue" style="width:45%"></div></div> 45%</td><td><span class="status processing">进行中</span></td></tr>
+          <tr><td>PRJ2025-078</td><td>财务共享中心建设</td><td>刘芳</td><td>软件开发</td><td>450.00</td><td><div class="progress-bar" style="width:120px;display:inline-block;vertical-align:middle;"><div class="fill green" style="width:100%"></div></div> 100%</td><td><span class="status approved">已完成</span></td></tr>
+          <tr><td>PRJ2026-007</td><td>国产化替代适配项目</td><td>陈明</td><td>软件开发</td><td>920.00</td><td><div class="progress-bar" style="width:120px;display:inline-block;vertical-align:middle;"><div class="fill orange" style="width:20%"></div></div> 20%</td><td><span class="status processing">进行中</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 合同到期提醒 -->
+    <div class="card" style="margin-top:20px;">
+      <div class="card-header"><h3>📄 合同到期提醒</h3></div>
+      <div class="card-body">
+        <table>
+          <thead><tr><th>合同编号</th><th>合同名称</th><th>对方单位</th><th>金额（万元）</th><th>到期日</th><th>剩余天数</th></tr></thead>
+          <tbody>
+            <tr><td>HT2025-0089</td><td>云计算服务年度合同</td><td>阿里云科技有限公司</td><td>320.00</td><td>2026-07-15</td><td><span class="status warning">27天</span></td></tr>
+            <tr><td>HT2025-0102</td><td>网络安全设备采购合同</td><td>深信服科技股份有限公司</td><td>185.00</td><td>2026-08-01</td><td><span class="status processing">44天</span></td></tr>
+            <tr><td>HT2024-0056</td><td>办公场地租赁合同</td><td>中关村科技园区管委会</td><td>480.00</td><td>2026-12-31</td><td><span class="status normal">196天</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
