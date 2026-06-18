@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>数据分析 - 华信集团</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+.da-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.chart-card{background:white;border-radius:var(--radius);box-shadow:var(--shadow-sm);overflow:hidden}
+.chart-header{padding:14px 20px;border-bottom:1px solid var(--gray-100);display:flex;justify-content:space-between;align-items:center}
+.chart-header h3{font-size:14px;color:var(--gray-700)}
+.chart-body{padding:20px}
+.bar-chart{display:flex;align-items:flex-end;gap:8px;height:160px;padding-top:10px}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+.bar{border-radius:4px 4px 0 0;transition:height .5s;min-width:30px}
+.bar-label{font-size:11px;color:var(--gray-400)}
+.bar-value{font-size:11px;color:var(--gray-600);font-weight:600}
+.ring-chart{width:120px;height:120px;border-radius:50%;position:relative;margin:0 auto}
+.ring-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
+.ring-center .num{font-size:20px;font-weight:700;color:var(--gray-800)}
+.ring-center .label{font-size:11px;color:var(--gray-400)}
+.legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:16px;justify-content:center}
+.legend-item{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--gray-600)}
+.legend-dot{width:10px;height:10px;border-radius:2px}
+.rank-list{list-style:none}
+.rank-item{display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--gray-100)}
+.rank-item:last-child{border-bottom:none}
+.rank-num{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:white}
+.rank-num.top{background:var(--primary)}.rank-num.normal{background:var(--gray-300)}
+.rank-name{flex:1;font-size:13px;color:var(--gray-700)}
+.rank-value{font-size:13px;font-weight:600;color:var(--gray-800)}
+.rank-bar{width:100px;height:6px;background:var(--gray-200);border-radius:3px;overflow:hidden}
+.rank-bar .fill{height:100%;border-radius:3px;background:var(--primary)}
+.kpi-cards{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-bottom:24px}
+.kpi-card{background:white;border-radius:var(--radius);padding:20px;box-shadow:var(--shadow-sm);text-align:center}
+.kpi-card .icon{font-size:28px;margin-bottom:8px}
+.kpi-card .value{font-size:26px;font-weight:700;color:var(--gray-800)}
+.kpi-card .label{font-size:12px;color:var(--gray-400);margin-top:4px}
+.kpi-card .change{font-size:12px;margin-top:4px}
+.kpi-card .change.up{color:var(--success)}
+.kpi-card .change.down{color:var(--danger)}
+.table-mini{width:100%;font-size:13px;border-collapse:collapse}
+.table-mini th{padding:8px 12px;text-align:left;font-weight:600;color:var(--gray-500);border-bottom:1px solid var(--gray-200);font-size:12px}
+.table-mini td{padding:8px 12px;border-bottom:1px solid var(--gray-100);color:var(--gray-700)}
+.table-mini tr:last-child td{border-bottom:none}
+.trend-line{display:flex;align-items:flex-end;gap:2px;height:40px}
+.trend-bar{flex:1;border-radius:2px;background:var(--primary);opacity:0.7}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="logo"><span class="icon">🏢</span><span>华信集团 · 统一业务门户</span></div>
+  <div class="nav-links">
+    <a href="index.html">门户首页</a>
+    <a href="workbench.html">工作台</a>
+    <a href="messages.html">消息中心</a>
+    <a href="analytics.html" class="active">数据分析</a>
+  </div>
+  <div class="user-info"><div class="avatar">席</div><span>席宝</span></div>
+</div>
+<div style="padding:24px;max-width:1400px;margin:0 auto">
+  <!-- 核心KPI -->
+  <div class="kpi-cards">
+    <div class="kpi-card"><div class="icon">💰</div><div class="value">8,420</div><div class="label">本月营收（万元）</div><div class="change up">↑ 12.3%</div></div>
+    <div class="kpi-card"><div class="icon">📋</div><div class="value">18</div><div class="label">在建项目</div><div class="change up">↑ 2个</div></div>
+    <div class="kpi-card"><div class="icon">👥</div><div class="value">1,286</div><div class="label">在职人数</div><div class="change up">+23</div></div>
+    <div class="kpi-card"><div class="icon">📦</div><div class="value">2,450</div><div class="label">库存总值（万元）</div><div class="change down">↓ 3.2%</div></div>
+    <div class="kpi-card"><div class="icon">⚖️</div><div class="value">3.82%</div><div class="label">增值税负率</div><div class="change up">行业均值3.5%</div></div>
+  </div>
+
+  <div class="da-grid">
+    <!-- 月度营收趋势 -->
+    <div class="chart-card">
+      <div class="chart-header"><h3>📈 月度营收趋势（万元）</h3><span style="font-size:12px;color:var(--gray-400)">2026年</span></div>
+      <div class="chart-body">
+        <div class="bar-chart">
+          ${[{m:'1月',v:6200},{m:'2月',v:5800},{m:'3月',v:7100},{m:'4月',v:7500},{m:'5月',v:8200},{m:'6月',v:8420}].map(d=>{
+            const h = d.v/8420*140;
+            return `<div class="bar-col"><div class="bar-value">${d.v}</div><div class="bar" style="height:${h}px;background:linear-gradient(180deg,#3b82f6,#1d4ed8)"></div><div class="bar-label">${d.m}</div></div>`;
+          }).join('')}
+        </div>
+      </div>
+    </div>
+
+    <!-- 费用构成 -->
+    <div class="chart-card">
+      <div class="chart-header"><h3>🧾 费用构成分析</h3><span style="font-size:12px;color:var(--gray-400)">本月</span></div>
+      <div class="chart-body" style="display:flex;align-items:center;gap:30px">
+        <div>
+          <div style="width:140px;height:140px;border-radius:50%;background:conic-gradient(#3b82f6 0% 35%,#059669 35% 55%,#d97706 55% 72%,#dc2626 72% 85%,#7c3aed 85% 100%);position:relative">
+            <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:80px;height:80px;border-radius:50%;background:white;display:flex;flex-direction:column;align-items:center;justify-content:center">
+              <div style="font-size:18px;font-weight:700">¥15.7万</div>
+              <div style="font-size:11px;color:var(--gray-400)">总费用</div>
+            </div>
+          </div>
+        </div>
+        <div style="flex:1">
+          <div class="legend" style="flex-direction:column;align-items:flex-start;gap:8px">
+            <div class="legend-item"><div class="legend-dot" style="background:#3b82f6"></div>差旅费 ¥55,360 (35%)</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#059669"></div>招待费 ¥31,400 (20%)</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#d97706"></div>办公费 ¥26,690 (17%)</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#dc2626"></div>培训费 ¥20,410 (13%)</div>
+            <div class="legend-item"><div class="legend-dot" style="background:#7c3aed"></div>其他 ¥23,140 (15%)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 部门人效排名 -->
+    <div class="chart-card">
+      <div class="chart-header"><h3>👥 部门人均产值排名（万元/人·月）</h3></div>
+      <div class="chart-body">
+        <ul class="rank-list">
+          ${[{n:'项目交付部',v:12.8},{n:'市场营销部',v:11.5},{n:'技术研发部',v:10.2},{n:'生产制造部',v:8.6},{n:'财务管理部',v:7.3},{n:'法务合规部',v:6.8},{n:'行政综合部',v:5.2},{n:'人力资源部',v:4.5}].map((d,i)=>{
+            const pct = d.v/12.8*100;
+            return `<li class="rank-item"><div class="rank-num ${i<3?'top':'normal'}">${i+1}</div><div class="rank-name">${d.n}</div><div class="rank-value">${d.v}</div><div class="rank-bar"><div class="fill" style="width:${pct}%"></div></div></li>`;
+          }).join('')}
+        </ul>
+      </div>
+    </div>
+
+    <!-- 项目进度概览 -->
+    <div class="chart-card">
+      <div class="chart-header"><h3>🏭 项目进度概览</h3></div>
+      <div class="chart-body">
+        <table class="table-mini">
+          <thead><tr><th>项目名称</th><th>合同额</th><th>进度</th><th>状态</th></tr></thead>
+          <tbody>
+            <tr><td>智慧城市数据平台</td><td>¥860万</td><td><div class="progress-bar" style="width:80px;display:inline-block"><div class="fill blue" style="width:75%"></div></div> 75%</td><td><span class="status processing">进行中</span></td></tr>
+            <tr><td>华东区政务云迁移</td><td>¥1,200万</td><td><div class="progress-bar" style="width:80px;display:inline-block"><div class="fill blue" style="width:60%"></div></div> 60%</td><td><span class="status processing">进行中</span></td></tr>
+            <tr><td>数据中心扩容工程</td><td>¥520万</td><td><div class="progress-bar" style="width:80px;display:inline-block"><div class="fill orange" style="width:35%"></div></div> 35%</td><td><span class="status warning">滞后</span></td></tr>
+            <tr><td>ERP系统升级</td><td>¥380万</td><td><div class="progress-bar" style="width:80px;display:inline-block"><div class="fill green" style="width:90%"></div></div> 90%</td><td><span class="status processing">进行中</span></td></tr>
+            <tr><td>国产化替代适配</td><td>¥920万</td><td><div class="progress-bar" style="width:80px;display:inline-block"><div class="fill orange" style="width:20%"></div></div> 20%</td><td><span class="status processing">进行中</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 应收账款账龄 -->
+    <div class="chart-card">
+      <div class="chart-header"><h3>📥 应收账款账龄分析</h3></div>
+      <div class="chart-body">
+        <div class="bar-chart" style="height:120px">
+          <div class="bar-col"><div class="bar-value">680万</div><div class="bar" style="height:100px;background:#059669"></div><div class="bar-label">0-30天</div></div>
+          <div class="bar-col"><div class="bar-value">320万</div><div class="bar" style="height:50px;background:#d97706"></div><div class="bar-label">31-60天</div></div>
+          <div class="bar-col"><div class="bar-value">185万</div><div class="bar" style="height:30px;background:#dc2626"></div><div class="bar-label">61-90天</div></div>
+          <div class="bar-col"><div class="bar-value">60万</div><div class="bar" style="height:12px;background:#7f1d1d"></div><div class="bar-label">90天+</div></div>
+        </div>
+        <div style="margin-top:16px;font-size:12px;color:var(--gray-500)">总应收 ¥1,245万 | 逾期 ¥285万 (22.9%) | 坏账风险 ¥60万</div>
+      </div>
+    </div>
+
+    <!-- 预算执行率 -->
+    <div class="chart-card">
+      <div class="chart-header"><h3>📊 部门预算执行率</h3></div>
+      <div class="chart-body">
+        ${[{d:'技术研发部',b:120,u:78.5},{d:'市场营销部',b:80,u:52.3},{d:'项目交付部',b:150,u:96.7},{d:'生产制造部',b:60,u:41.2},{d:'行政综合部',b:40,u:28.4}].map(item=>{
+          const rate = (item.u/item.b*100).toFixed(0);
+          return `<div style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px"><span style="color:var(--gray-600)">${item.d}</span><span style="font-weight:600;color:${rate>80?'var(--danger)':'var(--gray-700)'}">¥${item.u}万 / ¥${item.b}万 (${rate}%)</span></div><div class="progress-bar"><div class="fill ${rate>80?'red':rate>60?'orange':'green'}" style="width:${rate}%"></div></div></div>`;
+        }).join('')}
+      </div>
+    </div>
+
+    <!-- 系统使用统计 -->
+    <div class="chart-card">
+      <div class="chart-header"><h3>📱 系统使用统计（本月）</h3></div>
+      <div class="chart-body">
+        <table class="table-mini">
+          <thead><tr><th>系统</th><th>访问量</th><th>审批量</th><th>趋势</th></tr></thead>
+          <tbody>
+            <tr><td>OA审批</td><td>3,456</td><td>286</td><td style="color:var(--success)">↑ 15%</td></tr>
+            <tr><td>财务云</td><td>2,180</td><td>128</td><td style="color:var(--success)">↑ 8%</td></tr>
+            <tr><td>人力资源</td><td>1,850</td><td>45</td><td style="color:var(--success)">↑ 5%</td></tr>
+            <tr><td>生产经营</td><td>1,520</td><td>67</td><td style="color:var(--danger)">↓ 3%</td></tr>
+            <tr><td>税务管理</td><td>890</td><td>23</td><td style="color:var(--success)">↑ 12%</td></tr>
+            <tr><td>出入库</td><td>1,230</td><td>89</td><td style="color:var(--success)">↑ 10%</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- 人员结构 -->
+    <div class="chart-card">
+      <div class="chart-header"><h3>👥 人员结构分析</h3></div>
+      <div class="chart-body" style="display:flex;gap:30px;align-items:center">
+        <div style="width:140px;height:140px;border-radius:50%;background:conic-gradient(#3b82f6 0% 35%,#059669 35% 55%,#d97706 55% 75%,#7c3aed 75% 100%);position:relative">
+          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:80px;height:80px;border-radius:50%;background:white;display:flex;flex-direction:column;align-items:center;justify-content:center">
+            <div style="font-size:18px;font-weight:700">1,286</div>
+            <div style="font-size:11px;color:var(--gray-400)">总人数</div>
+          </div>
+        </div>
+        <div style="flex:1;font-size:13px">
+          <div style="margin-bottom:8px"><span style="display:inline-block;width:12px;height:12px;border-radius:2px;background:#3b82f6;margin-right:6px"></span>技术研发 450人 (35%)</div>
+          <div style="margin-bottom:8px"><span style="display:inline-block;width:12px;height:12px;border-radius:2px;background:#059669;margin-right:6px"></span>生产制造 257人 (20%)</div>
+          <div style="margin-bottom:8px"><span style="display:inline-block;width:12px;height:12px;border-radius:2px;background:#d97706;margin-right:6px"></span>市场营销 257人 (20%)</div>
+          <div><span style="display:inline-block;width:12px;height:12px;border-radius:2px;background:#7c3aed;margin-right:6px"></span>职能支持 322人 (25%)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">华信集团 · 数据分析平台 © 2026</div>
+</div>
+</body>
+</html>

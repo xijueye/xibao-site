@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>消息中心 - 华信集团</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+.msg-tabs{display:flex;border-bottom:2px solid var(--gray-200);margin-bottom:0}
+.msg-tab{padding:12px 20px;font-size:14px;color:var(--gray-500);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .2s;display:flex;align-items:center;gap:6px}
+.msg-tab:hover{color:var(--gray-700)}
+.msg-tab.active{color:var(--primary);border-bottom-color:var(--primary);font-weight:600}
+.msg-tab .badge{background:var(--danger);color:white;border-radius:10px;padding:1px 7px;font-size:11px;font-weight:600}
+.msg-item{display:flex;gap:14px;padding:16px 20px;border-bottom:1px solid var(--gray-100);cursor:pointer;transition:background .15s}
+.msg-item:hover{background:var(--gray-50)}
+.msg-item.unread{background:#f0f5ff}
+.msg-item.unread .msg-title{font-weight:600}
+.msg-avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.msg-avatar.approval{background:#dbeafe;color:#1a56db}
+.msg-avatar.system{background:#d1fae5;color:#059669}
+.msg-avatar.alert{background:#fee2e2;color:#dc2626}
+.msg-avatar.info{background:#ede9fe;color:#7c3aed}
+.msg-body{flex:1;min-width:0}
+.msg-title{font-size:14px;color:var(--gray-800);margin-bottom:2px}
+.msg-desc{font-size:13px;color:var(--gray-500);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.msg-time{font-size:12px;color:var(--gray-400);white-space:nowrap;flex-shrink:0}
+.msg-tag{display:inline-block;padding:1px 6px;border-radius:4px;font-size:11px;font-weight:600;margin-right:4px}
+.msg-tag.urgent{background:#fee2e2;color:#991b1b}
+.msg-tag.normal{background:#dbeafe;color:#1e40af}
+.msg-tag.system{background:#d1fae5;color:#065f46}
+.filter-row{display:flex;gap:12px;padding:12px 20px;border-bottom:1px solid var(--gray-200);background:var(--gray-50)}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="logo"><span class="icon">🏢</span><span>华信集团 · 统一业务门户</span></div>
+  <div class="nav-links">
+    <a href="index.html">门户首页</a>
+    <a href="workbench.html">工作台</a>
+    <a href="messages.html" class="active">消息中心</a>
+    <a href="analytics.html">数据分析</a>
+  </div>
+  <div class="user-info"><div class="avatar">席</div><span>席宝</span></div>
+</div>
+<div style="padding:24px;max-width:1000px;margin:0 auto">
+  <div class="card">
+    <div class="msg-tabs">
+      <div class="msg-tab active" onclick="filterMsg('all',this)">全部 <span class="badge" id="badge-all">18</span></div>
+      <div class="msg-tab" onclick="filterMsg('approval',this)">审批消息 <span class="badge">8</span></div>
+      <div class="msg-tab" onclick="filterMsg('system',this)">系统通知 <span class="badge">5</span></div>
+      <div class="msg-tab" onclick="filterMsg('alert',this)">预警提醒 <span class="badge">3</span></div>
+      <div class="msg-tab" onclick="filterMsg('info',this)">其他 <span class="badge">2</span></div>
+    </div>
+    <div class="filter-row">
+      <select style="padding:6px 10px;border:1px solid var(--gray-300);border-radius:6px;font-size:13px"><option>全部时间</option><option>今天</option><option>本周</option><option>本月</option></select>
+      <button onclick="markAllRead()" style="padding:6px 12px;border:1px solid var(--gray-300);border-radius:6px;font-size:13px;background:white;cursor:pointer">✅ 全部已读</button>
+      <button onclick="clearAll()" style="padding:6px 12px;border:1px solid var(--gray-300);border-radius:6px;font-size:13px;background:white;cursor:pointer;color:var(--danger)">🗑 清空</button>
+    </div>
+    <div id="msg-list"></div>
+  </div>
+  <div class="footer">华信集团 · 消息中心 © 2026</div>
+</div>
+<script src="assets/app.js"></script>
+<script>
+const messages = [
+  {id:1,type:'approval',icon:'📝',title:'赵丽 提交了年假申请（3天）',desc:'年假申请3天（6/20-6/22），事由：回老家探亲',time:'今天 09:30',read:false,link:'oa-system.html',urgent:true},
+  {id:2,type:'approval',icon:'📮',title:'吴刚 提交了合同用印审批',desc:'与中科信息合作协议，合同专用章，12页3份',time:'今天 08:50',read:false,link:'oa-system.html',urgent:true},
+  {id:3,type:'approval',icon:'🚗',title:'孙磊 提交了用车申请',desc:'6/19 北京-天津出差用车',time:'今天 09:15',read:false,link:'oa-system.html',urgent:false},
+  {id:4,type:'approval',icon:'🧾',title:'张伟 提交了差旅费报销',desc:'报销金额 ¥8,560，北京-上海出差',time:'昨天 16:30',read:false,link:'finance-system.html',urgent:false},
+  {id:5,type:'approval',icon:'🧾',title:'李娜 提交了招待费报销',desc:'报销金额 ¥3,200，客户接待',time:'昨天 15:20',read:false,link:'finance-system.html',urgent:false},
+  {id:6,type:'approval',icon:'🧾',title:'王强 提交了办公费报销',desc:'报销金额 ¥1,850，文件耗材',time:'昨天 14:00',read:true,link:'finance-system.html',urgent:false},
+  {id:7,type:'approval',icon:'📄',title:'陈明 提交了合同法务审核',desc:'智慧城市数据平台开发合同 ¥860万',time:'今天 09:00',read:false,link:'legal-system.html',urgent:true},
+  {id:8,type:'approval',icon:'🛒',title:'孙磊 提交了采购申请',desc:'ThinkPad T14 50台，预算 ¥340,000',time:'今天 08:30',read:true,link:'production-system.html',urgent:false},
+  {id:9,type:'system',icon:'🏢',title:'OA系统升级通知',desc:'集团OA系统将于6月20日凌晨02:00-06:00进行升级维护，届时系统将暂停使用',time:'昨天 10:00',read:false,link:'index.html',urgent:false},
+  {id:10,type:'system',icon:'📊',title:'月度考勤统计已生成',desc:'2026年5月考勤统计报表已生成，请及时查看',time:'6月5日',read:true,link:'hr-system.html',urgent:false},
+  {id:11,type:'system',icon:'📋',title:'2026年Q2预算编制提醒',desc:'请各部门于6月30日前完成Q2预算编制',time:'6月1日',read:true,link:'finance-system.html',urgent:false},
+  {id:12,type:'system',icon:'🎓',title:'合规培训提醒',desc:'请于6月30日前完成年度数据安全合规培训',time:'5月28日',read:true,link:'index.html',urgent:false},
+  {id:13,type:'system',icon:'📝',title:'新制度发布',desc:'《差旅费报销管理办法（2026版）》已发布，请知悉',time:'5月25日',read:true,link:'index.html',urgent:false},
+  {id:14,type:'alert',icon:'⚠️',title:'应收账款逾期提醒',desc:'北京中科信息技术有限公司 ¥84万 已逾期19天',time:'今天 08:00',read:false,link:'finance-system.html',urgent:true},
+  {id:15,type:'alert',icon:'⚠️',title:'库存预警：六类网线',desc:'当前库存5箱，低于安全库存20箱，请及时采购',time:'昨天 09:00',read:false,link:'inventory-system.html',urgent:true},
+  {id:16,type:'alert',icon:'⏰',title:'增值税申报截止提醒',desc:'2026年5月增值税申报截止日期为6月20日，剩余2天',time:'昨天 08:00',read:false,link:'tax-system.html',urgent:true},
+  {id:17,type:'info',icon:'💬',title:'张恒亮 给你发了一条消息',desc:'席宝，明天下午的项目评审会议纪要帮我整理一下',time:'昨天 17:00',read:true,link:'index.html',urgent:false},
+  {id:18,type:'info',icon:'🎉',title:'恭喜！你的报销单已通过',desc:'差旅费报销单 BX202606004 已审批通过，金额 ¥12,300',time:'6月15日',read:true,link:'finance-system.html',urgent:false},
+];
+
+function renderMsgList(filter) {
+  const list = filter === 'all' ? messages : messages.filter(m => m.type === filter);
+  document.getElementById('msg-list').innerHTML = list.map(m => `
+    <a href="${m.link}" class="msg-item ${m.read?'':'unread'}" onclick="markRead(${m.id})">
+      <div class="msg-avatar ${m.type}">${m.icon}</div>
+      <div class="msg-body">
+        <div class="msg-title">${m.urgent?'<span class="msg-tag urgent">紧急</span>':''}${m.title}</div>
+        <div class="msg-desc">${m.desc}</div>
+      </div>
+      <div class="msg-time">${m.time}</div>
+    </a>`).join('');
+}
+
+function filterMsg(type, tabEl) {
+  document.querySelectorAll('.msg-tab').forEach(t=>t.classList.remove('active'));
+  tabEl.classList.add('active');
+  renderMsgList(type);
+}
+
+function markRead(id) {
+  const m = messages.find(i=>i.id===id);
+  if (m) m.read = true;
+  const unread = messages.filter(m=>!m.read).length;
+  document.getElementById('badge-all').textContent = unread || '';
+}
+
+function markAllRead() {
+  messages.forEach(m=>m.read=true);
+  document.getElementById('badge-all').textContent = '0';
+  renderMsgList('all');
+  Modal.toast('✅ 已全部标记为已读');
+}
+
+function clearAll() {
+  Modal.confirm('确认清空所有消息？', () => { messages.length = 0; renderMsgList('all'); Modal.toast('已清空'); });
+}
+
+renderMsgList('all');
+</script>
+</body>
+</html>

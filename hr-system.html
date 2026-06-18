@@ -5,6 +5,30 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>人力资源系统 - 华信集团</title>
 <link rel="stylesheet" href="assets/style.css">
+<style>
+.pipeline{display:flex;gap:12px;padding:20px 0}
+.pipe-stage{flex:1;background:var(--gray-50);border-radius:8px;padding:12px;text-align:center}
+.pipe-stage .count{font-size:24px;font-weight:700;color:var(--primary)}
+.pipe-stage .label{font-size:12px;color:var(--gray-500);margin-top:4px}
+.pipe-card{background:white;border-radius:6px;padding:10px;margin-top:8px;text-align:left;font-size:13px;box-shadow:var(--shadow-sm);cursor:pointer}
+.pipe-card:hover{box-shadow:var(--shadow-md)}
+.pipe-card .name{font-weight:600;color:var(--gray-800)}
+.pipe-card .info{color:var(--gray-400);font-size:11px;margin-top:2px}
+.pipe-card .salary{color:var(--primary);font-weight:600;font-size:12px;margin-top:4px}
+.train-card{background:white;border-radius:8px;padding:16px;box-shadow:var(--shadow-sm);display:flex;gap:16px;align-items:center}
+.train-icon{width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0}
+.train-info{flex:1}
+.train-info h4{font-size:14px;color:var(--gray-800)}
+.train-info p{font-size:12px;color:var(--gray-400);margin-top:2px}
+.train-meta{display:flex;gap:16px;margin-top:6px;font-size:12px;color:var(--gray-500)}
+.eval-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--gray-100)}
+.eval-row:last-child{border-bottom:none}
+.eval-name{width:80px;font-weight:600;font-size:14px}
+.eval-scores{flex:1;display:flex;gap:8px}
+.eval-score{flex:1;text-align:center}
+.eval-score .num{font-size:16px;font-weight:700}
+.eval-score .label{font-size:11px;color:var(--gray-400)}
+</style>
 </head>
 <body>
 <div class="topbar">
@@ -14,35 +38,30 @@
 </div>
 <div class="layout">
   <div class="sidebar">
-    <div class="menu-group">
-      <div class="menu-title">员工管理</div>
+    <div class="menu-group"><div class="menu-title">员工管理</div>
       <a class="menu-item active" href="#" onclick="switchTab('employee')"><span class="icon">📋</span> 员工花名册</a>
-      <a class="menu-item" href="#" onclick="showAddEmployee()"><span class="icon">➕</span> 入职办理</a>
+      <a class="menu-item" href="#" onclick="switchTab('orgchart')"><span class="icon">🏢</span> 组织架构</a>
     </div>
-    <div class="menu-group">
-      <div class="menu-title">考勤管理</div>
+    <div class="menu-group"><div class="menu-title">考勤管理</div>
       <a class="menu-item" href="#" onclick="switchTab('attendance')"><span class="icon">⏰</span> 考勤统计</a>
-      <a class="menu-item" href="#" onclick="doCheckIn()"><span class="icon">✅</span> 今日签到</a>
+      <a class="menu-item" href="#" onclick="switchTab('leave')"><span class="icon">🏖️</span> 假期管理</a>
     </div>
-    <div class="menu-group">
-      <div class="menu-title">薪酬福利</div>
+    <div class="menu-group"><div class="menu-title">招聘管理</div>
+      <a class="menu-item" href="#" onclick="switchTab('recruit')"><span class="icon">📢</span> 招聘需求</a>
+      <a class="menu-item" href="#" onclick="switchTab('candidate')"><span class="icon">👤</span> 候选人库</a>
+    </div>
+    <div class="menu-group"><div class="menu-title">薪酬福利</div>
       <a class="menu-item" href="#" onclick="switchTab('salary')"><span class="icon">💵</span> 工资查询</a>
+      <a class="menu-item" href="#" onclick="switchTab('social')"><span class="icon">🏥</span> 社保公积金</a>
     </div>
-    <div class="menu-group">
-      <div class="menu-title">招聘管理</div>
-      <a class="menu-item" href="#" onclick="showAddRecruit()"><span class="icon">📢</span> 发布招聘</a>
+    <div class="menu-group"><div class="menu-title">培训发展</div>
+      <a class="menu-item" href="#" onclick="switchTab('training')"><span class="icon">📚</span> 培训管理</a>
+      <a class="menu-item" href="#" onclick="switchTab('performance')"><span class="icon">⭐</span> 绩效考核</a>
     </div>
   </div>
   <div class="main-content">
-    <div class="page-header">
-      <div>
-        <div class="breadcrumb">人力资源系统 / 员工管理</div>
-        <h2 id="page-title">📋 员工花名册</h2>
-      </div>
-      <div class="btn-group" id="header-actions">
-        <button class="btn btn-outline" style="background:white;border:1px solid #d1d5db;color:#4b5563;" onclick="exportData()">📥 导出</button>
-        <button class="btn btn-primary" onclick="showAddEmployee()">➕ 新增员工</button>
-      </div>
+    <div class="page-header"><div><div class="breadcrumb">人力资源系统</div><h2 id="page-title">📋 员工花名册</h2></div>
+      <div class="btn-group" id="header-actions"><button class="btn btn-primary" id="add-btn" onclick="showAddEmployee()">➕ 新增员工</button></div>
     </div>
     <div id="tab-content"></div>
     <div class="footer">华信集团 · 人力资源管理系统 V3.2.0 © 2026</div>
@@ -50,279 +69,304 @@
 </div>
 <script src="assets/app.js"></script>
 <script>
-// ===== 数据初始化 =====
+// ===== 数据 =====
+const depts = ['技术研发部','市场营销部','生产制造部','财务管理部','人力资源部','行政综合部','项目交付部','法务合规部','采购部','质量管理部'];
 const defaultEmployees = [
-  {id:'HX2024001',name:'张伟',dept:'技术研发部',position:'高级开发工程师',joinDate:'2024-03-15',phone:'138****1234',status:'在职',salary:18500},
-  {id:'HX2024002',name:'李娜',dept:'市场营销部',position:'市场总监',joinDate:'2024-01-10',phone:'139****5678',status:'在职',salary:25000},
-  {id:'HX2024003',name:'王强',dept:'生产制造部',position:'车间主任',joinDate:'2023-06-20',phone:'137****9012',status:'在职',salary:15000},
-  {id:'HX2024004',name:'刘芳',dept:'财务管理部',position:'财务主管',joinDate:'2023-09-01',phone:'136****3456',status:'在职',salary:20000},
-  {id:'HX2025005',name:'陈明',dept:'项目交付部',position:'项目经理',joinDate:'2025-02-18',phone:'135****7890',status:'试用期',salary:16000},
-  {id:'HX2025006',name:'赵丽',dept:'人力资源部',position:'HRBP',joinDate:'2025-04-01',phone:'158****2345',status:'试用期',salary:14000},
-  {id:'HX2024007',name:'孙磊',dept:'行政综合部',position:'行政主管',joinDate:'2024-05-12',phone:'159****6789',status:'在职',salary:13000},
-  {id:'HX2024008',name:'周婷',dept:'技术研发部',position:'测试工程师',joinDate:'2024-08-20',phone:'186****0123',status:'在职',salary:15500},
-  {id:'HX2024009',name:'吴刚',dept:'法务合规部',position:'法务专员',joinDate:'2024-02-28',phone:'187****4567',status:'在职',salary:16000},
-  {id:'HX2025010',name:'郑雪',dept:'市场营销部',position:'产品经理',joinDate:'2025-06-01',phone:'188****8901',status:'试用期',salary:17000},
-  {id:'HX2023011',name:'黄海',dept:'生产制造部',position:'技术工人',joinDate:'2023-03-10',phone:'133****2222',status:'在职',salary:9500},
-  {id:'HX2023012',name:'马丽',dept:'财务管理部',position:'出纳',joinDate:'2023-07-15',phone:'156****3333',status:'在职',salary:11000},
+  {id:'HX2024001',name:'张伟',dept:'技术研发部',position:'高级开发工程师',joinDate:'2024-03-15',phone:'138****1234',email:'zhangwei@huaxin.com',status:'在职',salary:18500,gender:'男',age:32,education:'硕士',idCard:'110101****1234'},
+  {id:'HX2024002',name:'李娜',dept:'市场营销部',position:'市场总监',joinDate:'2024-01-10',phone:'139****5678',email:'lina@huaxin.com',status:'在职',salary:25000,gender:'女',age:35,education:'硕士',idCard:'310101****5678'},
+  {id:'HX2024003',name:'王强',dept:'生产制造部',position:'车间主任',joinDate:'2023-06-20',phone:'137****9012',email:'wangqiang@huaxin.com',status:'在职',salary:15000,gender:'男',age:40,education:'本科',idCard:'440101****9012'},
+  {id:'HX2024004',name:'刘芳',dept:'财务管理部',position:'财务主管',joinDate:'2023-09-01',phone:'136****3456',email:'liufang@huaxin.com',status:'在职',salary:20000,gender:'女',age:33,education:'本科',idCard:'320101****3456'},
+  {id:'HX2025005',name:'陈明',dept:'项目交付部',position:'项目经理',joinDate:'2025-02-18',phone:'135****7890',email:'chenming@huaxin.com',status:'试用期',salary:16000,gender:'男',age:29,education:'硕士',idCard:'110101****7890'},
+  {id:'HX2025006',name:'赵丽',dept:'人力资源部',position:'HRBP',joinDate:'2025-04-01',phone:'158****2345',email:'zhaoli@huaxin.com',status:'试用期',salary:14000,gender:'女',age:27,education:'本科',idCard:'110101****2345'},
+  {id:'HX2024007',name:'孙磊',dept:'行政综合部',position:'行政主管',joinDate:'2024-05-12',phone:'159****6789',email:'sunlei@huaxin.com',status:'在职',salary:13000,gender:'男',age:31,education:'本科',idCard:'110101****6789'},
+  {id:'HX2024008',name:'周婷',dept:'技术研发部',position:'测试工程师',joinDate:'2024-08-20',phone:'186****0123',email:'zhouting@huaxin.com',status:'在职',salary:15500,gender:'女',age:28,education:'本科',idCard:'110101****0123'},
+  {id:'HX2024009',name:'吴刚',dept:'法务合规部',position:'法务专员',joinDate:'2024-02-28',phone:'187****4567',email:'wugang@huaxin.com',status:'在职',salary:16000,gender:'男',age:34,education:'硕士',idCard:'110101****4567'},
+  {id:'HX2025010',name:'郑雪',dept:'市场营销部',position:'产品经理',joinDate:'2025-06-01',phone:'188****8901',email:'zhengxue@huaxin.com',status:'试用期',salary:17000,gender:'女',age:26,education:'本科',idCard:'110101****8901'},
+  {id:'HX2023011',name:'黄海',dept:'生产制造部',position:'技术工人',joinDate:'2023-03-10',phone:'133****2222',email:'huanghai@huaxin.com',status:'在职',salary:9500,gender:'男',age:38,education:'大专',idCard:'110101****2222'},
+  {id:'HX2023012',name:'马丽',dept:'财务管理部',position:'出纳',joinDate:'2023-07-15',phone:'156****3333',email:'mali@huaxin.com',status:'在职',salary:11000,gender:'女',age:30,education:'本科',idCard:'110101****3333'},
 ];
-if (!DB.get('hr_employees').length) DB.set('hr_employees', defaultEmployees);
+if(!DB.get('hr_employees').length) DB.set('hr_employees',defaultEmployees);
 
-const depts = ['技术研发部','市场营销部','生产制造部','财务管理部','人力资源部','行政综合部','项目交付部','法务合规部'];
-let currentTab = 'employee';
-let currentPage = 1;
+const defaultRecruits = [
+  {id:'RC2026001',title:'高级Java开发工程师',dept:'技术研发部',count:3,salary:'20K-30K',status:'招聘中',date:'2026-06-10',candidates:8},
+  {id:'RC2026002',title:'前端开发工程师',dept:'技术研发部',count:2,salary:'18K-25K',status:'招聘中',date:'2026-06-08',candidates:12},
+  {id:'RC2026003',title:'大客户销售经理',dept:'市场营销部',count:2,salary:'15K-25K',status:'招聘中',date:'2026-06-05',candidates:6},
+  {id:'RC2026004',title:'DevOps工程师',dept:'技术研发部',count:1,salary:'22K-35K',status:'已关闭',date:'2026-05-20',candidates:15,offer:1},
+  {id:'RC2026005',title:'财务分析师',dept:'财务管理部',count:1,salary:'15K-20K',status:'招聘中',date:'2026-06-12',candidates:4},
+];
+if(!DB.get('hr_recruits').length) DB.set('hr_recruits',defaultRecruits);
 
-// ===== Tab切换 =====
-function switchTab(tab) {
-  currentTab = tab; currentPage = 1;
-  document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
+const defaultCandidates = [
+  {id:'CD001',name:'赵强',position:'高级Java开发',source:'BOSS直聘',phone:'139****1111',education:'硕士·北邮',experience:'6年',stage:'面试中',interviewDate:'2026-06-20',salary:'25K'},
+  {id:'CD002',name:'孙芳',position:'前端开发工程师',source:'拉勾网',phone:'138****2222',education:'本科·北航',experience:'4年',stage:'待面试',interviewDate:'2026-06-21',salary:'20K'},
+  {id:'CD003',name:'周明',position:'高级Java开发',source:'猎聘',phone:'137****3333',education:'硕士·清华',experience:'8年',stage:'已发Offer',interviewDate:'-',salary:'28K',offerDate:'2026-06-16'},
+  {id:'CD004',name:'吴丽',position:'大客户销售经理',source:'内部推荐',phone:'136****4444',education:'本科·人大',experience:'5年',stage:'简历筛选',salary:'22K'},
+  {id:'CD005',name:'郑华',position:'前端开发工程师',source:'BOSS直聘',phone:'135****5555',education:'本科·北理',experience:'3年',stage:'笔试中',salary:'18K'},
+  {id:'CD006',name:'王芳',position:'财务分析师',source:'智联招聘',phone:'158****6666',education:'硕士·央财',experience:'4年',stage:'面试中',interviewDate:'2026-06-19',salary:'16K'},
+  {id:'CD007',name:'李强',position:'高级Java开发',source:'猎聘',phone:'159****7777',education:'本科·北邮',experience:'7年',stage:'简历筛选',salary:'26K'},
+  {id:'CD008',name:'张丽',position:'DevOps工程师',source:'BOSS直聘',phone:'186****8888',education:'硕士·北航',experience:'5年',stage:'已入职',salary:'30K',hireDate:'2026-06-01'},
+];
+if(!DB.get('hr_candidates').length) DB.set('hr_candidates',defaultCandidates);
+
+const defaultTrainings = [
+  {id:'TR001',name:'新员工入职培训',type:'入职培训',hours:16,teacher:'赵丽',enrolled:23,completed:18,status:'进行中'},
+  {id:'TR002',name:'数据安全合规培训',type:'合规培训',hours:4,teacher:'外部讲师',enrolled:1286,completed:856,status:'进行中'},
+  {id:'TR003',name:'项目管理PMP认证',type:'专业认证',hours:40,teacher:'外部机构',enrolled:15,completed:15,status:'已完成'},
+  {id:'TR004',name:'领导力提升训练营',type:'管理培训',hours:24,teacher:'外部讲师',enrolled:30,completed:0,status:'报名中'},
+  {id:'TR005',name:'AI办公效率提升',type:'技能培训',hours:8,teacher:'内部讲师',enrolled:85,completed:62,status:'进行中'},
+];
+if(!DB.get('hr_trainings').length) DB.set('hr_trainings',defaultTrainings);
+
+const defaultPerformance = [
+  {empId:'HX2024001',name:'张伟',dept:'技术研发部',kpi:92,attendance:98,project:95,overall:95,grade:'A'},
+  {empId:'HX2024002',name:'李娜',dept:'市场营销部',kpi:88,attendance:96,project:90,overall:91,grade:'A'},
+  {empId:'HX2024003',name:'王强',dept:'生产制造部',kpi:78,attendance:92,project:82,overall:84,grade:'B'},
+  {empId:'HX2024004',name:'刘芳',dept:'财务管理部',kpi:90,attendance:99,project:88,overall:92,grade:'A'},
+  {empId:'HX2024007',name:'孙磊',dept:'行政综合部',kpi:75,attendance:94,project:78,overall:82,grade:'B'},
+  {empId:'HX2024008',name:'周婷',dept:'技术研发部',kpi:85,attendance:97,project:86,overall:89,grade:'B+'},
+  {empId:'HX2024009',name:'吴刚',dept:'法务合规部',kpi:82,attendance:95,project:80,overall:85,grade:'B+'},
+  {empId:'HX2023011',name:'黄海',dept:'生产制造部',kpi:70,attendance:88,project:72,overall:76,grade:'C'},
+];
+if(!DB.get('hr_performance').length) DB.set('hr_performance',defaultPerformance);
+
+const leaveRecords = [
+  {applicant:'赵丽',type:'年假',start:'2026-06-20',end:'2026-06-22',days:3,status:'待审批'},
+  {applicant:'黄海',type:'病假',start:'2026-06-18',end:'2026-06-18',days:1,status:'待审批'},
+  {applicant:'马丽',type:'调休',start:'2026-06-18',end:'2026-06-18',days:0.5,status:'待审批'},
+  {applicant:'陈明',type:'年假',start:'2026-05-01',end:'2026-05-03',days:3,status:'已通过'},
+  {applicant:'张伟',type:'事假',start:'2026-04-15',end:'2026-04-15',days:1,status:'已通过'},
+  {applicant:'李娜',type:'年假',start:'2026-06-10',end:'2026-06-12',days:3,status:'已通过'},
+];
+
+let currentTab='employee';
+const tabs={employee:'📋 员工花名册',orgchart:'🏢 组织架构',attendance:'⏰ 考勤统计',leave:'🏖️ 假期管理',recruit:'📢 招聘需求',candidate:'👤 候选人库',salary:'💵 工资查询',social:'🏥 社保公积金',training:'📚 培训管理',performance:'⭐ 绩效考核'};
+
+function switchTab(tab){
+  currentTab=tab;
+  document.querySelectorAll('.menu-item').forEach(m=>m.classList.remove('active'));
   event.target.closest('.menu-item')?.classList.add('active');
+  document.getElementById('page-title').textContent=tabs[tab]||'';
+  const addBtn=document.getElementById('add-btn');
+  addBtn.style.display='';
+  if(tab==='employee'){addBtn.textContent='➕ 新增员工';addBtn.onclick=showAddEmployee;}
+  else if(tab==='recruit'){addBtn.textContent='➕ 发布招聘';addBtn.onclick=showNewRecruit;}
+  else if(tab==='candidate'){addBtn.textContent='➕ 新增候选人';addBtn.onclick=showNewCandidate;}
+  else if(tab==='training'){addBtn.textContent='➕ 新建培训';addBtn.onclick=showNewTraining;}
+  else{addBtn.style.display='none';}
   renderContent();
 }
 
-function renderContent() {
-  const el = document.getElementById('tab-content');
-  const renderers = { employee: renderEmployee, attendance: renderAttendance, salary: renderSalary };
-  (renderers[currentTab] || renderEmployee)(el);
+function renderContent(){
+  const el=document.getElementById('tab-content');
+  ({employee:renderEmployee,orgchart:renderOrg,attendance:renderAttendance,leave:renderLeave,recruit:renderRecruit,candidate:renderCandidate,salary:renderSalary,social:renderSocial,training:renderTraining,performance:renderPerformance})[currentTab]?.(el);
 }
 
 // ===== 员工花名册 =====
-function renderEmployee(el) {
-  document.getElementById('page-title').textContent = '📋 员工花名册';
-  const list = DB.get('hr_employees');
-  const total = list.length, onJob = list.filter(i=>i.status==='在职').length, trial = list.filter(i=>i.status==='试用期').length;
+function renderEmployee(el){
+  const list=DB.get('hr_employees');
+  el.innerHTML=`<div class="dashboard-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:20px">
+    <div class="mini-stat"><div class="icon">👥</div><div class="num">${list.length}</div><div class="desc">在职总人数</div></div>
+    <div class="mini-stat"><div class="icon">✅</div><div class="num">${list.filter(i=>i.status==='在职').length}</div><div class="desc">正式员工</div></div>
+    <div class="mini-stat"><div class="icon">⏳</div><div class="num">${list.filter(i=>i.status==='试用期').length}</div><div class="desc">试用期</div></div>
+    <div class="mini-stat"><div class="icon">💰</div><div class="num">¥${(Summary.calc(list,'salary')/10000).toFixed(1)}万</div><div class="desc">月薪总额</div></div>
+  </div>
+  <div class="card"><div class="filter-bar">
+    <select id="f-dept"><option value="">全部部门</option>${depts.map(d=>`<option>${d}</option>`).join('')}</select>
+    <select id="f-status"><option value="">全部状态</option><option>在职</option><option>试用期</option></select>
+    <input type="text" id="f-kw" placeholder="搜索姓名/工号...">
+    <button class="btn btn-primary" onclick="renderEmpList()">🔍 搜索</button>
+  </div><div id="emp-list"></div></div>`;
+  renderEmpList();
+}
+function renderEmpList(){
+  let list=DB.get('hr_employees');
+  const d=document.getElementById('f-dept')?.value,s=document.getElementById('f-status')?.value,k=document.getElementById('f-kw')?.value?.toLowerCase();
+  if(d)list=list.filter(i=>i.dept===d);if(s)list=list.filter(i=>i.status===s);if(k)list=list.filter(i=>i.name.toLowerCase().includes(k)||i.id.toLowerCase().includes(k));
+  document.getElementById('emp-list').innerHTML=`<table><thead><tr><th>工号</th><th>姓名</th><th>性别</th><th>部门</th><th>岗位</th><th>入职日期</th><th>学历</th><th>月薪</th><th>状态</th><th>操作</th></tr></thead>
+  <tbody>${list.map(e=>`<tr><td>${e.id}</td><td><strong>${e.name}</strong></td><td>${e.gender}</td><td>${e.dept}</td><td>${e.position}</td><td>${e.joinDate}</td><td>${e.education}</td><td>¥${e.salary?.toLocaleString()}</td>
+  <td><span class="status ${e.status==='在职'?'approved':'processing'}">${e.status}</span></td>
+  <td><a href="#" onclick="viewEmployee('${e.id}');return false" style="color:var(--primary);font-size:13px;text-decoration:none">查看</a> <a href="#" onclick="editEmployee('${e.id}');return false" style="color:var(--gray-500);font-size:13px;text-decoration:none;margin-left:4px">编辑</a></td></tr>`).join('')}</tbody></table>
+  <div style="padding:16px;text-align:center;color:var(--gray-400);font-size:13px">共 ${list.length} 条记录</div>`;
+}
+function showAddEmployee(){
+  const fields=[{name:'id',label:'工号',required:true},{name:'name',label:'姓名',required:true},{name:'gender',label:'性别',type:'select',options:['男','女'],required:true},
+  {name:'dept',label:'部门',type:'select',options:depts,required:true},{name:'position',label:'岗位',required:true},{name:'joinDate',label:'入职日期',type:'date',required:true},
+  {name:'phone',label:'手机号',required:true},{name:'email',label:'邮箱',type:'email'},{name:'education',label:'学历',type:'select',options:['博士','硕士','本科','大专'],required:true},
+  {name:'salary',label:'月薪（元）',type:'number',required:true},{name:'status',label:'状态',type:'select',options:['在职','试用期'],required:true}];
+  const html=Form.render(fields)+`<div style="margin-top:16px;text-align:right"><button class="btn" style="background:#f3f4f6;color:#374151" onclick="Modal.close(this.closest('[id^=modal]').id)">取消</button><button class="btn btn-primary" onclick="saveEmployee()">提交</button></div>`;
+  Modal.show('📝 新增员工',html,{width:'600px'});
+}
+function saveEmployee(){const d=Form.getData();if(!d.id||!d.name){Modal.toast('请填写必填项','warning');return;}d.salary=parseInt(d.salary)||0;const l=DB.get('hr_employees');if(l.find(i=>i.id===d.id)){Modal.toast('工号已存在','error');return;}l.unshift(d);DB.set('hr_employees',l);document.querySelectorAll('[id^=modal-]').forEach(m=>m.remove());Modal.toast(`✅ 员工 ${d.name} 入职成功`);renderContent();}
+function viewEmployee(id){const e=DB.get('hr_employees').find(i=>i.id===id);if(!e)return;const html=`<div class="detail-grid" style="grid-template-columns:1fr 1fr">
+  <div class="detail-item"><div class="label">工号</div><div class="value">${e.id}</div></div><div class="detail-item"><div class="label">姓名</div><div class="value">${e.name}</div></div>
+  <div class="detail-item"><div class="label">性别</div><div class="value">${e.gender}</div></div><div class="detail-item"><div class="label">学历</div><div class="value">${e.education}</div></div>
+  <div class="detail-item"><div class="label">部门</div><div class="value">${e.dept}</div></div><div class="detail-item"><div class="label">岗位</div><div class="value">${e.position}</div></div>
+  <div class="detail-item"><div class="label">入职日期</div><div class="value">${e.joinDate}</div></div><div class="detail-item"><div class="label">手机</div><div class="value">${e.phone}</div></div>
+  <div class="detail-item"><div class="label">邮箱</div><div class="value">${e.email||'-'}</div></div><div class="detail-item"><div class="label">状态</div><div class="value"><span class="status ${e.status==='在职'?'approved':'processing'}">${e.status}</span></div></div>
+  <div class="detail-item" style="grid-column:1/-1"><div class="label">月薪</div><div class="value" style="color:var(--primary);font-size:20px;font-weight:700">¥${e.salary?.toLocaleString()}</div></div></div>`;
+  Modal.show(`👤 员工详情 - ${e.name}`,html,{width:'520px'});
+}
+function editEmployee(id){const e=DB.get('hr_employees').find(i=>i.id===id);if(!e)return;const fields=[{name:'name',label:'姓名',required:true},{name:'dept',label:'部门',type:'select',options:depts,required:true},{name:'position',label:'岗位',required:true},{name:'salary',label:'月薪',type:'number'},{name:'status',label:'状态',type:'select',options:['在职','试用期','离职'],required:true}];
+  const html=Form.render(fields,e)+`<div style="margin-top:16px;text-align:right"><button class="btn" style="background:#f3f4f6;color:#374151" onclick="Modal.close(this.closest('[id^=modal]').id)">取消</button><button class="btn btn-primary" onclick="updateEmployee('${id}')">保存</button></div>`;
+  Modal.show(`✏️ 编辑 - ${e.name}`,html,{width:'520px'});}
+function updateEmployee(id){const d=Form.getData();const l=DB.get('hr_employees');const i=l.findIndex(x=>x.id===id);if(i>=0){Object.assign(l[i],d);l[i].salary=parseInt(l[i].salary)||0;DB.set('hr_employees',l);document.querySelectorAll('[id^=modal-]').forEach(m=>m.remove());Modal.toast('✅ 已更新');renderContent();}}
 
-  el.innerHTML = `
-    <div class="dashboard-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:20px">
-      <div class="mini-stat"><div class="icon">👥</div><div class="num">${total}</div><div class="desc">在职总人数</div></div>
-      <div class="mini-stat"><div class="icon">✅</div><div class="num">${onJob}</div><div class="desc">正式员工</div></div>
-      <div class="mini-stat"><div class="icon">⏳</div><div class="num">${trial}</div><div class="desc">试用期</div></div>
-      <div class="mini-stat"><div class="icon">💰</div><div class="num">¥${(Summary.calc(list,'salary')/10000).toFixed(1)}万</div><div class="desc">月薪总额</div></div>
-    </div>
-    <div class="card">
-      <div class="filter-bar">
-        <select id="f-dept"><option value="">全部部门</option>${depts.map(d=>`<option>${d}</option>`).join('')}</select>
-        <select id="f-status"><option value="">全部状态</option><option>在职</option><option>试用期</option><option>离职</option></select>
-        <input type="text" id="f-keyword" placeholder="搜索姓名/工号...">
-        <button class="btn btn-primary" onclick="renderEmployeeList()">🔍 搜索</button>
+// ===== 组织架构 =====
+function renderOrg(el){
+  el.innerHTML=`<div class="card"><div class="card-body padded" style="text-align:center">
+    <div style="display:inline-block;text-align:center">
+      <div style="background:linear-gradient(135deg,#1a56db,#3b82f6);color:white;padding:16px 32px;border-radius:10px;display:inline-block;font-weight:700;font-size:16px">🏛️ 华信集团<br><span style="font-size:12px;font-weight:400;opacity:0.8">总经理：王建国</span></div>
+      <div style="width:2px;height:30px;background:var(--gray-300);margin:0 auto"></div>
+      <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap">
+        ${[{name:'技术研发部',head:'张伟',count:450,icon:'💻'},{name:'市场营销部',head:'李娜',count:257,icon:'📈'},{name:'生产制造部',head:'王强',count:257,icon:'🏭'},{name:'项目交付部',head:'陈明',count:120,icon:'📋'},{name:'财务管理部',head:'刘芳',count:68,icon:'💰'},{name:'人力资源部',head:'赵丽',count:35,icon:'👥'},{name:'行政综合部',head:'孙磊',count:42,icon:'🏢'},{name:'法务合规部',head:'吴刚',count:28,icon:'⚖️'},{name:'采购部',head:'马丽',count:26,icon:'🛒'},{name:'质量管理部',head:'周婷',count:18,icon:'🔍'}].map(d=>`
+        <div style="background:white;border:2px solid var(--gray-200);border-radius:10px;padding:16px;width:160px;text-align:center;cursor:pointer" onmouseover="this.style.borderColor='var(--primary)'" onmouseout="this.style.borderColor='var(--gray-200)'">
+          <div style="font-size:28px;margin-bottom:8px">${d.icon}</div>
+          <div style="font-weight:600;font-size:14px;margin-bottom:4px">${d.name}</div>
+          <div style="font-size:12px;color:var(--gray-400)">负责人：${d.head}</div>
+          <div style="font-size:12px;color:var(--primary);margin-top:4px">${d.count}人</div>
+        </div>`).join('')}
       </div>
-      <div id="employee-list"></div>
-    </div>`;
-  renderEmployeeList();
-}
-
-function renderEmployeeList() {
-  let list = DB.get('hr_employees');
-  const dept = document.getElementById('f-dept')?.value;
-  const status = document.getElementById('f-status')?.value;
-  const kw = document.getElementById('f-keyword')?.value?.toLowerCase();
-  if (dept) list = list.filter(i => i.dept === dept);
-  if (status) list = list.filter(i => i.status === status);
-  if (kw) list = list.filter(i => i.name.toLowerCase().includes(kw) || i.id.toLowerCase().includes(kw));
-
-  const statusClass = s => s === '在职' ? 'approved' : s === '试用期' ? 'processing' : 'rejected';
-  document.getElementById('employee-list').innerHTML = `
-    <table><thead><tr><th>工号</th><th>姓名</th><th>部门</th><th>岗位</th><th>入职日期</th><th>月薪</th><th>状态</th><th>操作</th></tr></thead>
-    <tbody>${list.map(e => `<tr>
-      <td>${e.id}</td><td><strong>${e.name}</strong></td><td>${e.dept}</td><td>${e.position}</td><td>${e.joinDate}</td>
-      <td>¥${e.salary?.toLocaleString() || '-'}</td>
-      <td><span class="status ${statusClass(e.status)}">${e.status}</span></td>
-      <td><a href="#" onclick="viewEmployee('${e.id}');return false" style="color:var(--primary);text-decoration:none;font-size:13px">查看</a> <a href="#" onclick="editEmployee('${e.id}');return false" style="color:var(--gray-500);text-decoration:none;font-size:13px;margin-left:6px">编辑</a></td>
-    </tr>`).join('')}</tbody></table>
-    <div style="padding:16px;text-align:center;color:var(--gray-400);font-size:13px">共 ${list.length} 条记录</div>`;
-}
-
-// ===== 新增员工 =====
-function showAddEmployee() {
-  const fields = [
-    {name:'id',label:'工号',placeholder:'如 HX2026XXX',required:true},
-    {name:'name',label:'姓名',required:true},
-    {name:'dept',label:'部门',type:'select',options:depts,required:true},
-    {name:'position',label:'岗位',required:true},
-    {name:'joinDate',label:'入职日期',type:'date',required:true},
-    {name:'phone',label:'手机号',placeholder:'138xxxxxxxx',required:true},
-    {name:'salary',label:'月薪（元）',type:'number',placeholder:'如 15000',required:true},
-    {name:'status',label:'状态',type:'select',options:['在职','试用期'],required:true},
-  ];
-  const html = Form.render(fields) + `<div style="margin-top:16px;text-align:right">
-    <button class="btn" style="background:#f3f4f6;color:#374151" onclick="Modal.close(this.closest('[id^=modal]').id)">取消</button>
-    <button class="btn btn-primary" onclick="saveEmployee()">提交入职</button></div>`;
-  Modal.show('📝 新增员工', html, {width:'560px'});
-}
-
-function saveEmployee() {
-  const data = Form.getData();
-  if (!data.id || !data.name) { Modal.toast('请填写必填项', 'warning'); return; }
-  data.salary = parseInt(data.salary) || 0;
-  const list = DB.get('hr_employees');
-  if (list.find(i => i.id === data.id)) { Modal.toast('工号已存在', 'error'); return; }
-  list.unshift(data);
-  DB.set('hr_employees', list);
-  document.querySelectorAll('[id^=modal-]').forEach(m => m.remove());
-  Modal.toast(`✅ 员工 ${data.name} 入职办理成功`);
-  renderContent();
-}
-
-function editEmployee(id) {
-  const list = DB.get('hr_employees');
-  const emp = list.find(i => i.id === id);
-  if (!emp) return;
-  const fields = [
-    {name:'name',label:'姓名',required:true},
-    {name:'dept',label:'部门',type:'select',options:depts,required:true},
-    {name:'position',label:'岗位',required:true},
-    {name:'phone',label:'手机号'},
-    {name:'salary',label:'月薪（元）',type:'number'},
-    {name:'status',label:'状态',type:'select',options:['在职','试用期','离职'],required:true},
-  ];
-  const html = Form.render(fields, emp) + `<div style="margin-top:16px;text-align:right">
-    <button class="btn" style="background:#f3f4f6;color:#374151" onclick="Modal.close(this.closest('[id^=modal]').id)">取消</button>
-    <button class="btn btn-primary" onclick="updateEmployee('${id}')">保存修改</button></div>`;
-  Modal.show(`✏️ 编辑员工 - ${emp.name}`, html, {width:'560px'});
-}
-
-function updateEmployee(id) {
-  const data = Form.getData();
-  const list = DB.get('hr_employees');
-  const idx = list.findIndex(i => i.id === id);
-  if (idx >= 0) {
-    Object.assign(list[idx], data);
-    list[idx].salary = parseInt(list[idx].salary) || 0;
-    DB.set('hr_employees', list);
-    document.querySelectorAll('[id^=modal-]').forEach(m => m.remove());
-    Modal.toast('✅ 员工信息已更新');
-    renderContent();
-  }
-}
-
-function viewEmployee(id) {
-  const emp = DB.get('hr_employees').find(i => i.id === id);
-  if (!emp) return;
-  const html = `
-    <div class="detail-grid" style="grid-template-columns:1fr 1fr">
-      <div class="detail-item"><div class="label">工号</div><div class="value">${emp.id}</div></div>
-      <div class="detail-item"><div class="label">姓名</div><div class="value">${emp.name}</div></div>
-      <div class="detail-item"><div class="label">部门</div><div class="value">${emp.dept}</div></div>
-      <div class="detail-item"><div class="label">岗位</div><div class="value">${emp.position}</div></div>
-      <div class="detail-item"><div class="label">入职日期</div><div class="value">${emp.joinDate}</div></div>
-      <div class="detail-item"><div class="label">手机号</div><div class="value">${emp.phone}</div></div>
-      <div class="detail-item"><div class="label">月薪</div><div class="value" style="color:var(--primary);font-size:18px">¥${emp.salary?.toLocaleString() || '-'}</div></div>
-      <div class="detail-item"><div class="label">状态</div><div class="value"><span class="status ${emp.status==='在职'?'approved':'processing'}">${emp.status}</span></div></div>
-    </div>`;
-  Modal.show(`👤 员工详情 - ${emp.name}`, html, {width:'520px'});
+    </div>
+  </div></div>`;
 }
 
 // ===== 考勤管理 =====
-function renderAttendance(el) {
-  document.getElementById('page-title').textContent = '⏰ 考勤统计';
-  const records = DB.get('hr_attendance');
-  const today = new Date().toLocaleDateString('zh-CN');
-  const todayRecords = records.filter(r => r.date === today);
-  const checkedIn = todayRecords.length;
-  const onTime = todayRecords.filter(r => r.time < '09:00').length;
-  const late = todayRecords.filter(r => r.time >= '09:00').length;
-  const rate = checkedIn > 0 ? ((onTime / checkedIn) * 100).toFixed(1) : 0;
+function renderAttendance(el){
+  const records=DB.get('hr_attendance');
+  const today=new Date().toLocaleDateString('zh-CN');
+  const todayR=records.filter(r=>r.date===today);
+  el.innerHTML=`<div class="portal-stats" style="margin-bottom:20px">
+    <div class="stat-card green"><div class="label">今日签到</div><div class="value">${todayR.length}</div></div>
+    <div class="stat-card"><div class="label">出勤率</div><div class="value">${(todayR.length/12*100).toFixed(1)}%</div></div>
+    <div class="stat-card orange"><div class="label">请假人数</div><div class="value">15</div></div>
+    <div class="stat-card"><div class="label">迟到人数</div><div class="value">${todayR.filter(r=>r.time>='09:00').length}</div></div>
+  </div>
+  <div style="text-align:center;margin-bottom:20px"><button class="btn btn-primary" onclick="doCheckIn()" style="padding:12px 32px;font-size:16px">⏰ 签到打卡</button></div>
+  <div class="card"><div class="card-header"><h3>今日签到记录</h3></div><div class="card-body">
+  ${todayR.length?`<table><thead><tr><th>姓名</th><th>部门</th><th>签到时间</th><th>状态</th></tr></thead>
+  <tbody>${todayR.map(r=>`<tr><td>${r.name}</td><td>${r.dept}</td><td>${r.time}</td><td><span class="status ${r.time<'09:00'?'approved':'warning'}">${r.time<'09:00'?'准时':'迟到'}</span></td></tr>`).join('')}</tbody></table>`
+  :'<div style="padding:40px;text-align:center;color:var(--gray-400)">暂无签到记录</div>'}</div></div>`;
+}
+function doCheckIn(){const now=new Date();const time=now.toTimeString().slice(0,5);const records=DB.get('hr_attendance');const today=now.toLocaleDateString('zh-CN');if(records.find(r=>r.date===today&&r.name==='席宝')){Modal.toast('今日已签到','warning');return;}records.unshift({name:'席宝',dept:'人力资源部',date:today,time});DB.set('hr_attendance',records);Modal.toast(`✅ 签到成功 ${time}`);if(currentTab==='attendance')renderContent();}
 
-  el.innerHTML = `
-    <div class="portal-stats" style="margin-bottom:20px">
-      <div class="stat-card green"><div class="label">今日签到</div><div class="value">${checkedIn}</div><div class="change">按时 ${onTime} | 迟到 ${late}</div></div>
-      <div class="stat-card"><div class="label">出勤率</div><div class="value">${(checkedIn/12*100).toFixed(1)}%</div></div>
-      <div class="stat-card orange"><div class="label">请假人数</div><div class="value">15</div></div>
-      <div class="stat-card"><div class="label">出差人数</div><div class="value">8</div></div>
+// ===== 假期管理 =====
+function renderLeave(el){
+  el.innerHTML=`<div class="card"><div class="filter-bar"><select><option>全部状态</option><option>待审批</option><option>已通过</option><option>已驳回</option></select><select><option>全部类型</option><option>年假</option><option>事假</option><option>病假</option><option>调休</option></select><button class="btn btn-primary">🔍 搜索</button></div>
+  <div class="card-body"><table><thead><tr><th>申请人</th><th>假别</th><th>开始日期</th><th>结束日期</th><th>天数</th><th>状态</th><th>操作</th></tr></thead>
+  <tbody>${leaveRecords.map(l=>`<tr><td><strong>${l.applicant}</strong></td><td>${l.type}</td><td>${l.start}</td><td>${l.end}</td><td>${l.days}天</td>
+  <td><span class="status ${l.status==='待审批'?'pending':'approved'}">${l.status}</span></td>
+  <td>${l.status==='待审批'?`<button class="btn btn-sm btn-primary" onclick="Modal.toast('✅ 已通过','success')">通过</button> <button class="btn btn-sm btn-danger" onclick="Modal.toast('❌ 已驳回','error')">驳回</button>`:'-'}</td></tr>`).join('')}</tbody></table></div></div>`;
+}
+
+// ===== 招聘需求 =====
+function renderRecruit(el){
+  const list=DB.get('hr_recruits');
+  el.innerHTML=`<div class="portal-stats" style="margin-bottom:20px">
+    <div class="stat-card"><div class="label">招聘中岗位</div><div class="value">${list.filter(i=>i.status==='招聘中').length}</div></div>
+    <div class="stat-card green"><div class="label">累计收到简历</div><div class="value">${Summary.calc(list,'candidates')}</div></div>
+    <div class="stat-card orange"><div class="label">待招总人数</div><div class="value">${list.filter(i=>i.status==='招聘中').reduce((s,i)=>s+i.count,0)}</div></div>
+  </div>
+  <div class="card"><div class="card-body"><table><thead><tr><th>岗位名称</th><th>需求部门</th><th>招聘人数</th><th>薪资范围</th><th>收到简历</th><th>发布日期</th><th>状态</th><th>操作</th></tr></thead>
+  <tbody>${list.map(r=>`<tr><td><strong>${r.title}</strong></td><td>${r.dept}</td><td>${r.count}人</td><td>${r.salary}</td><td>${r.candidates}份</td><td>${r.date}</td>
+  <td><span class="status ${r.status==='招聘中'?'processing':'rejected'}">${r.status}</span></td>
+  <td><a href="#" onclick="viewCandidates('${r.title}');return false" style="color:var(--primary);font-size:13px;text-decoration:none">查看候选人</a></td></tr>`).join('')}</tbody></table></div></div>`;
+}
+function showNewRecruit(){
+  const fields=[{name:'title',label:'岗位名称',full:true,required:true},{name:'dept',label:'需求部门',type:'select',options:depts,required:true},{name:'count',label:'招聘人数',type:'number',required:true},{name:'salary',label:'薪资范围',placeholder:'如 15K-25K',required:true},{name:'requirements',label:'任职要求',type:'textarea',full:true,required:true}];
+  const html=Form.render(fields)+`<div style="margin-top:16px;text-align:right"><button class="btn" style="background:#f3f4f6;color:#374151" onclick="Modal.close(this.closest('[id^=modal]').id)">取消</button><button class="btn btn-primary" onclick="saveRecruit()">发布</button></div>`;
+  Modal.show('📢 发布招聘需求',html,{width:'560px'});}
+function saveRecruit(){const d=Form.getData();if(!d.title){Modal.toast('请填写岗位名称','warning');return;}const l=DB.get('hr_recruits');l.unshift({...d,id:DB.genId('RC'),status:'招聘中',date:new Date().toISOString().slice(0,10),candidates:0});DB.set('hr_recruits',l);document.querySelectorAll('[id^=modal-]').forEach(m=>m.remove());Modal.toast('✅ 已发布');renderContent();}
+
+// ===== 候选人管理 =====
+const stageColors={'简历筛选':'pending','笔试中':'processing','待面试':'processing','面试中':'processing','已发Offer':'approved','已入职':'approved','已淘汰':'rejected'};
+function renderCandidate(el){
+  const list=DB.get('hr_candidates');
+  const stages=['简历筛选','笔试中','待面试','面试中','已发Offer','已入职'];
+  el.innerHTML=`<div class="pipeline">${stages.map(s=>{const count=list.filter(i=>i.stage===s).length;return `<div class="pipe-stage"><div class="count">${count}</div><div class="label">${s}</div></div>`;}).join('')}</div>
+  <div class="card"><div class="card-body"><table><thead><tr><th>候选人</th><th>应聘岗位</th><th>来源</th><th>学历</th><th>经验</th><th>期望薪资</th><th>当前阶段</th><th>操作</th></tr></thead>
+  <tbody>${list.map(c=>`<tr><td><strong>${c.name}</strong></td><td>${c.position}</td><td>${c.source}</td><td>${c.education}</td><td>${c.experience}</td><td>${c.salary}</td>
+  <td><span class="status ${stageColors[c.stage]||'pending'}">${c.stage}</span></td>
+  <td><a href="#" onclick="viewCandidate('${c.id}');return false" style="color:var(--primary);font-size:13px;text-decoration:none">查看</a> ${c.stage!=='已入职'&&c.stage!=='已淘汰'?`<a href="#" onclick="advanceCandidate('${c.id}');return false" style="color:var(--success);font-size:13px;text-decoration:none;margin-left:4px">推进</a>`:''}</td></tr>`).join('')}</tbody></table></div></div>`;
+}
+function showNewCandidate(){
+  const fields=[{name:'name',label:'姓名',required:true},{name:'position',label:'应聘岗位',required:true},{name:'source',label:'来源',type:'select',options:['BOSS直聘','拉勾网','猎聘','智联招聘','内部推荐','校招'],required:true},{name:'phone',label:'手机',required:true},{name:'education',label:'学历',required:true},{name:'experience',label:'工作经验',required:true},{name:'salary',label:'期望薪资',required:true}];
+  const html=Form.render(fields)+`<div style="margin-top:16px;text-align:right"><button class="btn" style="background:#f3f4f6;color:#374151" onclick="Modal.close(this.closest('[id^=modal]').id)">取消</button><button class="btn btn-primary" onclick="saveCandidate()">添加</button></div>`;
+  Modal.show('👤 新增候选人',html,{width:'520px'});}
+function saveCandidate(){const d=Form.getData();if(!d.name){Modal.toast('请填写姓名','warning');return;}const l=DB.get('hr_candidates');l.unshift({...d,id:DB.genId('CD'),stage:'简历筛选'});DB.set('hr_candidates',l);document.querySelectorAll('[id^=modal-]').forEach(m=>m.remove());Modal.toast('✅ 已添加');renderContent();}
+function advanceCandidate(id){const list=DB.get('hr_candidates');const c=list.find(i=>i.id===id);if(!c)return;const flow=['简历筛选','笔试中','待面试','面试中','已发Offer','已入职'];const idx=flow.indexOf(c.stage);if(idx<flow.length-1){c.stage=flow[idx+1];DB.set('hr_candidates',list);Modal.toast(`✅ 已推进到「${c.stage}」`);renderContent();}}
+function viewCandidate(id){const c=DB.get('hr_candidates').find(i=>i.id===id);if(!c)return;const html=`<div class="detail-grid" style="grid-template-columns:1fr 1fr">
+  <div class="detail-item"><div class="label">姓名</div><div class="value">${c.name}</div></div><div class="detail-item"><div class="label">岗位</div><div class="value">${c.position}</div></div>
+  <div class="detail-item"><div class="label">来源</div><div class="value">${c.source}</div></div><div class="detail-item"><div class="label">学历</div><div class="value">${c.education}</div></div>
+  <div class="detail-item"><div class="label">经验</div><div class="value">${c.experience}</div></div><div class="detail-item"><div class="label">期望薪资</div><div class="value" style="color:var(--primary)">${c.salary}</div></div>
+  <div class="detail-item"><div class="label">手机</div><div class="value">${c.phone}</div></div><div class="detail-item"><div class="label">当前阶段</div><div class="value"><span class="status ${stageColors[c.stage]||'pending'}">${c.stage}</span></div></div></div>`;
+  Modal.show(`👤 候选人详情 - ${c.name}`,html,{width:'520px'});}
+
+// ===== 工资查询 =====
+function renderSalary(el){
+  const list=DB.get('hr_employees');
+  const total=Summary.calc(list,'salary'),avg=total/list.length;
+  el.innerHTML=`<div class="portal-stats" style="margin-bottom:20px">
+    <div class="stat-card"><div class="label">月薪总额</div><div class="value">¥${(total/10000).toFixed(1)}万</div></div>
+    <div class="stat-card green"><div class="label">平均月薪</div><div class="value">¥${avg.toFixed(0).toLocaleString()}</div></div>
+  </div><div class="card"><div class="card-body"><table><thead><tr><th>工号</th><th>姓名</th><th>部门</th><th>基本工资</th><th>社保(个人)</th><th>公积金</th><th>个税</th><th>实发工资</th></tr></thead>
+  <tbody>${list.map(e=>{const b=e.salary||0;const soc=Math.round(b*0.105);const fund=Math.round(b*0.12);const tx=Math.max(0,Math.round((b-soc-fund-5000)*0.1));const real=b-soc-fund-tx;
+    return `<tr><td>${e.id}</td><td><strong>${e.name}</strong></td><td>${e.dept}</td><td>¥${b.toLocaleString()}</td><td style="color:var(--danger)">-¥${soc.toLocaleString()}</td><td style="color:var(--danger)">-¥${fund.toLocaleString()}</td><td style="color:var(--danger)">-¥${tx.toLocaleString()}</td><td style="color:var(--success);font-weight:600">¥${real.toLocaleString()}</td></tr>`;}).join('')}</tbody></table></div></div>`;
+}
+
+// ===== 社保公积金 =====
+function renderSocial(el){
+  el.innerHTML=`<div class="card"><div class="card-header"><h3>🏥 2026年社保公积金基数</h3></div><div class="card-body padded">
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px">
+      <div style="padding:16px;background:var(--gray-50);border-radius:8px;text-align:center"><div style="font-size:12px;color:var(--gray-400)">养老保险（个人）</div><div style="font-size:20px;font-weight:700;color:var(--primary)">8%</div></div>
+      <div style="padding:16px;background:var(--gray-50);border-radius:8px;text-align:center"><div style="font-size:12px;color:var(--gray-400)">医疗保险（个人）</div><div style="font-size:20px;font-weight:700;color:var(--primary)">2%</div></div>
+      <div style="padding:16px;background:var(--gray-50);border-radius:8px;text-align:center"><div style="font-size:12px;color:var(--gray-400)">失业保险（个人）</div><div style="font-size:20px;font-weight:700;color:var(--primary)">0.5%</div></div>
+      <div style="padding:16px;background:var(--gray-50);border-radius:8px;text-align:center"><div style="font-size:12px;color:var(--gray-400)">住房公积金（个人）</div><div style="font-size:20px;font-weight:700;color:var(--success)">12%</div></div>
+      <div style="padding:16px;background:var(--gray-50);border-radius:8px;text-align:center"><div style="font-size:12px;color:var(--gray-400)">社保基数上限</div><div style="font-size:20px;font-weight:700">¥35,283</div></div>
+      <div style="padding:16px;background:var(--gray-50);border-radius:8px;text-align:center"><div style="font-size:12px;color:var(--gray-400)">社保基数下限</div><div style="font-size:20px;font-weight:700">¥6,326</div></div>
     </div>
-    <div class="card">
-      <div class="card-header"><h3>今日签到记录</h3><span style="font-size:13px;color:var(--gray-400)">${today}</span></div>
-      <div class="card-body" id="attendance-list">
-        ${todayRecords.length ? `<table><thead><tr><th>姓名</th><th>部门</th><th>签到时间</th><th>状态</th></tr></thead>
-        <tbody>${todayRecords.map(r => `<tr><td>${r.name}</td><td>${r.dept}</td><td>${r.time}</td>
-        <td><span class="status ${r.time < '09:00' ? 'approved' : 'warning'}">${r.time < '09:00' ? '准时' : '迟到'}</span></td></tr>`).join('')}</tbody></table>`
-        : '<div style="padding:40px;text-align:center;color:var(--gray-400)">今日暂无签到记录，点击侧边栏「今日签到」打卡</div>'}
-      </div>
-    </div>`;
+    <h4 style="font-size:14px;margin-bottom:12px">企业承担比例</h4>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+      <div style="padding:12px;border:1px solid var(--gray-200);border-radius:8px;text-align:center"><div style="font-size:13px;color:var(--gray-600)">养老保险（企业）</div><div style="font-size:16px;font-weight:700">16%</div></div>
+      <div style="padding:12px;border:1px solid var(--gray-200);border-radius:8px;text-align:center"><div style="font-size:13px;color:var(--gray-600)">医疗保险（企业）</div><div style="font-size:16px;font-weight:700">9.8%</div></div>
+      <div style="padding:12px;border:1px solid var(--gray-200);border-radius:8px;text-align:center"><div style="font-size:13px;color:var(--gray-600)">工伤保险（企业）</div><div style="font-size:16px;font-weight:700">0.4%</div></div>
+    </div></div></div>`;
 }
 
-function doCheckIn() {
-  const now = new Date();
-  const time = now.toTimeString().slice(0,5);
-  const records = DB.get('hr_attendance');
-  const today = now.toLocaleDateString('zh-CN');
-  if (records.find(r => r.date === today && r.name === '席宝')) {
-    Modal.toast('今日已签到，无需重复打卡', 'warning');
-    return;
-  }
-  records.unshift({name:'席宝', dept:'人力资源部', date: today, time: time});
-  DB.set('hr_attendance', records);
-  Modal.toast(`✅ 签到成功！时间 ${time} ${time < '09:00' ? '(准时)' : '(迟到)'}`);
-  if (currentTab === 'attendance') renderContent();
-}
-
-// ===== 薪酬查询 =====
-function renderSalary(el) {
-  document.getElementById('page-title').textContent = '💵 薪酬查询';
-  const list = DB.get('hr_employees');
-  const totalSalary = Summary.calc(list, 'salary');
-  const avgSalary = totalSalary / list.length;
-  const maxSalary = Math.max(...list.map(i => i.salary || 0));
-  const minSalary = Math.min(...list.map(i => i.salary || 0));
-
-  el.innerHTML = `
-    <div class="portal-stats" style="margin-bottom:20px">
-      <div class="stat-card"><div class="label">月薪总额</div><div class="value">¥${(totalSalary/10000).toFixed(1)}万</div></div>
-      <div class="stat-card green"><div class="label">平均月薪</div><div class="value">¥${avgSalary.toFixed(0).toLocaleString()}</div></div>
-      <div class="stat-card orange"><div class="label">最高月薪</div><div class="value">¥${maxSalary.toLocaleString()}</div></div>
-      <div class="stat-card"><div class="label">最低月薪</div><div class="value">¥${minSalary.toLocaleString()}</div></div>
+// ===== 培训管理 =====
+function renderTraining(el){
+  const list=DB.get('hr_trainings');
+  el.innerHTML=`<div class="portal-stats" style="margin-bottom:20px">
+    <div class="stat-card"><div class="label">培训课程</div><div class="value">${list.length}</div></div>
+    <div class="stat-card green"><div class="label">已完成</div><div class="value">${list.filter(i=>i.status==='已完成').length}</div></div>
+    <div class="stat-card orange"><div class="label">进行中</div><div class="value">${list.filter(i=>i.status==='进行中').length}</div></div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px">
+  ${list.map(t=>{const rate=t.completed/t.enrolled*100;return `<div class="train-card">
+    <div class="train-icon" style="background:${t.status==='已完成'?'#d1fae5':t.status==='报名中'?'#dbeafe':'#fef3c7'}">${t.type==='入职培训'?'🎓':t.type==='合规培训'?'🛡️':t.type==='专业认证'?'📜':t.type==='管理培训'?'👑':'🤖'}</div>
+    <div class="train-info"><h4>${t.name}</h4><p>${t.type} | ${t.hours}课时 | 讲师：${t.teacher}</p>
+    <div class="train-meta"><span>报名 ${t.enrolled}人</span><span>完成 ${t.completed}人</span><span>完成率 ${rate.toFixed(0)}%</span></div>
+    <div class="progress-bar" style="margin-top:6px"><div class="fill ${rate>=80?'green':rate>=40?'blue':'orange'}" style="width:${rate}%"></div></div>
     </div>
-    <div class="card">
-      <div class="card-header"><h3>员工薪酬明细</h3></div>
-      <div class="card-body">
-        <table><thead><tr><th>工号</th><th>姓名</th><th>部门</th><th>岗位</th><th>基本工资</th><th>社保（个人）</th><th>公积金</th><th>个税</th><th>实发工资</th></tr></thead>
-        <tbody>${list.map(e => {
-          const base = e.salary || 0;
-          const social = Math.round(base * 0.105);
-          const fund = Math.round(base * 0.12);
-          const taxable = Math.max(0, base - social - fund - 5000);
-          const tax = Math.round(taxable * 0.1);
-          const real = base - social - fund - tax;
-          return `<tr><td>${e.id}</td><td><strong>${e.name}</strong></td><td>${e.dept}</td><td>${e.position}</td>
-          <td>¥${base.toLocaleString()}</td><td style="color:var(--danger)">-¥${social.toLocaleString()}</td>
-          <td style="color:var(--danger)">-¥${fund.toLocaleString()}</td><td style="color:var(--danger)">-¥${tax.toLocaleString()}</td>
-          <td style="color:var(--success);font-weight:600">¥${real.toLocaleString()}</td></tr>`;
-        }).join('')}</tbody></table>
-      </div>
-    </div>`;
+    <span class="status ${t.status==='已完成'?'approved':t.status==='报名中'?'processing':'pending'}" style="flex-shrink:0">${t.status}</span></div>`;}).join('')}</div>`;
 }
 
-// ===== 招聘发布 =====
-function showAddRecruit() {
-  const fields = [
-    {name:'title',label:'招聘岗位',required:true},
-    {name:'dept',label:'需求部门',type:'select',options:depts,required:true},
-    {name:'count',label:'招聘人数',type:'number',required:true},
-    {name:'salary',label:'薪资范围',placeholder:'如 15K-20K'},
-    {name:'requirements',label:'任职要求',type:'textarea',full:true,placeholder:'请输入任职要求...',required:true},
-    {name:'deadline',label:'截止日期',type:'date'},
-  ];
-  const html = Form.render(fields) + `<div style="margin-top:16px;text-align:right">
-    <button class="btn" style="background:#f3f4f6;color:#374151" onclick="Modal.close(this.closest('[id^=modal]').id)">取消</button>
-    <button class="btn btn-primary" onclick="saveRecruit()">发布招聘</button></div>`;
-  Modal.show('📢 发布招聘需求', html, {width:'600px'});
+// ===== 绩效考核 =====
+function renderPerformance(el){
+  const list=DB.get('hr_performance');
+  el.innerHTML=`<div class="card"><div class="card-header"><h3>⭐ 2026年Q1绩效考核结果</h3><span style="font-size:13px;color:var(--gray-400)">考核周期：2026.01-2026.03</span></div><div class="card-body">
+  <table><thead><tr><th>员工</th><th>部门</th><th>KPI得分</th><th>出勤得分</th><th>项目得分</th><th>综合得分</th><th>等级</th></tr></thead>
+  <tbody>${list.sort((a,b)=>b.overall-a.overall).map(p=>{
+    const gradeColor=p.grade==='A'?'var(--success)':p.grade==='B+'?'var(--primary)':p.grade==='B'?'var(--warning)':'var(--danger)';
+    return `<tr><td><strong>${p.name}</strong></td><td>${p.dept}</td><td>${p.kpi}</td><td>${p.attendance}</td><td>${p.project}</td>
+    <td style="font-weight:700">${p.overall}</td><td><span style="color:${gradeColor};font-weight:700;font-size:16px">${p.grade}</span></td></tr>`;}).join('')}</tbody></table></div></div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:20px">
+    <div style="text-align:center;padding:20px;background:#d1fae5;border-radius:8px"><div style="font-size:28px;font-weight:700;color:var(--success)">${list.filter(i=>i.grade==='A').length}</div><div style="font-size:13px;color:var(--gray-500)">A级（优秀）</div></div>
+    <div style="text-align:center;padding:20px;background:#dbeafe;border-radius:8px"><div style="font-size:28px;font-weight:700;color:var(--primary)">${list.filter(i=>i.grade==='B+').length}</div><div style="font-size:13px;color:var(--gray-500)">B+级（良好）</div></div>
+    <div style="text-align:center;padding:20px;background:#fef3c7;border-radius:8px"><div style="font-size:28px;font-weight:700;color:var(--warning)">${list.filter(i=>i.grade==='B').length}</div><div style="font-size:13px;color:var(--gray-500)">B级（合格）</div></div>
+    <div style="text-align:center;padding:20px;background:#fee2e2;border-radius:8px"><div style="font-size:28px;font-weight:700;color:var(--danger)">${list.filter(i=>i.grade==='C').length}</div><div style="font-size:13px;color:var(--gray-500)">C级（待改进）</div></div>
+  </div>`;
 }
 
-function saveRecruit() {
-  const data = Form.getData();
-  if (!data.title || !data.dept) { Modal.toast('请填写必填项', 'warning'); return; }
-  const list = DB.get('hr_recruits');
-  list.unshift({...data, id: DB.genId('RC'), status: '招聘中', createdAt: new Date().toLocaleString('zh-CN')});
-  DB.set('hr_recruits', list);
-  document.querySelectorAll('[id^=modal-]').forEach(m => m.remove());
-  Modal.toast(`✅ 招聘需求「${data.title}」已发布`);
-}
-
-function exportData() {
-  Modal.toast('📥 数据导出中...', 'info');
-  setTimeout(() => Modal.toast('✅ 导出成功（模拟）'), 1500);
-}
-
-// ===== 初始化 =====
 renderContent();
 </script>
 </body>

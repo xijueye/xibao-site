@@ -14,29 +14,34 @@
 </div>
 <div class="layout">
   <div class="sidebar">
-    <div class="menu-group">
-      <div class="menu-title">审批中心</div>
+    <div class="menu-group"><div class="menu-title">审批中心</div>
       <a class="menu-item active" href="#" onclick="switchTab('pending')"><span class="icon">📥</span> 我的待办 <span id="badge-pending" style="background:#dc2626;color:white;border-radius:10px;padding:1px 7px;font-size:11px;margin-left:auto"></span></a>
       <a class="menu-item" href="#" onclick="switchTab('approved')"><span class="icon">✅</span> 已审批</a>
       <a class="menu-item" href="#" onclick="switchTab('mine')"><span class="icon">📋</span> 我发起的</a>
     </div>
-    <div class="menu-group">
-      <div class="menu-title">发起审批</div>
-      <a class="menu-item" href="#" onclick="showNewApproval('请假')"><span class="icon">🏖️</span> 请假申请</a>
-      <a class="menu-item" href="#" onclick="showNewApproval('用车')"><span class="icon">🚗</span> 用车申请</a>
-      <a class="menu-item" href="#" onclick="showNewApproval('用印')"><span class="icon">📮</span> 用印审批</a>
-      <a class="menu-item" href="#" onclick="showNewApproval('出差')"><span class="icon">✈️</span> 出差申请</a>
-      <a class="menu-item" href="#" onclick="showNewApproval('招待')"><span class="icon">🏠</span> 招待申请</a>
+    <div class="menu-group"><div class="menu-title">发起审批</div>
+      <a class="menu-item" href="#" onclick="showNew('请假')"><span class="icon">🏖️</span> 请假申请</a>
+      <a class="menu-item" href="#" onclick="showNew('用车')"><span class="icon">🚗</span> 用车申请</a>
+      <a class="menu-item" href="#" onclick="showNew('用印')"><span class="icon">📮</span> 用印审批</a>
+      <a class="menu-item" href="#" onclick="showNew('出差')"><span class="icon">✈️</span> 出差申请</a>
+      <a class="menu-item" href="#" onclick="showNew('招待')"><span class="icon">🍽️</span> 招待申请</a>
+      <a class="menu-item" href="#" onclick="showNew('采购')"><span class="icon">🛒</span> 采购申请</a>
     </div>
-    <div class="menu-group">
-      <div class="menu-title">会议室</div>
-      <a class="menu-item" href="#" onclick="showBookRoom()"><span class="icon">📅</span> 预约会议室</a>
+    <div class="menu-group"><div class="menu-title">公文管理</div>
+      <a class="menu-item" href="#" onclick="switchTab('doc')"><span class="icon">📄</span> 公文台账</a>
+      <a class="menu-item" href="#" onclick="showNewDoc()"><span class="icon">✏️</span> 发文登记</a>
+    </div>
+    <div class="menu-group"><div class="menu-title">会议管理</div>
+      <a class="menu-item" href="#" onclick="switchTab('meeting')"><span class="icon">📅</span> 会议安排</a>
+      <a class="menu-item" href="#" onclick="showBookRoom()"><span class="icon">🏢</span> 会议室预约</a>
+    </div>
+    <div class="menu-group"><div class="menu-title">车辆管理</div>
+      <a class="menu-item" href="#" onclick="switchTab('vehicle')"><span class="icon">🚌</span> 车辆调度</a>
     </div>
   </div>
   <div class="main-content">
-    <div class="page-header">
-      <div><div class="breadcrumb">OA审批系统 / 审批中心</div><h2 id="page-title">📥 我的待办</h2></div>
-      <div class="btn-group"><button class="btn btn-primary" onclick="showNewApproval('请假')">➕ 发起审批</button></div>
+    <div class="page-header"><div><div class="breadcrumb">OA审批系统</div><h2 id="page-title">📥 我的待办</h2></div>
+      <div class="btn-group"><button class="btn btn-primary" id="add-btn" onclick="showNew('请假')">➕ 发起审批</button></div>
     </div>
     <div id="tab-content"></div>
     <div class="footer">华信集团 · OA办公审批系统 V3.2.0 © 2026</div>
@@ -44,206 +49,176 @@
 </div>
 <script src="assets/app.js"></script>
 <script>
-// ===== 数据 =====
-const defaultApprovals = [
-  {id:'SP20260618001',type:'请假',applicant:'赵丽',dept:'人力资源部',summary:'年假申请3天（6/20-6/22）',date:'2026-06-18 09:30',urgency:'普通',status:'待审批',detail:{leaveType:'年假',startDate:'2026-06-20',endDate:'2026-06-22',days:3,reason:'回老家探亲'}},
-  {id:'SP20260618002',type:'用车',applicant:'孙磊',dept:'行政综合部',summary:'6/19 北京-天津出差用车',date:'2026-06-18 09:15',urgency:'普通',status:'待审批',detail:{date:'2026-06-19',from:'公司',to:'天津滨海新区',purpose:'客户拜访'}},
-  {id:'SP20260618003',type:'用印',applicant:'吴刚',dept:'法务合规部',summary:'合同用印审批（中科信息合作协议）',date:'2026-06-18 08:50',urgency:'紧急',status:'待审批',detail:{contract:'与中科信息合作协议',pages:12,copies:3,sealType:'合同专用章'}},
-  {id:'SP20260617008',type:'出差',applicant:'陈明',dept:'项目交付部',summary:'上海出差5天（6/21-6/25）',date:'2026-06-17 16:30',urgency:'普通',status:'待审批',detail:{destination:'上海',startDate:'2026-06-21',endDate:'2026-06-25',purpose:'智慧城市项目交付'}},
-  {id:'SP20260617007',type:'招待',applicant:'李娜',dept:'市场营销部',summary:'客户接待餐费2000元',date:'2026-06-17 15:20',urgency:'普通',status:'待审批',detail:{guest:'北京中科信息张总一行3人',budget:2000,restaurant:'全聚德',date:'2026-06-19'}},
-  {id:'SP20260617006',type:'请假',applicant:'黄海',dept:'生产制造部',summary:'病假申请1天（6/18）',date:'2026-06-17 14:00',urgency:'紧急',status:'待审批',detail:{leaveType:'病假',startDate:'2026-06-18',endDate:'2026-06-18',days:1,reason:'感冒发烧'}},
-  {id:'SP20260617005',type:'用印',applicant:'刘芳',dept:'财务管理部',summary:'银行开户许可证盖章',date:'2026-06-17 11:30',urgency:'普通',status:'待审批',detail:{contract:'银行开户许可证',pages:2,copies:1,sealType:'公章'}},
-  {id:'SP20260616012',type:'出差',applicant:'王强',dept:'生产制造部',summary:'广州供应商考察3天',date:'2026-06-16 17:00',urgency:'普通',status:'待审批',detail:{destination:'广州',startDate:'2026-06-20',endDate:'2026-06-22',purpose:'供应商资质考察'}},
-  {id:'SP20260616011',type:'用车',applicant:'郑雪',dept:'市场营销部',summary:'6/18 机场接机用车',date:'2026-06-16 16:00',urgency:'紧急',status:'待审批',detail:{date:'2026-06-18',from:'首都机场T3',to:'公司',purpose:'接机（重要客户）'}},
-  {id:'SP20260616010',type:'请假',applicant:'马丽',dept:'财务管理部',summary:'调休半天（6/18下午）',date:'2026-06-16 10:00',urgency:'普通',status:'待审批',detail:{leaveType:'调休',startDate:'2026-06-18',endDate:'2026-06-18',days:0.5,reason:'个人事务'}},
-  {id:'SP20260615015',type:'用印',applicant:'孙磊',dept:'行政综合部',summary:'关于2026年端午节放假通知',date:'2026-06-15 14:00',urgency:'紧急',status:'待审批',detail:{contract:'端午节放假通知',pages:1,copies:5,sealType:'公章'}},
-  {id:'SP20260615014',type:'用印',applicant:'周婷',dept:'技术研发部',summary:'软件著作权登记盖章',date:'2026-06-15 11:00',urgency:'普通',status:'待审批',detail:{contract:'软件著作权登记材料',pages:8,copies:2,sealType:'公章'}},
+const typeIcon={请假:'🏖️',用车:'🚗',用印:'📮',出差:'✈️',招待:'🍽️',采购:'🛒'};
+const defaultApprovals=[
+  {id:'SP001',type:'请假',applicant:'赵丽',dept:'人力资源部',summary:'年假3天（6/20-6/22）',date:'2026-06-18 09:30',urgency:'普通',status:'待审批',detail:{leaveType:'年假',start:'2026-06-20',end:'2026-06-22',days:3,reason:'回老家探亲'}},
+  {id:'SP002',type:'用车',applicant:'孙磊',dept:'行政综合部',summary:'6/19 北京-天津出差',date:'2026-06-18 09:15',urgency:'普通',status:'待审批',detail:{date:'2026-06-19',from:'公司',to:'天津滨海新区',purpose:'客户拜访'}},
+  {id:'SP003',type:'用印',applicant:'吴刚',dept:'法务合规部',summary:'中科信息合作协议盖章',date:'2026-06-18 08:50',urgency:'紧急',status:'待审批',detail:{contract:'中科信息合作协议',pages:12,copies:3,sealType:'合同专用章'}},
+  {id:'SP004',type:'出差',applicant:'陈明',dept:'项目交付部',summary:'上海5天（6/21-6/25）',date:'2026-06-17 16:30',urgency:'普通',status:'待审批',detail:{dest:'上海',start:'2026-06-21',end:'2026-06-25',purpose:'项目交付'}},
+  {id:'SP005',type:'招待',applicant:'李娜',dept:'市场营销部',summary:'客户接待 ¥2,000',date:'2026-06-17 15:20',urgency:'普通',status:'待审批',detail:{guest:'中科信息张总3人',budget:2000,restaurant:'全聚德',date:'2026-06-19'}},
+  {id:'SP006',type:'采购',applicant:'孙磊',dept:'行政综合部',summary:'ThinkPad T14 50台 ¥340,000',date:'2026-06-18 08:30',urgency:'紧急',status:'待审批',detail:{item:'ThinkPad T14 50台',vendor:'联想集团',amount:340000,reason:'新员工配备'}},
+  {id:'SP007',type:'请假',applicant:'黄海',dept:'生产制造部',summary:'病假1天（6/18）',date:'2026-06-17 14:00',urgency:'紧急',status:'待审批'},
+  {id:'SP008',type:'用印',applicant:'刘芳',dept:'财务管理部',summary:'银行开户许可证盖章',date:'2026-06-17 11:30',urgency:'普通',status:'待审批'},
+  {id:'SP009',type:'出差',applicant:'王强',dept:'生产制造部',summary:'广州供应商考察3天',date:'2026-06-16 17:00',urgency:'普通',status:'待审批'},
+  {id:'SP010',type:'请假',applicant:'马丽',dept:'财务管理部',summary:'调休半天（6/18下午）',date:'2026-06-16 10:00',urgency:'普通',status:'待审批'},
 ];
-if (!DB.get('oa_approvals').length) DB.set('oa_approvals', defaultApprovals);
+if(!DB.get('oa_approvals').length) DB.set('oa_approvals',defaultApprovals);
 
-const typeIcon = {请假:'🏖️',用车:'🚗',用印:'📮',出差:'✈️',招待:'🏠'};
-let currentTab = 'pending';
+const defaultDocs=[
+  {id:'GW2026018',title:'关于2026年端午节放假通知',type:'通知',dept:'行政综合部',author:'孙磊',date:'2026-06-18',status:'审核中',level:'普通'},
+  {id:'GW2026017',title:'关于调整差旅费报销标准的通知',type:'通知',dept:'财务管理部',author:'刘芳',date:'2026-06-15',status:'已发布',level:'重要'},
+  {id:'GW2026016',title:'2026年第二季度安全生产检查通报',type:'通报',dept:'生产制造部',author:'王强',date:'2026-06-16',status:'已发布',level:'重要'},
+  {id:'GW2026015',title:'集团2026年校园招聘拟录用人员公示',type:'公示',dept:'人力资源部',author:'赵丽',date:'2026-06-14',status:'已发布',level:'普通'},
+  {id:'GW2026014',title:'关于开展税务合规自查工作的紧急通知',type:'通知',dept:'财务管理部',author:'刘芳',date:'2026-06-13',status:'已发布',level:'紧急'},
+];
+if(!DB.get('oa_docs').length) DB.set('oa_docs',defaultDocs);
 
-function switchTab(tab) {
-  currentTab = tab;
-  document.querySelectorAll('.menu-item').forEach(m => m.classList.remove('active'));
+const defaultMeetings=[
+  {id:'MT001',title:'集团周例会',room:'3F-大会议室A',date:'2026-06-18',time:'09:00-11:00',organizer:'行政综合部',attendees:25,status:'进行中'},
+  {id:'MT002',title:'智慧城市项目评审',room:'3F-大会议室B',date:'2026-06-18',time:'09:00-17:00',organizer:'项目交付部',attendees:15,status:'进行中'},
+  {id:'MT003',title:'Q2预算执行分析会',room:'5F-会议室C',date:'2026-06-19',time:'14:00-16:00',organizer:'财务管理部',attendees:12,status:'待开始'},
+  {id:'MT004',title:'招聘需求评审会',room:'5F-会议室D',date:'2026-06-20',time:'10:00-11:30',organizer:'人力资源部',attendees:8,status:'待开始'},
+  {id:'MT005',title:'安全生产月度例会',room:'3F-大会议室A',date:'2026-06-21',time:'14:00-15:30',organizer:'生产制造部',attendees:20,status:'待开始'},
+];
+if(!DB.get('oa_meetings').length) DB.set('oa_meetings',defaultMeetings);
+
+const defaultVehicles=[
+  {plate:'京A·12345',type:'商务车',model:'别克GL8',status:'在用',driver:'李师傅',usage:'陈明 上海出差'},
+  {plate:'京B·67890',type:'轿车',model:'大众帕萨特',status:'空闲',driver:'王师傅',usage:'-'},
+  {plate:'京C·11111',type:'商务车',model:'金杯海狮',status:'维修',driver:'-',usage:'保养中'},
+  {plate:'京D·22222',type:'轿车',model:'丰田凯美瑞',status:'空闲',driver:'赵师傅',usage:'-'},
+];
+if(!DB.get('oa_vehicles').length) DB.set('oa_vehicles',defaultVehicles);
+
+let currentTab='pending';
+const tabTitles={pending:'📥 我的待办',approved:'✅ 已审批',mine:'📋 我发起的',doc:'📄 公文台账',meeting:'📅 会议安排',vehicle:'🚌 车辆调度'};
+
+function switchTab(tab){
+  currentTab=tab;
+  document.querySelectorAll('.menu-item').forEach(m=>m.classList.remove('active'));
   event.target.closest('.menu-item')?.classList.add('active');
+  document.getElementById('page-title').textContent=tabTitles[tab]||'';
+  const ab=document.getElementById('add-btn');ab.style.display='';
+  if(tab==='pending'||tab==='approved'||tab==='mine'){ab.textContent='➕ 发起审批';ab.onclick=()=>showNew('请假');}
+  else if(tab==='doc'){ab.textContent='✏️ 发文登记';ab.onclick=showNewDoc;}
+  else if(tab==='meeting'){ab.textContent='📅 预约会议室';ab.onclick=showBookRoom;}
+  else{ab.style.display='none';}
   renderContent();
 }
 
-function renderContent() {
-  const el = document.getElementById('tab-content');
-  const list = DB.get('oa_approvals');
-  const pending = list.filter(i => i.status === '待审批');
-  const approved = list.filter(i => i.status !== '待审批');
-
-  document.getElementById('badge-pending').textContent = pending.length || '';
-  const titles = {pending:`📥 我的待办（${pending.length}项）`, approved:`✅ 已审批（${approved.length}项）`, mine:'📋 我发起的'};
-  document.getElementById('page-title').textContent = titles[currentTab] || titles.pending;
-
-  const showList = currentTab === 'pending' ? pending : currentTab === 'approved' ? approved : list;
-
-  el.innerHTML = `
-    <div class="card">
-      <div class="card-body">
-        ${showList.length ? `<table><thead><tr><th>编号</th><th>类型</th><th>申请人</th><th>部门</th><th>摘要</th><th>提交时间</th><th>紧急度</th><th>状态</th><th>操作</th></tr></thead>
-        <tbody>${showList.map(item => `<tr>
-          <td style="font-size:12px;color:var(--gray-400)">${item.id}</td>
-          <td>${typeIcon[item.type]||'📝'} ${item.type}</td>
-          <td><strong>${item.applicant}</strong></td><td>${item.dept}</td>
-          <td style="max-width:200px">${item.summary}</td>
-          <td style="font-size:12px">${item.date}</td>
-          <td><span class="status ${item.urgency==='紧急'?'warning':'pending'}">${item.urgency}</span></td>
-          <td><span class="status ${item.status==='待审批'?'pending':item.status==='已通过'?'approved':'rejected'}">${item.status}</span></td>
-          <td>
-            ${currentTab === 'pending' ? `
-              <button class="btn btn-sm btn-primary" onclick="approveItem('${item.id}')">通过</button>
-              <button class="btn btn-sm btn-danger" onclick="rejectItem('${item.id}')" style="margin-left:4px">驳回</button>` : ''}
-            <a href="#" onclick="viewApproval('${item.id}');return false" style="color:var(--primary);text-decoration:none;font-size:13px;margin-left:6px">详情</a>
-          </td>
-        </tr>`).join('')}</tbody></table>`
-        : '<div style="padding:60px;text-align:center;color:var(--gray-400)"><div style="font-size:48px;margin-bottom:12px">🎉</div>暂无数据</div>'}
-      </div>
-    </div>`;
+function renderContent(){
+  const el=document.getElementById('tab-content');
+  ({pending:renderPending,approved:renderApproved,mine:renderMine,doc:renderDoc,meeting:renderMeeting,vehicle:renderVehicle})[currentTab]?.(el);
 }
 
-function approveItem(id) {
-  Approval.approve(id, 'oa_approvals', () => renderContent());
+// ===== 审批 =====
+function renderPending(el){
+  const list=DB.get('oa_approvals').filter(i=>i.status==='待审批');
+  document.getElementById('badge-pending').textContent=list.length||'';
+  el.innerHTML=renderApprovalTable(list,true);
 }
-
-function rejectItem(id) {
-  Approval.reject(id, 'oa_approvals');
+function renderApproved(el){
+  const list=DB.get('oa_approvals').filter(i=>i.status!=='待审批');
+  el.innerHTML=renderApprovalTable(list,false);
 }
-
-function viewApproval(id) {
-  const item = DB.get('oa_approvals').find(i => i.id === id);
-  if (!item) return;
-  const d = item.detail || {};
-  const detailRows = {
-    请假: `<div class="detail-item"><div class="label">假别</div><div class="value">${d.leaveType||'-'}</div></div>
-      <div class="detail-item"><div class="label">开始日期</div><div class="value">${d.startDate||'-'}</div></div>
-      <div class="detail-item"><div class="label">结束日期</div><div class="value">${d.endDate||'-'}</div></div>
-      <div class="detail-item"><div class="label">天数</div><div class="value" style="color:var(--primary)">${d.days||'-'}天</div></div>
-      <div class="detail-item" style="grid-column:1/-1"><div class="label">事由</div><div class="value">${d.reason||'-'}</div></div>`,
-    用车: `<div class="detail-item"><div class="label">用车日期</div><div class="value">${d.date||'-'}</div></div>
-      <div class="detail-item"><div class="label">出发地</div><div class="value">${d.from||'-'}</div></div>
-      <div class="detail-item"><div class="label">目的地</div><div class="value">${d.to||'-'}</div></div>
-      <div class="detail-item" style="grid-column:1/-1"><div class="label">用途</div><div class="value">${d.purpose||'-'}</div></div>`,
-    用印: `<div class="detail-item"><div class="label">文件名称</div><div class="value">${d.contract||'-'}</div></div>
-      <div class="detail-item"><div class="label">页数</div><div class="value">${d.pages||'-'}页</div></div>
-      <div class="detail-item"><div class="label">份数</div><div class="value">${d.copies||'-'}份</div></div>
-      <div class="detail-item"><div class="label">印章类型</div><div class="value">${d.sealType||'-'}</div></div>`,
-    出差: `<div class="detail-item"><div class="label">目的地</div><div class="value">${d.destination||'-'}</div></div>
-      <div class="detail-item"><div class="label">出发日期</div><div class="value">${d.startDate||'-'}</div></div>
-      <div class="detail-item"><div class="label">返回日期</div><div class="value">${d.endDate||'-'}</div></div>
-      <div class="detail-item" style="grid-column:1/-1"><div class="label">出差事由</div><div class="value">${d.purpose||'-'}</div></div>`,
-    招待: `<div class="detail-item"><div class="label">招待对象</div><div class="value">${d.guest||'-'}</div></div>
-      <div class="detail-item"><div class="label">预算金额</div><div class="value" style="color:var(--warning)">¥${d.budget||0}</div></div>
-      <div class="detail-item"><div class="label">餐厅</div><div class="value">${d.restaurant||'-'}</div></div>
-      <div class="detail-item"><div class="label">日期</div><div class="value">${d.date||'-'}</div></div>`,
-  };
-  const html = `
-    <div style="background:var(--gray-50);padding:12px 16px;border-radius:8px;margin-bottom:16px;display:flex;gap:24px;font-size:13px">
-      <span>申请人：<strong>${item.applicant}</strong></span><span>部门：${item.dept}</span><span>提交：${item.date}</span>
-      <span>状态：<span class="status ${item.status==='待审批'?'pending':item.status==='已通过'?'approved':'rejected'}">${item.status}</span></span>
-    </div>
-    <h4 style="font-size:14px;color:var(--gray-600);margin-bottom:12px">📝 审批详情</h4>
-    <div class="detail-grid" style="grid-template-columns:1fr 1fr">${detailRows[item.type] || ''}</div>
-    ${item.approver ? `<div style="margin-top:16px;padding:12px 16px;background:${item.status==='已通过'?'#d1fae5':'#fee2e2'};border-radius:8px;font-size:13px">
-      <strong>${item.status === '已通过' ? '✅' : '❌'} 审批结论：${item.status}</strong><br>
-      审批人：${item.approver} | 时间：${item.approvedAt || item.rejectedAt || '-'}
-      ${item.rejectReason ? `<br>驳回原因：${item.rejectReason}` : ''}
-    </div>` : ''}
-    ${currentTab === 'pending' ? `<div style="margin-top:20px;display:flex;gap:8px;justify-content:flex-end">
-      <button class="btn btn-danger" onclick="rejectItem('${item.id}')">❌ 驳回</button>
-      <button class="btn btn-primary" onclick="approveItem('${item.id}')">✅ 通过</button>
-    </div>` : ''}`;
-  Modal.show(`${typeIcon[item.type]||'📝'} ${item.type}审批详情`, html, {width:'640px'});
+function renderMine(el){
+  const list=DB.get('oa_approvals').filter(i=>i.applicant==='席宝');
+  el.innerHTML=list.length?renderApprovalTable(list,false):'<div style="padding:60px;text-align:center;color:var(--gray-400)">暂无我发起的审批</div>';
+}
+function renderApprovalTable(list,showActions){
+  if(!list.length) return '<div style="padding:60px;text-align:center;color:var(--gray-400)">暂无数据</div>';
+  return `<div class="card"><div class="card-body"><table><thead><tr><th>编号</th><th>类型</th><th>申请人</th><th>部门</th><th>摘要</th><th>提交时间</th><th>状态</th><th>操作</th></tr></thead>
+  <tbody>${list.map(i=>`<tr><td style="font-size:12px">${i.id}</td><td>${typeIcon[i.type]||'📝'} ${i.type}</td><td><strong>${i.applicant}</strong></td><td>${i.dept}</td><td>${i.summary}</td><td style="font-size:12px">${i.date}</td>
+  <td><span class="status ${i.status==='待审批'?'pending':i.status==='已通过'?'approved':'rejected'}">${i.status}</span></td>
+  <td>${showActions?`<button class="btn btn-sm btn-primary" onclick="approve('${i.id}')">通过</button> <button class="btn btn-sm btn-danger" onclick="reject('${i.id}')">驳回</button>`:`<a href="#" onclick="viewDetail('${i.id}');return false" style="color:var(--primary);font-size:13px;text-decoration:none">详情</a>`}</td></tr>`).join('')}</tbody></table></div></div>`;
+}
+function approve(id){Approval.approve(id,'oa_approvals',()=>renderContent());}
+function reject(id){Approval.reject(id,'oa_approvals');}
+function viewDetail(id){
+  const item=DB.get('oa_approvals').find(i=>i.id===id);if(!item)return;
+  const html=`<div style="margin-bottom:12px;font-size:13px;color:var(--gray-500)">申请人：${item.applicant} | 部门：${item.dept} | 提交：${item.date}</div>
+  <div style="padding:12px;background:var(--gray-50);border-radius:8px;font-size:14px">${item.summary}</div>`;
+  Modal.show(`${typeIcon[item.type]||'📝'} 审批详情`,html,{width:'480px'});
 }
 
 // ===== 发起审批 =====
-function showNewApproval(type) {
-  const configs = {
-    请假: [
-      {name:'leaveType',label:'假别',type:'select',options:['年假','事假','病假','调休','婚假','产假'],required:true},
-      {name:'startDate',label:'开始日期',type:'date',required:true},
-      {name:'endDate',label:'结束日期',type:'date',required:true},
-      {name:'days',label:'天数',type:'number',required:true},
-      {name:'reason',label:'事由',type:'textarea',full:true,required:true},
-    ],
-    用车: [
-      {name:'date',label:'用车日期',type:'date',required:true},
-      {name:'from',label:'出发地',required:true},
-      {name:'to',label:'目的地',required:true},
-      {name:'purpose',label:'用途',type:'textarea',full:true,required:true},
-    ],
-    用印: [
-      {name:'contract',label:'文件名称',required:true},
-      {name:'sealType',label:'印章类型',type:'select',options:['公章','合同专用章','财务专用章','法人章'],required:true},
-      {name:'pages',label:'页数',type:'number',required:true},
-      {name:'copies',label:'份数',type:'number',required:true},
-    ],
-    出差: [
-      {name:'destination',label:'目的地',required:true},
-      {name:'startDate',label:'出发日期',type:'date',required:true},
-      {name:'endDate',label:'返回日期',type:'date',required:true},
-      {name:'purpose',label:'出差事由',type:'textarea',full:true,required:true},
-    ],
-    招待: [
-      {name:'guest',label:'招待对象',required:true},
-      {name:'restaurant',label:'餐厅',required:true},
-      {name:'date',label:'日期',type:'date',required:true},
-      {name:'budget',label:'预算金额（元）',type:'number',required:true},
-    ],
+function showNew(type){
+  const configs={
+    请假:[{name:'leaveType',label:'假别',type:'select',options:['年假','事假','病假','调休','婚假'],required:true},{name:'start',label:'开始日期',type:'date',required:true},{name:'end',label:'结束日期',type:'date',required:true},{name:'days',label:'天数',type:'number',required:true},{name:'reason',label:'事由',type:'textarea',full:true,required:true}],
+    用车:[{name:'date',label:'用车日期',type:'date',required:true},{name:'from',label:'出发地',required:true},{name:'to',label:'目的地',required:true},{name:'purpose',label:'用途',type:'textarea',full:true,required:true}],
+    用印:[{name:'contract',label:'文件名称',required:true},{name:'sealType',label:'印章类型',type:'select',options:['公章','合同专用章','财务专用章'],required:true},{name:'pages',label:'页数',type:'number',required:true},{name:'copies',label:'份数',type:'number',required:true}],
+    出差:[{name:'dest',label:'目的地',required:true},{name:'start',label:'出发日期',type:'date',required:true},{name:'end',label:'返回日期',type:'date',required:true},{name:'purpose',label:'事由',type:'textarea',full:true,required:true}],
+    招待:[{name:'guest',label:'招待对象',required:true},{name:'restaurant',label:'餐厅',required:true},{name:'date',label:'日期',type:'date',required:true},{name:'budget',label:'预算金额',type:'number',required:true}],
+    采购:[{name:'item',label:'采购内容',full:true,required:true},{name:'vendor',label:'供应商',required:true},{name:'amount',label:'预算金额（元）',type:'number',required:true},{name:'reason',label:'采购原因',type:'textarea',full:true,required:true}],
   };
-  const fields = configs[type] || configs.请假;
-  const html = Form.render(fields) + `<div style="margin-top:20px;text-align:right">
-    <button class="btn" style="background:#f3f4f6;color:#374151" onclick="Modal.close(this.closest('[id^=modal]').id)">取消</button>
-    <button class="btn btn-primary" onclick="submitApproval('${type}')">提交申请</button></div>`;
-  Modal.show(`📝 发起${type}申请`, html, {width:'560px'});
+  const fields=configs[type]||configs.请假;
+  const html=Form.render(fields)+`<div style="margin-top:20px;text-align:right"><button class="btn" style="background:#f3f4f6;color:#374151" onclick="Modal.close(this.closest('[id^=modal]').id)">取消</button><button class="btn btn-primary" onclick="submitApproval('${type}')">提交</button></div>`;
+  Modal.show(`📝 发起${type}申请`,html,{width:'560px'});
+}
+function submitApproval(type){
+  const data=Form.getData();if(!Object.keys(data).length){Modal.toast('请填写表单','warning');return;}
+  const summary=type==='请假'?`${data.leaveType}${data.days}天`:type==='采购'?`${data.item} ¥${data.amount}`:data.guest||data.dest||data.contract||data.from||'';
+  const list=DB.get('oa_approvals');
+  list.unshift({id:DB.genId('SP'),type,applicant:'席宝',dept:'人力资源部',summary,date:new Date().toLocaleString('zh-CN'),urgency:'普通',status:'待审批',detail:data});
+  DB.set('oa_approvals',list);document.querySelectorAll('[id^=modal-]').forEach(m=>m.remove());Modal.toast(`✅ ${type}申请已提交`);currentTab='mine';renderContent();
 }
 
-function submitApproval(type) {
-  const data = Form.getData();
-  if (!Object.keys(data).length) { Modal.toast('请填写表单', 'warning'); return; }
-  const summary = type === '请假' ? `${data.leaveType}${data.days}天（${data.startDate}~${data.endDate}）`
-    : type === '用车' ? `${data.date} ${data.from}-${data.to}`
-    : type === '用印' ? data.contract : type === '出差' ? `${data.destination}${data.startDate}~${data.endDate}`
-    : `${data.guest} ¥${data.budget}`;
-
-  const list = DB.get('oa_approvals');
-  list.unshift({
-    id: DB.genId('SP'), type, applicant: '席宝', dept: '人力资源部', summary,
-    date: new Date().toLocaleString('zh-CN'), urgency: '普通', status: '待审批', detail: data
-  });
-  DB.set('oa_approvals', list);
-  document.querySelectorAll('[id^=modal-]').forEach(m => m.remove());
-  Modal.toast(`✅ ${type}申请已提交，等待审批`);
-  currentTab = 'mine';
-  renderContent();
+// ===== 公文管理 =====
+function renderDoc(el){
+  const list=DB.get('oa_docs');
+  el.innerHTML=`<div class="portal-stats" style="margin-bottom:20px">
+    <div class="stat-card"><div class="label">本月发文</div><div class="value">${list.length}</div></div>
+    <div class="stat-card green"><div class="label">已发布</div><div class="value">${list.filter(i=>i.status==='已发布').length}</div></div>
+    <div class="stat-card orange"><div class="label">审核中</div><div class="value">${list.filter(i=>i.status==='审核中').length}</div></div>
+  </div>
+  <div class="card"><div class="card-body"><table><thead><tr><th>文号</th><th>标题</th><th>类型</th><th>拟稿部门</th><th>拟稿人</th><th>日期</th><th>密级</th><th>状态</th><th>操作</th></tr></thead>
+  <tbody>${list.map(d=>`<tr><td>${d.id}</td><td><strong>${d.title}</strong></td><td>${d.type}</td><td>${d.dept}</td><td>${d.author}</td><td>${d.date}</td>
+  <td><span class="status ${d.level==='紧急'?'danger':d.level==='重要'?'warning':'pending'}">${d.level}</span></td>
+  <td><span class="status ${d.status==='已发布'?'approved':'processing'}">${d.status}</span></td>
+  <td>${d.status==='审核中'?`<button class="btn btn-sm btn-primary" onclick="publishDoc('${d.id}')">发布</button>`:`<a href="#" onclick="Modal.toast('📄 公文详情（模拟）','info');return false" style="color:var(--primary);font-size:13px;text-decoration:none">查看</a>`}</td></tr>`).join('')}</tbody></table></div></div>`;
 }
-
-// ===== 预约会议室 =====
-function showBookRoom() {
-  const fields = [
-    {name:'room',label:'会议室',type:'select',options:['3F-大会议室A','3F-大会议室B','5F-会议室C','5F-会议室D','8F-贵宾室'],required:true},
-    {name:'date',label:'日期',type:'date',required:true},
-    {name:'timeSlot',label:'时段',type:'select',options:['09:00-10:00','10:00-11:00','11:00-12:00','14:00-15:00','15:00-16:00','16:00-17:00','09:00-12:00','14:00-17:00','全天'],required:true},
-    {name:'topic',label:'会议主题',required:true},
-    {name:'attendees',label:'参会人数',type:'number',required:true},
-    {name:'needs',label:'设备需求',type:'select',options:['无特殊需求','需要投影仪','需要视频会议系统','需要白板']},
-  ];
-  const html = Form.render(fields) + `<div style="margin-top:20px;text-align:right">
-    <button class="btn" style="background:#f3f4f6;color:#374151" onclick="Modal.close(this.closest('[id^=modal]').id)">取消</button>
-    <button class="btn btn-primary" onclick="bookRoom()">预约</button></div>`;
-  Modal.show('📅 预约会议室', html, {width:'520px'});
+function showNewDoc(){
+  const fields=[{name:'title',label:'公文标题',full:true,required:true},{name:'type',label:'文种',type:'select',options:['通知','通报','决定','报告','请示','函','纪要'],required:true},
+  {name:'dept',label:'拟稿部门',type:'select',options:['行政综合部','财务管理部','人力资源部','生产制造部','技术研发部'],required:true},{name:'level',label:'密级',type:'select',options:['普通','重要','紧急'],required:true},
+  {name:'content',label:'正文内容',type:'textarea',full:true,required:true}];
+  const html=Form.render(fields)+`<div style="margin-top:20px;text-align:right"><button class="btn" style="background:#f3f4f6;color:#374151" onclick="Modal.close(this.closest('[id^=modal]').id)">取消</button><button class="btn btn-primary" onclick="saveDoc()">提交拟稿</button></div>`;
+  Modal.show('✏️ 发文登记',html,{width:'600px'});
 }
+function saveDoc(){const d=Form.getData();if(!d.title){Modal.toast('请填写标题','warning');return;}const l=DB.get('oa_docs');l.unshift({...d,id:DB.genId('GW'),author:'席宝',date:new Date().toISOString().slice(0,10),status:'审核中'});DB.set('oa_docs',l);document.querySelectorAll('[id^=modal-]').forEach(m=>m.remove());Modal.toast('✅ 公文已提交拟稿');renderContent();}
+function publishDoc(id){const l=DB.get('oa_docs');const d=l.find(i=>i.id===id);if(d){d.status='已发布';DB.set('oa_docs',l);Modal.toast('✅ 已发布');renderContent();}}
 
-function bookRoom() {
-  const data = Form.getData();
-  if (!data.room || !data.topic) { Modal.toast('请填写必填项', 'warning'); return; }
-  Modal.toast(`✅ 会议室「${data.room}」预约成功！`);
-  document.querySelectorAll('[id^=modal-]').forEach(m => m.remove());
+// ===== 会议管理 =====
+function renderMeeting(el){
+  const list=DB.get('oa_meetings');
+  el.innerHTML=`<div class="portal-stats" style="margin-bottom:20px">
+    <div class="stat-card"><div class="label">今日会议</div><div class="value">${list.filter(i=>i.date==='2026-06-18').length}</div></div>
+    <div class="stat-card orange"><div class="label">待开始</div><div class="value">${list.filter(i=>i.status==='待开始').length}</div></div>
+  </div>
+  <div class="card"><div class="card-body"><table><thead><tr><th>会议主题</th><th>会议室</th><th>日期</th><th>时间</th><th>组织部门</th><th>参会人数</th><th>状态</th><th>操作</th></tr></thead>
+  <tbody>${list.map(m=>`<tr><td><strong>${m.title}</strong></td><td>${m.room}</td><td>${m.date}</td><td>${m.time}</td><td>${m.organizer}</td><td>${m.attendees}人</td>
+  <td><span class="status ${m.status==='进行中'?'processing':m.status==='待开始'?'pending':'approved'}">${m.status}</span></td>
+  <td>${m.status==='待开始'?`<button class="btn btn-sm btn-primary" onclick="Modal.toast('📋 会议纪要模板已生成','info')">纪要</button>`:`<a href="#" onclick="Modal.toast('📋 查看会议纪要（模拟）','info');return false" style="color:var(--primary);font-size:13px;text-decoration:none">纪要</a>`}</td></tr>`).join('')}</tbody></table></div></div>`;
+}
+function showBookRoom(){
+  const fields=[{name:'room',label:'会议室',type:'select',options:['3F-大会议室A','3F-大会议室B','5F-会议室C','5F-会议室D','8F-贵宾室'],required:true},{name:'date',label:'日期',type:'date',required:true},
+  {name:'timeSlot',label:'时段',type:'select',options:['09:00-10:00','10:00-11:00','14:00-15:00','15:00-16:00','全天'],required:true},{name:'topic',label:'会议主题',required:true},{name:'attendees',label:'参会人数',type:'number',required:true}];
+  const html=Form.render(fields)+`<div style="margin-top:20px;text-align:right"><button class="btn" style="background:#f3f4f6;color:#374151" onclick="Modal.close(this.closest('[id^=modal]').id)">取消</button><button class="btn btn-primary" onclick="bookRoom()">预约</button></div>`;
+  Modal.show('📅 预约会议室',html,{width:'520px'});}
+function bookRoom(){const d=Form.getData();if(!d.room){Modal.toast('请选择会议室','warning');return;}const l=DB.get('oa_meetings');l.unshift({...d,id:DB.genId('MT'),organizer:'席宝',status:'待开始'});DB.set('oa_meetings',l);document.querySelectorAll('[id^=modal-]').forEach(m=>m.remove());Modal.toast(`✅ ${d.room} 预约成功`);renderContent();}
+
+// ===== 车辆管理 =====
+function renderVehicle(el){
+  const list=DB.get('oa_vehicles');
+  el.innerHTML=`<div class="portal-stats" style="margin-bottom:20px">
+    <div class="stat-card"><div class="label">车辆总数</div><div class="value">${list.length}</div></div>
+    <div class="stat-card green"><div class="label">空闲</div><div class="value">${list.filter(i=>i.status==='空闲').length}</div></div>
+    <div class="stat-card orange"><div class="label">在用</div><div class="value">${list.filter(i=>i.status==='在用').length}</div></div>
+    <div class="stat-card red"><div class="label">维修</div><div class="value">${list.filter(i=>i.status==='维修').length}</div></div>
+  </div>
+  <div class="card"><div class="card-body"><table><thead><tr><th>车牌号</th><th>类型</th><th>车型</th><th>司机</th><th>当前状态</th><th>使用情况</th><th>操作</th></tr></thead>
+  <tbody>${list.map(v=>`<tr><td><strong>${v.plate}</strong></td><td>${v.type}</td><td>${v.model}</td><td>${v.driver}</td>
+  <td><span class="status ${v.status==='空闲'?'approved':v.status==='在用'?'processing':'danger'}">${v.status}</span></td><td>${v.usage}</td>
+  <td>${v.status==='空闲'?`<button class="btn btn-sm btn-primary" onclick="Modal.toast('🚗 调度申请已提交（模拟）','info')">调度</button>`:'-'}</td></tr>`).join('')}</tbody></table></div></div>`;
 }
 
 renderContent();
