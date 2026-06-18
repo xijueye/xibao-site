@@ -67,6 +67,43 @@ function switchTab(tab) {
   renderContent();
 }
 
+// ===== 审计项目详情 =====
+function viewAuditProject(id){
+  const p=DB.get('aud_projects').find(i=>i.id===id);if(!p)return;
+  const relatedIssues=DB.get('aud_issues').filter(i=>i.source.includes(p.name.split(' ')[0]));
+  const html=`<div style="font-size:14px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+      <div><strong>项目编号：</strong>${p.id}</div><div><strong>审计类型：</strong>${p.type}</div>
+      <div style="grid-column:1/-1"><strong>项目名称：</strong>${p.name}</div>
+      <div><strong>审计组长：</strong>${p.leader}</div><div><strong>计划周期：</strong>${p.period}</div>
+      <div><strong>进度：</strong><span style="font-weight:700;color:var(--primary)">${p.progress}%</span></div>
+      <div><strong>状态：</strong><span class="status ${p.status==='已完成'?'approved':'processing'}">${p.status}</span></div>
+    </div>
+    <div class="progress-bar" style="margin-bottom:16px"><div class="fill ${p.progress>=80?'green':'blue'}" style="width:${p.progress}%"></div></div>
+    ${relatedIssues.length?`<h4 style="font-size:13px;margin-bottom:8px">关联审计问题（${relatedIssues.length}项）</h4>
+    <table><thead><tr><th>问题描述</th><th>风险等级</th><th>责任部门</th><th>状态</th></tr></thead>
+    <tbody>${relatedIssues.map(i=>`<tr><td style="font-size:12px">${i.desc}</td><td><span class="status ${i.risk==='高'?'danger':i.risk==='中'?'warning':'pending'}">${i.risk}</span></td><td>${i.dept}</td><td><span class="status ${i.status==='已整改'?'approved':i.status==='整改中'?'warning':'pending'}">${i.status}</span></td></tr>`).join('')}</tbody></table>`:'<div style="padding:12px;text-align:center;color:var(--gray-400);font-size:13px">暂无关联问题</div>'}</div>`;
+  Modal.show(`🔍 审计项目详情 - ${p.name}`,html,{width:'600px'});
+}
+
+// ===== 审计问题详情 =====
+function viewAuditIssue(id){
+  const issue=DB.get('aud_issues').find(i=>i.id===id);if(!issue)return;
+  const html=`<div style="font-size:14px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+      <div><strong>问题编号：</strong>${issue.id}</div><div><strong>来源项目：</strong>${issue.source}</div>
+      <div style="grid-column:1/-1"><strong>问题描述：</strong>${issue.desc}</div>
+      <div><strong>风险等级：</strong><span class="status ${issue.risk==='高'?'danger':issue.risk==='中'?'warning':'pending'}">${issue.risk}</span></div>
+      <div><strong>责任部门：</strong>${issue.dept}</div>
+      <div><strong>整改期限：</strong>${issue.deadline}</div>
+      <div><strong>当前状态：</strong><span class="status ${issue.status==='已整改'?'approved':issue.status==='整改中'?'warning':'pending'}">${issue.status}</span></div>
+    </div>
+    ${issue.status==='已整改'?`<div style="padding:12px;background:#d1fae5;border-radius:8px;font-size:13px;color:#065f46">✅ 该问题已完成整改</div>`:
+    issue.status==='整改中'?`<div style="padding:12px;background:#fef3c7;border-radius:8px;font-size:13px;color:#92400e">⏳ 整改进行中，请跟踪进度</div>`:
+    `<div style="padding:12px;background:#fee2e2;border-radius:8px;font-size:13px;color:#991b1b">⚠️ 尚未开始整改，请督促责任部门</div>`}</div>`;
+  Modal.show(`⚠️ 审计问题详情 - ${issue.id}`,html,{width:'520px'});
+}
+
 function renderContent() {
   const el = document.getElementById('tab-content');
   const titles = {project:'📋 审计项目',issue:'⚠️ 问题台账'};
@@ -88,7 +125,7 @@ function renderAuditProject(el) {
         <td>${a.id}</td><td><strong>${a.name}</strong></td><td>${a.type}</td><td>${a.leader}</td><td>${a.period}</td>
         <td><div class="progress-bar" style="width:80px;display:inline-block;vertical-align:middle"><div class="fill ${a.progress>=80?'green':'blue'}" style="width:${a.progress}%"></div></div> ${a.progress}%</td>
         <td><span class="status ${a.status==='已完成'?'approved':'processing'}">${a.status}</span></td>
-        <td><a href="#" onclick="updateAuditProgress('${a.id}');return false" style="color:var(--primary);font-size:13px;text-decoration:none">更新</a></td>
+        <td><a href="#" onclick="viewAuditProject('${a.id}');return false" style="color:var(--primary);font-size:13px;text-decoration:none">查看</a> <a href="#" onclick="updateAuditProgress('${a.id}');return false" style="color:var(--gray-500);font-size:13px;text-decoration:none;margin-left:4px">更新</a></td>
       </tr>`).join('')}</tbody></table>
     </div></div>`;
 }
@@ -151,7 +188,7 @@ function renderIssue(el) {
         <td><span class="status ${i.risk==='高'?'danger':i.risk==='中'?'warning':'pending'}">${i.risk}</span></td>
         <td>${i.dept}</td><td>${i.deadline}</td>
         <td><span class="status ${i.status==='已整改'?'approved':i.status==='整改中'?'warning':'pending'}">${i.status}</span></td>
-        <td><a href="#" onclick="updateIssueStatus('${i.id}');return false" style="color:var(--primary);font-size:13px;text-decoration:none">更新</a></td>
+        <td><a href="#" onclick="viewAuditIssue('${i.id}');return false" style="color:var(--primary);font-size:13px;text-decoration:none">查看</a> <a href="#" onclick="updateIssueStatus('${i.id}');return false" style="color:var(--gray-500);font-size:13px;text-decoration:none;margin-left:4px">更新</a></td>
       </tr>`).join('')}</tbody></table>
     </div></div>`;
 }

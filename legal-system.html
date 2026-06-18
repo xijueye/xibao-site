@@ -202,6 +202,28 @@ function viewCase(id) {
 }
 
 // ===== 合规检查 =====
+// ===== 合规检查详情 =====
+function viewComplianceDetail(name, items, passed){
+  const failed=items-passed;
+  const details={
+    '数据安全合规':{items:['数据分类分级管理 ✅','数据加密传输 ✅','数据备份恢复 ✅','访问权限控制 ✅','数据安全审计 ✅','个人信息保护 ✅','数据泄露应急预案 ✅','数据库安全防护 ✅','日志监控与告警 ✅','数据脱敏处理 ✅','安全培训完成率 ✅','第三方数据共享合规 ✅']},
+    '反腐败合规':{items:['反腐败制度建设 ✅','礼品礼金登记 ✅','利益冲突申报 ✅','供应商准入审查 ✅','采购招标合规 ✅','合同审批流程 ✅','费用报销规范 ✅','员工廉洁承诺 ⚠️ 1人未签']},
+    '环保合规':{items:['环保许可证 ✅','污染物排放达标 ✅','废物处理合规 ✅','环保应急预案 ✅','环境监测报告 ✅','碳排放报告 ✅']},
+    '劳动法合规':{items:['劳动合同签订率 ✅','社保公积金缴纳 ✅','工时管理合规 ✅','加班费支付 ✅','带薪年假执行 ✅','女职工保护 ✅','劳动安全卫生 ✅','职业病防治 ✅','员工培训记录 ✅','离职手续合规 ⚠️ 需完善']},
+    '知识产权合规':{items:['专利申请管理 ✅','商标注册维护 ✅','软件著作权 ✅','技术秘密保护 ✅','知识产权培训 ✅']}
+  };
+  const detail=details[name];
+  const html=`<div>
+    <div style="display:flex;justify-content:space-between;margin-bottom:16px">
+      <div><strong>检查项：</strong>${items}项 | <strong>通过：</strong>${passed}项</div>
+      <div><strong>通过率：</strong><span style="color:${failed>0?'var(--warning)':'var(--success)'};font-weight:700">${(passed/items*100).toFixed(0)}%</span></div>
+    </div>
+    ${detail?`<div style="font-size:13px">${detail.items.map(it=>`<div style="padding:6px 0;border-bottom:1px solid var(--gray-100)">${it}</div>`).join('')}</div>`:
+    `<div style="padding:12px;background:#d1fae5;border-radius:8px;font-size:13px;color:#065f46">✅ 全部${passed}项检查均已通过</div>`}
+  </div>`;
+  Modal.show(`🛡️ ${name} - 检查明细`,html,{width:'520px'});
+}
+
 function renderCompliance(el) {
   const checks = [
     {name:'数据安全合规',items:12,passed:12},
@@ -220,7 +242,7 @@ function renderCompliance(el) {
         ${checks.map(c => {
           const rate = (c.passed/c.items*100).toFixed(0);
           const ok = c.passed === c.items;
-          return `<div style="padding:16px;border:1px solid var(--gray-200);border-radius:8px;border-top:3px solid ${ok?'var(--success)':'var(--warning)'}">
+          return `<div style="padding:16px;border:1px solid var(--gray-200);border-radius:8px;border-top:3px solid ${ok?'var(--success)':'var(--warning)'};cursor:pointer" onclick="viewComplianceDetail('${c.name}',${c.items},${c.passed})">
             <div style="font-weight:600;margin-bottom:8px">${c.name}</div>
             <div style="font-size:13px;color:var(--gray-500);margin-bottom:8px">检查项 ${c.items} 项</div>
             <div class="progress-bar"><div class="fill ${ok?'green':'orange'}" style="width:${rate}%"></div></div>
