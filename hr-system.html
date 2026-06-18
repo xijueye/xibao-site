@@ -109,11 +109,14 @@ const defaultCandidates = [
 if(!DB.get('hr_candidates').length) DB.set('hr_candidates',defaultCandidates);
 
 const defaultTrainings = [
-  {id:'TR001',name:'新员工入职培训',type:'入职培训',hours:16,teacher:'赵丽',enrolled:23,completed:18,status:'进行中'},
-  {id:'TR002',name:'数据安全合规培训',type:'合规培训',hours:4,teacher:'外部讲师',enrolled:1286,completed:856,status:'进行中'},
-  {id:'TR003',name:'项目管理PMP认证',type:'专业认证',hours:40,teacher:'外部机构',enrolled:15,completed:15,status:'已完成'},
-  {id:'TR004',name:'领导力提升训练营',type:'管理培训',hours:24,teacher:'外部讲师',enrolled:30,completed:0,status:'报名中'},
-  {id:'TR005',name:'AI办公效率提升',type:'技能培训',hours:8,teacher:'内部讲师',enrolled:85,completed:62,status:'进行中'},
+  {id:'TR001',name:'新员工入职培训',type:'入职培训',hours:16,teacher:'赵丽',enrolled:23,completed:18,status:'进行中',startDate:'2026-06-01',endDate:'2026-06-30',location:'总部3楼培训室',desc:'涵盖企业文化、规章制度、OA系统使用、安全须知等内容'},
+  {id:'TR002',name:'数据安全合规培训',type:'合规培训',hours:4,teacher:'外部讲师',enrolled:1286,completed:856,status:'进行中',startDate:'2026-06-01',endDate:'2026-06-30',location:'线上学习平台',desc:'全员必修课程，学习数据安全法、个人信息保护法及公司数据管理规范'},
+  {id:'TR003',name:'项目管理PMP认证',type:'专业认证',hours:40,teacher:'外部机构',enrolled:15,completed:15,status:'已完成',startDate:'2026-03-01',endDate:'2026-05-31',location:'总部5楼会议室',desc:'PMP项目管理专业人士认证培训，15名学员全部通过考试'},
+  {id:'TR004',name:'领导力提升训练营',type:'管理培训',hours:24,teacher:'外部讲师',enrolled:30,completed:0,status:'报名中',startDate:'2026-07-15',endDate:'2026-08-15',location:'总部多功能厅',desc:'针对中层管理者的领导力、团队管理、战略思维能力提升培训'},
+  {id:'TR005',name:'AI办公效率提升',type:'技能培训',hours:8,teacher:'内部讲师',enrolled:85,completed:62,status:'进行中',startDate:'2026-06-10',endDate:'2026-06-25',location:'总部3楼培训室',desc:'学习ChatGPT、Copilot等AI工具在办公场景中的实际应用'},
+  {id:'TR006',name:'安全生产月专题培训',type:'合规培训',hours:6,teacher:'安全管理部',enrolled:1286,completed:1286,status:'已完成',startDate:'2026-06-01',endDate:'2026-06-15',location:'各车间/线上',desc:'每年6月全国安全生产月，全员学习安全操作规程和应急处理流程'},
+  {id:'TR007',name:'财务报表分析实操',type:'专业培训',hours:12,teacher:'刘芳',enrolled:28,completed:0,status:'报名中',startDate:'2026-07-01',endDate:'2026-07-15',location:'总部2楼会议室',desc:'针对财务部及各部门负责人，学习资产负债表、利润表、现金流量表分析'},
+  {id:'TR008',name:'新经理管理必修课',type:'管理培训',hours:16,teacher:'外部讲师',enrolled:12,completed:8,status:'进行中',startDate:'2026-06-05',endDate:'2026-06-20',location:'总部多功能厅',desc:'针对新晋升管理者，涵盖角色转换、目标管理、绩效辅导、团队激励等模块'},
 ];
 if(!DB.get('hr_trainings').length) DB.set('hr_trainings',defaultTrainings);
 
@@ -137,6 +140,81 @@ const leaveRecords = [
   {applicant:'张伟',type:'事假',start:'2026-04-15',end:'2026-04-15',days:1,status:'已通过'},
   {applicant:'李娜',type:'年假',start:'2026-06-10',end:'2026-06-12',days:3,status:'已通过'},
 ];
+
+// ===== 考勤历史数据 =====
+function initAttendanceHistory(){
+  if(DB.get('hr_attendance').length>0)return;
+  const names=[
+    {name:'张伟',dept:'技术研发部'},{name:'李娜',dept:'市场营销部'},{name:'王强',dept:'生产制造部'},
+    {name:'刘芳',dept:'财务管理部'},{name:'陈明',dept:'项目交付部'},{name:'赵丽',dept:'人力资源部'},
+    {name:'孙磊',dept:'行政综合部'},{name:'周婷',dept:'技术研发部'},{name:'吴刚',dept:'法务合规部'},
+    {name:'郑雪',dept:'市场营销部'},{name:'黄海',dept:'生产制造部'},{name:'马丽',dept:'财务管理部'},
+    {name:'李强',dept:'技术研发部'},{name:'王芳',dept:'质量管理部'},{name:'刘洋',dept:'采购部'}
+  ];
+  const records=[];
+  for(let d=0;d<14;d++){
+    const dt=new Date();dt.setDate(dt.getDate()-d);
+    const dateStr=dt.toLocaleDateString('zh-CN');
+    const dayOfWeek=dt.getDay();
+    if(dayOfWeek===0||dayOfWeek===6)continue;
+    names.forEach(n=>{
+      const hasLeave=Math.random()<0.08;
+      if(hasLeave){
+        const types=['年假','病假','事假','调休'];
+        records.push({name:n.name,dept:n.dept,date:dateStr,time:'-',type:types[Math.floor(Math.random()*4)],status:'请假'});
+        return;
+      }
+      const baseMin=8*60+Math.floor(Math.random()*50);
+      const isLate=baseMin>=8*60+60;
+      const h=String(Math.floor(baseMin/60)).padStart(2,'0');
+      const m=String(baseMin%60).padStart(2,'0');
+      const time=h+':'+m;
+      const clockOutMin=17*60+30+Math.floor(Math.random()*60);
+      const oh=String(Math.floor(clockOutMin/60)).padStart(2,'0');
+      const om=String(clockOutMin%60).padStart(2,'0');
+      records.push({name:n.name,dept:n.dept,date:dateStr,time,clockOut:oh+':'+om,status:isLate?'迟到':'正常'});
+    });
+  }
+  DB.set('hr_attendance',records);
+}
+initAttendanceHistory();
+
+// ===== 候选人简历假数据 =====
+const resumeDB={
+  'CD001':{birth:'1994-05-12',address:'北京市海淀区中关村',skills:['Java','Spring Boot','微服务','MySQL','Redis','Kafka','Docker'],
+    workExp:[{company:'字节跳动',role:'高级Java工程师',period:'2022.06-至今',desc:'负责抖音直播后端核心系统，主导微服务架构重构，日均处理订单量2000万+'},{company:'美团',role:'Java开发工程师',period:'2020.07-2022.05',desc:'参与外卖交易系统开发，负责订单履约模块，优化接口响应时间40%'}],
+    eduExp:[{school:'北京邮电大学',major:'计算机科学与技术',degree:'硕士',period:'2017.09-2020.06'},{school:'郑州大学',major:'软件工程',degree:'本科',period:'2013.09-2017.06'}],
+    selfIntro:'6年Java后端开发经验，熟悉微服务架构设计，有高并发系统实战经验。主导过多个核心系统的架构升级。'},
+  'CD002':{birth:'1997-09-23',address:'北京市朝阳区望京',skills:['Vue3','React','TypeScript','Node.js','Webpack','TailwindCSS','Figma'],
+    workExp:[{company:'快手',role:'前端开发工程师',period:'2023.03-至今',desc:'负责快手电商商家端管理后台，使用Vue3+TypeScript重构核心模块，提升开发效率30%'},{company:'网易',role:'前端开发工程师',period:'2021.07-2023.02',desc:'参与网易云音乐Web版开发，负责歌单和评论模块'}],
+    eduExp:[{school:'北京航空航天大学',major:'计算机科学与技术',degree:'本科',period:'2017.09-2021.06'}],
+    selfIntro:'4年前端开发经验，精通Vue3和React框架，对前端工程化和组件化有深入理解。'},
+  'CD003':{birth:'1991-11-08',address:'北京市海淀区五道口',skills:['Java','系统架构','微服务','DDD','Oracle','Terraform','AWS'],
+    workExp:[{company:'阿里巴巴',role:'资深技术专家',period:'2021.01-至今',desc:'负责支付宝核心支付系统架构设计，日均交易量10亿+'},{company:'京东',role:'高级Java工程师',period:'2018.03-2020.12',desc:'参与京东物流WMS系统开发，主导仓储调度算法优化，效率提升25%'}],
+    eduExp:[{school:'清华大学',major:'软件工程',degree:'硕士',period:'2014.09-2017.06'},{school:'华中科技大学',major:'计算机科学',degree:'本科',period:'2010.09-2014.06'}],
+    selfIntro:'8年Java开发经验，具备从0到1的系统架构设计能力，有支付系统和高并发系统的丰富实战经验。'},
+  'CD004':{birth:'1996-03-17',address:'北京市西城区金融街',skills:['商务谈判','大客户管理','CRM','PowerPoint','数据分析','行业解决方案'],
+    workExp:[{company:'华为',role:'大客户销售经理',period:'2022.08-至今',desc:'负责华北区央国企大客户拓展，年度签约额3000万+'},{company:'用友网络',role:'销售经理',period:'2020.07-2022.07',desc:'负责ERP产品在制造业的推广，累计签约客户20+家'}],
+    eduExp:[{school:'中国人民大学',major:'工商管理',degree:'本科',period:'2015.09-2019.06'}],
+    selfIntro:'5年ToB销售经验，深耕央国企市场，了解政府和大型企业采购流程。'},
+  'CD005':{birth:'1999-07-28',address:'北京市昌平区回龙观',skills:['Vue3','JavaScript','CSS3','HTML5','Git','小程序','Flutter'],
+    workExp:[{company:'百度',role:'前端开发工程师',period:'2024.07-至今',desc:'负责百度地图H5端开发，优化页面加载性能，LCP降低40%'}],
+    eduExp:[{school:'北京理工大学',major:'软件工程',degree:'本科',period:'2018.09-2022.06'}],
+    selfIntro:'3年前端开发经验，扎实的前端基础，熟悉主流框架和工程化工具。'},
+  'CD006':{birth:'1997-02-14',address:'北京市东城区安定门',skills:['Excel高级函数','Power BI','SAP','财务分析','预算管理','SQL'],
+    workExp:[{company:'普华永道',role:'审计师',period:'2023.07-至今',desc:'负责央企年报审计和内控评估，参与5家上市公司审计项目'},{company:'德勤',role:'审计助理',period:'2022.07-2023.06',desc:'协助完成多家企业财务报表审计'}],
+    eduExp:[{school:'中央财经大学',major:'会计学',degree:'硕士',period:'2019.09-2022.06'},{school:'东北财经大学',major:'财务管理',degree:'本科',period:'2015.09-2019.06'}],
+    selfIntro:'4年财务分析和审计经验，熟悉央国企财务管理流程和合规要求。持有CPA证书。'},
+  'CD007':{birth:'1993-08-05',address:'北京市丰台区总部基地',skills:['Java','Spring Cloud','ElasticSearch','MongDB','CI/CD','微服务治理'],
+    workExp:[{company:'小米',role:'高级Java工程师',period:'2021.04-至今',desc:'负责小米IoT平台后端开发，管理设备数亿级接入'},{company:'滴滴',role:'Java工程师',period:'2019.06-2021.03',desc:'参与滴滴出行订单系统开发，负责高峰期流量调度'}],
+    eduExp:[{school:'北京邮电大学',major:'计算机科学',degree:'本科',period:'2013.09-2017.06'}],
+    selfIntro:'7年Java开发经验，有IoT和出行领域技术背景，擅长分布式系统设计。'},
+  'CD008':{birth:'1995-12-30',address:'北京市通州区副中心',skills:['Linux','Docker','Kubernetes','Jenkins','Ansible','Prometheus','AWS'],
+    workExp:[{company:'腾讯云',role:'DevOps工程师',period:'2022.01-至今',desc:'负责腾讯云内部CI/CD平台维护，支撑5000+开发者日常发布'},{company:'金山云',role:'运维工程师',period:'2020.07-2021.12',desc:'负责云服务器集群监控和自动化运维'}],
+    eduExp:[{school:'北京航空航天大学',major:'计算机科学与技术',degree:'硕士',period:'2017.09-2020.06'}],
+    selfIntro:'5年运维和DevOps经验，精通Kubernetes容器编排和CI/CD流水线搭建。'}
+};
+if(!DB.get('hr_resume_data'))DB.set('hr_resume_data',resumeDB);
 
 let currentTab='employee';
 const tabs={employee:'📋 员工花名册',orgchart:'🏢 组织架构',attendance:'⏰ 考勤统计',leave:'🏖️ 假期管理',recruit:'📢 招聘需求',candidate:'👤 候选人库',salary:'💵 工资查询',social:'🏥 社保公积金',training:'📚 培训管理',performance:'⭐ 绩效考核'};
@@ -235,17 +313,68 @@ function renderAttendance(el){
   const records=DB.get('hr_attendance');
   const today=new Date().toLocaleDateString('zh-CN');
   const todayR=records.filter(r=>r.date===today);
+  const totalEmp=1286;
+  const todayNormal=todayR.filter(r=>r.status==='正常').length;
+  const todayLate=todayR.filter(r=>r.status==='迟到').length;
+  const todayLeave=todayR.filter(r=>r.status==='请假').length;
+  const attRate=totalEmp>0?((totalEmp-todayLeave)/totalEmp*100).toFixed(1):'0.0';
+  const allDates=[...new Set(records.map(r=>r.date))].sort((a,b)=>new Date(b)-new Date(a));
   el.innerHTML=`<div class="portal-stats" style="margin-bottom:20px">
     <div class="stat-card green"><div class="label">今日签到</div><div class="value">${todayR.length}</div></div>
-    <div class="stat-card"><div class="label">出勤率</div><div class="value">${(todayR.length/12*100).toFixed(1)}%</div></div>
-    <div class="stat-card orange"><div class="label">请假人数</div><div class="value">15</div></div>
-    <div class="stat-card"><div class="label">迟到人数</div><div class="value">${todayR.filter(r=>r.time>='09:00').length}</div></div>
+    <div class="stat-card"><div class="label">出勤率</div><div class="value">${attRate}%</div></div>
+    <div class="stat-card orange"><div class="label">今日请假</div><div class="value">${todayLeave}</div></div>
+    <div class="stat-card red"><div class="label">今日迟到</div><div class="value">${todayLate}</div></div>
   </div>
   <div style="text-align:center;margin-bottom:20px"><button class="btn btn-primary" onclick="doCheckIn()" style="padding:12px 32px;font-size:16px">⏰ 签到打卡</button></div>
-  <div class="card"><div class="card-header"><h3>今日签到记录</h3></div><div class="card-body">
-  ${todayR.length?`<table><thead><tr><th>姓名</th><th>部门</th><th>签到时间</th><th>状态</th></tr></thead>
-  <tbody>${todayR.map(r=>`<tr><td>${r.name}</td><td>${r.dept}</td><td>${r.time}</td><td><span class="status ${r.time<'09:00'?'approved':'warning'}">${r.time<'09:00'?'准时':'迟到'}</span></td></tr>`).join('')}</tbody></table>`
-  :'<div style="padding:40px;text-align:center;color:var(--gray-400)">暂无签到记录</div>'}</div></div>`;
+  <div class="card" style="margin-bottom:20px"><div class="card-header"><h3>📊 本月考勤概览</h3></div><div class="card-body">
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:16px;text-align:center">
+      <div style="padding:16px;background:#d1fae5;border-radius:8px"><div style="font-size:24px;font-weight:700;color:#059669">${todayNormal}</div><div style="font-size:12px;color:#6b7280;margin-top:4px">正常出勤</div></div>
+      <div style="padding:16px;background:#fef3c7;border-radius:8px"><div style="font-size:24px;font-weight:700;color:#d97706">${todayLate}</div><div style="font-size:12px;color:#6b7280;margin-top:4px">迟到</div></div>
+      <div style="padding:16px;background:#fee2e2;border-radius:8px"><div style="font-size:24px;font-weight:700;color:#dc2626">${todayLeave}</div><div style="font-size:12px;color:#6b7280;margin-top:4px">请假</div></div>
+      <div style="padding:16px;background:#dbeafe;border-radius:8px"><div style="font-size:24px;font-weight:700;color:#2563eb">0</div><div style="font-size:12px;color:#6b7280;margin-top:4px">出差</div></div>
+      <div style="padding:16px;background:#f3f4f6;border-radius:8px"><div style="font-size:24px;font-weight:700;color:#4b5563">${totalEmp}</div><div style="font-size:12px;color:#6b7280;margin-top:4px">在职总人数</div></div>
+    </div>
+  </div></div>
+  <div class="card" style="margin-bottom:20px"><div class="card-header"><h3>📅 今日签到记录</h3></div><div class="card-body">
+  ${todayR.length?`<table><thead><tr><th>姓名</th><th>部门</th><th>签到时间</th><th>签退时间</th><th>状态</th></tr></thead>
+  <tbody>${todayR.map(r=>`<tr><td>${r.name}</td><td>${r.dept}</td><td>${r.time}</td><td>${r.clockOut||'-'}</td><td><span class="status ${r.status==='正常'?'approved':'warning'}">${r.status}</span></td></tr>`).join('')}</tbody></table>`
+  :'<div style="padding:40px;text-align:center;color:var(--gray-400)">暂无签到记录，请点击上方签到打卡</div>'}</div></div>
+  <div class="card"><div class="card-header" style="display:flex;justify-content:space-between;align-items:center"><h3>📋 考勤历史记录</h3><div style="display:flex;gap:8px;align-items:center">
+    <select id="att-hist-date" style="padding:6px 12px;border:1px solid var(--gray-200);border-radius:6px;font-size:13px" onchange="renderAttHistory()">
+      <option value="all">全部日期</option>${allDates.slice(0,10).map(d=>`<option value="${d}">${d}</option>`).join('')}</select>
+    <input type="text" id="att-hist-kw" placeholder="搜索姓名..." style="padding:6px 12px;border:1px solid var(--gray-200);border-radius:6px;font-size:13px;width:140px" oninput="renderAttHistory()">
+  </div></div><div class="card-body"><div id="att-history-list"></div></div></div>`;
+  renderAttHistory();
+}
+function renderAttHistory(){
+  const records=DB.get('hr_attendance');
+  const dateFilter=document.getElementById('att-hist-date')?.value;
+  const kw=document.getElementById('att-hist-kw')?.value?.toLowerCase()||'';
+  let list=records;
+  if(dateFilter!=='all')list=list.filter(r=>r.date===dateFilter);
+  if(kw)list=list.filter(r=>r.name.toLowerCase().includes(kw));
+  const grouped={};list.forEach(r=>{if(!grouped[r.date])grouped[r.date]=[];grouped[r.date].push(r);});
+  const sortedDates=Object.keys(grouped).sort((a,b)=>new Date(b)-new Date(a));
+  if(!sortedDates.length){document.getElementById('att-history-list').innerHTML='<div style="padding:40px;text-align:center;color:var(--gray-400)">暂无考勤记录</div>';return;}
+  let html='';
+  sortedDates.forEach(date=>{
+    const dayR=grouped[date];
+    const normal=dayR.filter(r=>r.status==='正常').length;
+    const late=dayR.filter(r=>r.status==='迟到').length;
+    const leave=dayR.filter(r=>r.status==='请假').length;
+    const dt=new Date(date);
+    const weekDay=['日','一','二','三','四','五','六'][dt.getDay()];
+    html+=`<div style="margin-bottom:16px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <div style="font-weight:600;font-size:14px;color:var(--gray-800)">${date} <span style="font-weight:400;color:var(--gray-400)">星期${weekDay}</span></div>
+        <div style="font-size:12px;color:var(--gray-400)">正常 ${normal} · 迟到 ${late} · 请假 ${leave}</div>
+      </div>
+      <table><thead><tr><th>姓名</th><th>部门</th><th>签到</th><th>签退</th><th>状态</th></tr></thead>
+      <tbody>${dayR.map(r=>`<tr><td>${r.name}</td><td>${r.dept}</td><td>${r.time}</td><td>${r.clockOut||'-'}</td>
+      <td><span class="status ${r.status==='正常'?'approved':r.status==='迟到'?'warning':'processing'}">${r.status}${r.type?'('+r.type+')':''}</span></td></tr>`).join('')}</tbody></table>
+    </div>`;
+  });
+  document.getElementById('att-history-list').innerHTML=html;
 }
 function doCheckIn(){const now=new Date();const time=now.toTimeString().slice(0,5);const records=DB.get('hr_attendance');const today=now.toLocaleDateString('zh-CN');if(records.find(r=>r.date===today&&r.name==='席宝')){Modal.toast('今日已签到','warning');return;}records.unshift({name:'席宝',dept:'人力资源部',date:today,time});DB.set('hr_attendance',records);Modal.toast(`✅ 签到成功 ${time}`);if(currentTab==='attendance')renderContent();}
 
@@ -294,12 +423,41 @@ function showNewCandidate(){
   Modal.show('👤 新增候选人',html,{width:'520px'});}
 function saveCandidate(){const d=Form.getData();if(!d.name){Modal.toast('请填写姓名','warning');return;}const l=DB.get('hr_candidates');l.unshift({...d,id:DB.genId('CD'),stage:'简历筛选'});DB.set('hr_candidates',l);document.querySelectorAll('[id^=modal-]').forEach(m=>m.remove());Modal.toast('✅ 已添加');renderContent();}
 function advanceCandidate(id){const list=DB.get('hr_candidates');const c=list.find(i=>i.id===id);if(!c)return;const flow=['简历筛选','笔试中','待面试','面试中','已发Offer','已入职'];const idx=flow.indexOf(c.stage);if(idx<flow.length-1){c.stage=flow[idx+1];DB.set('hr_candidates',list);Modal.toast(`✅ 已推进到「${c.stage}」`);renderContent();}}
-function viewCandidate(id){const c=DB.get('hr_candidates').find(i=>i.id===id);if(!c)return;const html=`<div class="detail-grid" style="grid-template-columns:1fr 1fr">
-  <div class="detail-item"><div class="label">姓名</div><div class="value">${c.name}</div></div><div class="detail-item"><div class="label">岗位</div><div class="value">${c.position}</div></div>
-  <div class="detail-item"><div class="label">来源</div><div class="value">${c.source}</div></div><div class="detail-item"><div class="label">学历</div><div class="value">${c.education}</div></div>
-  <div class="detail-item"><div class="label">经验</div><div class="value">${c.experience}</div></div><div class="detail-item"><div class="label">期望薪资</div><div class="value" style="color:var(--primary)">${c.salary}</div></div>
-  <div class="detail-item"><div class="label">手机</div><div class="value">${c.phone}</div></div><div class="detail-item"><div class="label">当前阶段</div><div class="value"><span class="status ${stageColors[c.stage]||'pending'}">${c.stage}</span></div></div></div>`;
-  Modal.show(`👤 候选人详情 - ${c.name}`,html,{width:'520px'});}
+function viewCandidate(id){const c=DB.get('hr_candidates').find(i=>i.id===id);if(!c)return;const resume=resumeDB[id]||{};
+  const skillsHtml=resume.skills?resume.skills.map(s=>`<span style="display:inline-block;padding:4px 10px;background:var(--gray-100);border-radius:4px;font-size:12px;color:var(--gray-700);margin:2px">${s}</span>`).join(''):'暂无';
+  const workHtml=resume.workExp?resume.workExp.map(w=>`<div style="border-left:3px solid var(--primary);padding:8px 12px;margin-bottom:8px;background:var(--gray-50);border-radius:0 6px 6px 0">
+    <div style="display:flex;justify-content:space-between;align-items:center"><strong style="font-size:13px;color:var(--gray-800)">${w.company}</strong><span style="font-size:11px;color:var(--gray-400)">${w.period}</span></div>
+    <div style="font-size:12px;color:var(--primary);margin:4px 0">${w.role}</div>
+    <div style="font-size:12px;color:var(--gray-500);line-height:1.6">${w.desc}</div>
+  </div>`).join(''):'暂无';
+  const eduHtml=resume.eduExp?resume.eduExp.map(e=>`<div style="display:flex;gap:12px;align-items:center;padding:8px 0;border-bottom:1px solid var(--gray-100)">
+    <div style="width:36px;height:36px;background:var(--primary);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">🎓</div>
+    <div><div style="font-weight:600;font-size:13px;color:var(--gray-800)">${e.school}</div>
+    <div style="font-size:12px;color:var(--gray-400)">${e.major} | ${e.degree} | ${e.period}</div></div>
+  </div>`).join(''):'暂无';
+  const html=`<div style="max-height:65vh;overflow-y:auto">
+    <div style="background:linear-gradient(135deg,#1a56db,#3b82f6);color:white;padding:24px;border-radius:10px;margin-bottom:20px;display:flex;gap:20px;align-items:center">
+      <div style="width:64px;height:64px;background:rgba(255,255,255,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700">${c.name[0]}</div>
+      <div><div style="font-size:20px;font-weight:700">${c.name}</div>
+      <div style="font-size:14px;opacity:0.9;margin-top:4px">${c.position} | ${c.education}</div>
+      <div style="font-size:12px;opacity:0.7;margin-top:4px">${resume.birth||''} ${resume.address?'| '+resume.address:''} | ${c.phone}</div></div>
+      <div style="margin-left:auto;text-align:right"><div style="font-size:12px;opacity:0.7">期望薪资</div><div style="font-size:22px;font-weight:700">${c.salary}</div>
+      <span class="status ${stageColors[c.stage]||'pending'}" style="margin-top:8px">${c.stage}</span></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div><div style="display:flex;align-items:center;gap:8px;margin-bottom:12px"><span style="font-size:16px">💼</span><h4 style="font-size:14px;color:var(--gray-800);margin:0">工作经历</h4></div>${workHtml}</div>
+      <div><div style="display:flex;align-items:center;gap:8px;margin-bottom:12px"><span style="font-size:16px">🎓</span><h4 style="font-size:14px;color:var(--gray-800);margin:0">教育背景</h4></div>${eduHtml}
+        <div style="margin-top:16px"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span style="font-size:16px">🛠️</span><h4 style="font-size:14px;color:var(--gray-800);margin:0">技能标签</h4></div>
+        <div style="display:flex;flex-wrap:wrap;gap:4px">${skillsHtml}</div></div></div>
+    </div>
+    ${resume.selfIntro?`<div style="margin-top:20px"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span style="font-size:16px">📝</span><h4 style="font-size:14px;color:var(--gray-800);margin:0">自我评价</h4></div>
+    <div style="padding:16px;background:var(--gray-50);border-radius:8px;font-size:13px;color:var(--gray-600);line-height:1.8">${resume.selfIntro}</div></div>`:''}
+    <div style="margin-top:20px;display:flex;gap:8px;justify-content:flex-end">
+      ${c.stage!=='已入职'&&c.stage!=='已淘汰'?`<button class="btn btn-primary" onclick="advanceCandidate('${c.id}');Modal.close(this.closest('[id^=modal]').id)">推进到下一阶段</button>`:''}
+      <button class="btn" style="background:var(--gray-100);color:var(--gray-600)" onclick="Modal.close(this.closest('[id^=modal]').id)">关闭</button>
+    </div>
+  </div>`;
+  Modal.show(`📄 候选人简历 - ${c.name}`,html,{width:'720px'});}
 
 // ===== 工资查询 =====
 function renderSalary(el){
@@ -335,19 +493,78 @@ function renderSocial(el){
 // ===== 培训管理 =====
 function renderTraining(el){
   const list=DB.get('hr_trainings');
+  const totalEnrolled=Summary.calc(list,'enrolled');
   el.innerHTML=`<div class="portal-stats" style="margin-bottom:20px">
     <div class="stat-card"><div class="label">培训课程</div><div class="value">${list.length}</div></div>
     <div class="stat-card green"><div class="label">已完成</div><div class="value">${list.filter(i=>i.status==='已完成').length}</div></div>
     <div class="stat-card orange"><div class="label">进行中</div><div class="value">${list.filter(i=>i.status==='进行中').length}</div></div>
+    <div class="stat-card"><div class="label">总培训人次</div><div class="value">${totalEnrolled}</div></div>
   </div>
   <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px">
-  ${list.map(t=>{const rate=t.completed/t.enrolled*100;return `<div class="train-card">
-    <div class="train-icon" style="background:${t.status==='已完成'?'#d1fae5':t.status==='报名中'?'#dbeafe':'#fef3c7'}">${t.type==='入职培训'?'🎓':t.type==='合规培训'?'🛡️':t.type==='专业认证'?'📜':t.type==='管理培训'?'👑':'🤖'}</div>
+  ${list.map(t=>{const rate=t.enrolled>0?(t.completed/t.enrolled*100):0;return `<div class="train-card" style="cursor:pointer" onclick="viewTraining('${t.id}')">
+    <div class="train-icon" style="background:${t.status==='已完成'?'#d1fae5':t.status==='报名中'?'#dbeafe':'#fef3c7'}">${t.type==='入职培训'?'🎓':t.type==='合规培训'?'🛡️':t.type==='专业认证'?'📜':t.type==='管理培训'?'👑':t.type==='专业培训'?'📊':'🤖'}</div>
     <div class="train-info"><h4>${t.name}</h4><p>${t.type} | ${t.hours}课时 | 讲师：${t.teacher}</p>
+    <div class="train-meta"><span>📅 ${t.startDate||'待定'} ~ ${t.endDate||'待定'}</span><span>📍 ${t.location||'待定'}</span></div>
     <div class="train-meta"><span>报名 ${t.enrolled}人</span><span>完成 ${t.completed}人</span><span>完成率 ${rate.toFixed(0)}%</span></div>
     <div class="progress-bar" style="margin-top:6px"><div class="fill ${rate>=80?'green':rate>=40?'blue':'orange'}" style="width:${rate}%"></div></div>
     </div>
     <span class="status ${t.status==='已完成'?'approved':t.status==='报名中'?'processing':'pending'}" style="flex-shrink:0">${t.status}</span></div>`;}).join('')}</div>`;
+}
+function viewTraining(id){
+  const list=DB.get('hr_trainings');
+  const t=list.find(i=>i.id===id);if(!t)return;
+  const rate=t.enrolled>0?(t.completed/t.enrolled*100).toFixed(1):'0.0';
+  const html=`<div>
+    <div style="background:linear-gradient(135deg,#059669,#10b981);color:white;padding:20px;border-radius:10px;margin-bottom:20px">
+      <div style="font-size:18px;font-weight:700">${t.name}</div>
+      <div style="opacity:0.8;font-size:13px;margin-top:4px">${t.type} | ${t.hours}课时</div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px">
+      <div style="padding:16px;background:var(--gray-50);border-radius:8px;text-align:center"><div style="font-size:12px;color:var(--gray-400)">讲师</div><div style="font-size:16px;font-weight:600;margin-top:4px">${t.teacher}</div></div>
+      <div style="padding:16px;background:var(--gray-50);border-radius:8px;text-align:center"><div style="font-size:12px;color:var(--gray-400)">地点</div><div style="font-size:16px;font-weight:600;margin-top:4px">${t.location||'待定'}</div></div>
+      <div style="padding:16px;background:var(--gray-50);border-radius:8px;text-align:center"><div style="font-size:12px;color:var(--gray-400)">状态</div><div style="margin-top:4px"><span class="status ${t.status==='已完成'?'approved':t.status==='报名中'?'processing':'pending'}">${t.status}</span></div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
+      <div><div style="font-size:13px;color:var(--gray-400);margin-bottom:4px">培训时间</div><div style="font-size:14px;font-weight:500">${t.startDate||'待定'} ~ ${t.endDate||'待定'}</div></div>
+      <div><div style="font-size:13px;color:var(--gray-400);margin-bottom:4px">培训地点</div><div style="font-size:14px;font-weight:500">${t.location||'待定'}</div></div>
+    </div>
+    <div style="margin-bottom:20px"><div style="font-size:13px;color:var(--gray-400);margin-bottom:8px">课程介绍</div><div style="padding:16px;background:var(--gray-50);border-radius:8px;font-size:13px;color:var(--gray-600);line-height:1.8">${t.desc||'暂无介绍'}</div></div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:16px">
+      <div style="text-align:center;padding:12px;border:1px solid var(--gray-200);border-radius:8px"><div style="font-size:20px;font-weight:700;color:var(--primary)">${t.enrolled}</div><div style="font-size:12px;color:var(--gray-400)">已报名</div></div>
+      <div style="text-align:center;padding:12px;border:1px solid var(--gray-200);border-radius:8px"><div style="font-size:20px;font-weight:700;color:var(--success)">${t.completed}</div><div style="font-size:12px;color:var(--gray-400)">已完成</div></div>
+      <div style="text-align:center;padding:12px;border:1px solid var(--gray-200);border-radius:8px"><div style="font-size:20px;font-weight:700;color:var(--warning)">${rate}%</div><div style="font-size:12px;color:var(--gray-400)">完成率</div></div>
+    </div>
+    <div class="progress-bar" style="margin-bottom:16px"><div class="fill ${parseFloat(rate)>=80?'green':parseFloat(rate)>=40?'blue':'orange'}" style="width:${rate}%"></div></div>
+  </div>`;
+  Modal.show(`📚 培训详情 - ${t.name}`,html,{width:'600px'});
+}
+function showNewTraining(){
+  const fields=[
+    {name:'name',label:'培训名称',full:true,required:true,placeholder:'如：新员工入职培训'},
+    {name:'type',label:'培训类型',type:'select',options:['入职培训','合规培训','技能培训','专业培训','管理培训','专业认证'],required:true},
+    {name:'teacher',label:'讲师',required:true,placeholder:'如：赵丽'},
+    {name:'hours',label:'课时数',type:'number',required:true,placeholder:'如：8'},
+    {name:'startDate',label:'开始日期',type:'date',required:true},
+    {name:'endDate',label:'结束日期',type:'date',required:true},
+    {name:'location',label:'培训地点',required:true,placeholder:'如：总部3楼培训室'},
+    {name:'enrolled',label:'计划人数',type:'number',required:true,placeholder:'如：30'},
+    {name:'desc',label:'课程介绍',type:'textarea',full:true,required:true,placeholder:'请输入课程介绍...'},
+  ];
+  const html=Form.render(fields)+`<div style="margin-top:16px;text-align:right">
+    <button class="btn" style="background:#f3f4f6;color:#374151" onclick="Modal.close(this.closest('[id^=modal]').id)">取消</button>
+    <button class="btn btn-primary" onclick="saveTraining()">创建培训</button></div>`;
+  Modal.show('📚 新建培训课程',html,{width:'580px'});
+}
+function saveTraining(){
+  const d=Form.getData();
+  if(!d.name||!d.type||!d.startDate){Modal.toast('请填写必填项','warning');return;}
+  if(d.endDate<d.startDate){Modal.toast('结束日期不能早于开始日期','warning');return;}
+  const l=DB.get('hr_trainings');
+  l.unshift({...d,id:DB.genId('TR'),enrolled:parseInt(d.enrolled)||0,completed:0,status:'报名中'});
+  DB.set('hr_trainings',l);
+  document.querySelectorAll('[id^=modal-]').forEach(m=>m.remove());
+  Modal.toast('✅ 培训课程创建成功');
+  renderContent();
 }
 
 // ===== 绩效考核 =====
