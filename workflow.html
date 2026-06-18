@@ -37,6 +37,9 @@
     <div class="menu-group"><div class="menu-title">发起流程</div>
       <a class="menu-item" href="#" onclick="startProcurement()"><span class="icon">🛒</span> 采购全流程</a>
       <a class="menu-item" href="#" onclick="startSales()"><span class="icon">📈</span> 销售全流程</a>
+      <a class="menu-item" href="#" onclick="startApprovalFlow()"><span class="icon">📋</span> 审批流</a>
+      <a class="menu-item" href="#" onclick="startProjectAcceptFlow()"><span class="icon">✅</span> 项目验收</a>
+      <a class="menu-item" href="#" onclick="startOnboardFlow()"><span class="icon">👤</span> 入职流程</a>
     </div>
     <div class="menu-group"><div class="menu-title">快捷入口</div>
       <a class="menu-item" href="oa-system.html"><span class="icon">📝</span> OA审批</a>
@@ -79,8 +82,10 @@ function renderWfList() {
     </div>
     ${list.length ? list.map(wf => {
       const isProcurement = wf.type === 'procurement';
-      const badgeColor = isProcurement ? '#dbeafe;color:#1e40af' : '#d1fae5;color:#065f46';
-      const badgeLabel = isProcurement ? '🛒 采购流程' : '📈 销售流程';
+      const badgeColors = {procurement:'#dbeafe;color:#1e40af',sales:'#d1fae5;color:#065f46',approval:'#fef3c7;color:#92400e',project_accept:'#ede9fe;color:#5b21b6',onboard:'#fce7f3;color:#9d174d'};
+      const badgeColor = badgeColors[wf.type] || '#f3f4f6;color:#374151';
+      const typeLabels = {procurement:'🛒 采购流程',sales:'📈 销售流程',approval:'📋 审批流',project_accept:'✅ 项目验收',onboard:'👤 入职流程'};
+      const badgeLabel = typeLabels[wf.type] || '📋 流程';
       const doneCount = wf.steps.filter(s => s.status === 'done').length;
       return `<div class="wf-card ${wf.status}" onclick="viewWfDetail('${wf.id}')">
         <div class="wf-card-header">
@@ -184,6 +189,106 @@ function doStartSales() {
   WorkflowEngine.startWorkflow('sales', d.items + ' 销售', d);
   document.querySelectorAll('[id^=modal-]').forEach(m=>m.remove());
   Modal.toast('✅ 销售流程已发起'); renderWfList();
+}
+
+
+// ===== 更多流程类型 =====
+function startApprovalFlow() {
+  const fields = [
+    {name:'title',label:'流程标题',full:true,required:true,placeholder:'如：年度预算审批'},
+    {name:'dept',label:'发起部门',type:'select',options:['财务管理部','人力资源部','技术研发部','市场营销部','生产制造部','行政综合部'],required:true},
+    {name:'amount',label:'涉及金额（元）',type:'number'},
+    {name:'reason',label:'事由说明',type:'textarea',full:true,required:true},
+  ];
+  const html = Form.render(fields) + `<div style="margin-top:16px;text-align:right">
+    <button class="btn" style="background:#f3f4f6;color:#374151" onclick="Modal.close(this.closest('[id^=modal]').id)">取消</button>
+    <button class="btn btn-primary" onclick="doStartApprovalFlow()">发起审批流</button></div>`;
+  Modal.show('📋 发起审批流', html, {width:'520px'});
+}
+function doStartApprovalFlow() {
+  const d = Form.getData();
+  if (!d.title) { Modal.toast('请填写标题','warning'); return; }
+  const wf = WorkflowEngine.startWorkflow('approval', d.title, d);
+  // Override steps for approval flow
+  wf.steps = [
+    {key:'submit', label:'提交申请', system:'oa-system.html', status:'done', doneAt:new Date().toLocaleString('zh-CN'), doneBy:'席宝', data:d},
+    {key:'dept_approve', label:'部门审批', system:'oa-system.html', status:'pending'},
+    {key:'finance_approve', label:'财务审核', system:'finance-system.html', status:'pending'},
+    {key:'gm_approve', label:'总经理审批', system:'oa-system.html', status:'pending'},
+    {key:'execute', label:'执行确认', system:'oa-system.html', status:'pending'},
+  ];
+  wf.currentStep = 'dept_approve';
+  const list = WorkflowEngine.getAll();
+  const idx = list.findIndex(w => w.id === wf.id);
+  if (idx >= 0) list[idx] = wf;
+  WorkflowEngine.save(list);
+  document.querySelectorAll('[id^=modal-]').forEach(m=>m.remove());
+  Modal.toast('✅ 审批流已发起'); renderWfList();
+}
+
+function startProjectAcceptFlow() {
+  const fields = [
+    {name:'project',label:'项目名称',full:true,required:true},
+    {name:'customer',label:'客户名称',required:true},
+    {name:'amount',label:'合同金额（元）',type:'number',required:true},
+    {name:'acceptDate',label:'验收日期',type:'date',required:true},
+  ];
+  const html = Form.render(fields) + `<div style="margin-top:16px;text-align:right">
+    <button class="btn" style="background:#f3f4f6;color:#374151" onclick="Modal.close(this.closest('[id^=modal]').id)">取消</button>
+    <button class="btn btn-primary" onclick="doStartProjectAccept()">发起验收流</button></div>`;
+  Modal.show('📋 发起项目验收流', html, {width:'520px'});
+}
+function doStartProjectAccept() {
+  const d = Form.getData();
+  if (!d.project) { Modal.toast('请填写项目名称','warning'); return; }
+  const wf = WorkflowEngine.startWorkflow('project_accept', d.project + ' 验收', d);
+  wf.steps = [
+    {key:'apply', label:'验收申请', system:'production-system.html', status:'done', doneAt:new Date().toLocaleString('zh-CN'), doneBy:'席宝', data:d},
+    {key:'tech_review', label:'技术评审', system:'production-system.html', status:'pending'},
+    {key:'quality_check', label:'质量检查', system:'audit-system.html', status:'pending'},
+    {key:'customer_accept', label:'客户验收', system:'production-system.html', status:'pending'},
+    {key:'finance_settle', label:'财务结算', system:'finance-system.html', status:'pending'},
+    {key:'archive', label:'项目归档', system:'production-system.html', status:'pending'},
+  ];
+  wf.currentStep = 'tech_review';
+  const list = WorkflowEngine.getAll();
+  const idx = list.findIndex(w => w.id === wf.id);
+  if (idx >= 0) list[idx] = wf;
+  WorkflowEngine.save(list);
+  document.querySelectorAll('[id^=modal-]').forEach(m=>m.remove());
+  Modal.toast('✅ 验收流已发起'); renderWfList();
+}
+
+function startOnboardFlow() {
+  const fields = [
+    {name:'name',label:'入职员工',required:true},
+    {name:'dept',label:'入职部门',type:'select',options:['技术研发部','市场营销部','生产制造部','财务管理部','人力资源部','行政综合部','项目交付部'],required:true},
+    {name:'position',label:'岗位',required:true},
+    {name:'joinDate',label:'入职日期',type:'date',required:true},
+  ];
+  const html = Form.render(fields) + `<div style="margin-top:16px;text-align:right">
+    <button class="btn" style="background:#f3f4f6;color:#374151" onclick="Modal.close(this.closest('[id^=modal]').id)">取消</button>
+    <button class="btn btn-primary" onclick="doStartOnboard()">发起入职流</button></div>`;
+  Modal.show('📋 发起入职流程', html, {width:'520px'});
+}
+function doStartOnboard() {
+  const d = Form.getData();
+  if (!d.name) { Modal.toast('请填写员工姓名','warning'); return; }
+  const wf = WorkflowEngine.startWorkflow('onboard', d.name + ' 入职流程', d);
+  wf.steps = [
+    {key:'hr_register', label:'HR登记', system:'hr-system.html', status:'done', doneAt:new Date().toLocaleString('zh-CN'), doneBy:'席宝', data:d},
+    {key:'it_setup', label:'IT设备配置', system:'inventory-system.html', status:'pending'},
+    {key:'access_apply', label:'权限申请', system:'oa-system.html', status:'pending'},
+    {key:'orientation', label:'入职培训', system:'hr-system.html', status:'pending'},
+    {key:'probation', label:'试用期跟踪', system:'hr-system.html', status:'pending'},
+  ];
+  wf.currentStep = 'it_setup';
+  const list = WorkflowEngine.getAll();
+  const idx = list.findIndex(w => w.id === wf.id);
+  if (idx >= 0) list[idx] = wf;
+  WorkflowEngine.save(list);
+  document.querySelectorAll('[id^=modal-]').forEach(m=>m.remove());
+  Modal.toast('✅ 入职流程已发起'); renderWfList();
 }
 
 renderWfList();
