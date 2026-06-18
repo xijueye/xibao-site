@@ -45,6 +45,13 @@ const defaultContracts = [
   {id:'HTFW2026042',name:'网络安全服务合同',counterparty:'奇安信科技集团',amount:120,applicant:'周婷',date:'2026-06-16',priority:'普通',status:'待审核'},
   {id:'HTFW2026041',name:'员工培训服务合同',counterparty:'北京百朗教育科技',amount:28,applicant:'赵丽',date:'2026-06-16',priority:'普通',status:'已通过'},
 ];
+  // ===== 新增待审核合同 =====
+  {id:'HTFW2026046',name:'华为交换机采购合同',counterparty:'华为技术有限公司',amount:64,applicant:'张伟',date:'2026-06-18',priority:'普通',status:'待审核'},
+  {id:'HTFW2026047',name:'金杜律师事务所年度顾问合同',counterparty:'北京金杜律师事务所',amount:120,applicant:'吴刚',date:'2026-06-17',priority:'普通',status:'待审核'},
+  {id:'HTFW2026048',name:'前海数字二期开发合同',counterparty:'深圳前海数字科技有限公司',amount:450,applicant:'陈明',date:'2026-06-16',priority:'紧急',status:'待审核'},
+  {id:'HTFW2026049',name:'数据中心建设工程合同',counterparty:'中国建筑第三工程局',amount:520,applicant:'王强',date:'2026-06-15',priority:'紧急',status:'待审核'},
+  {id:'HTFW2026050',name:'安普布线年度供货合同',counterparty:'安普布线（中国）有限公司',amount:35,applicant:'刘洋',date:'2026-06-14',priority:'普通',status:'待审核'},
+
 if (!DB.get('leg_contracts').length) DB.set('leg_contracts', defaultContracts);
 
 const defaultCases = [

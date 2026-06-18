@@ -57,6 +57,18 @@ const defaultApprovals=[
   {id:'SP012',type:'出差',applicant:'周婷',dept:'技术研发部',summary:'深圳腾讯拜访3天',date:'2026-06-18 10:30',urgency:'普通',status:'待审批'},
   {id:'SP013',type:'用车',applicant:'陈明',dept:'项目交付部',summary:'6/20 北京南站接送客户',date:'2026-06-18 11:00',urgency:'紧急',status:'待审批'},
   {id:'SP014',type:'招待',applicant:'王强',dept:'生产制造部',summary:'供应商晚宴 ¥1,500',date:'2026-06-17 16:00',urgency:'普通',status:'待审批'},
+  // ===== 新增待审批 =====
+  {id:'SP036',type:'请假',applicant:'郑雪',dept:'市场营销部',summary:'事假1天（6/19）',date:'2026-06-18 11:30',urgency:'普通',status:'待审批',detail:{leaveType:'事假',days:1,reason:'搬家'}},
+  {id:'SP037',type:'出差',applicant:'李强',dept:'技术研发部',summary:'深圳腾讯云拜访2天（6/23-6/24）',date:'2026-06-18 12:00',urgency:'普通',status:'待审批',detail:{dest:'深圳',start:'2026-06-23',end:'2026-06-24',purpose:'技术交流'}},
+  {id:'SP038',type:'采购',applicant:'王芳',dept:'质量管理部',summary:'检测仪器校准 ¥15,000',date:'2026-06-18 13:00',urgency:'普通',status:'待审批',detail:{item:'检测仪器年度校准',vendor:'北京计量院',amount:15000,reason:'年度校准'}},
+  {id:'SP039',type:'用车',applicant:'刘洋',dept:'采购部',summary:'6/20 北京-河北沧州供应商',date:'2026-06-18 13:30',urgency:'普通',status:'待审批',detail:{date:'2026-06-20',from:'公司',to:'河北沧州',purpose:'供应商考察'}},
+  {id:'SP040',type:'用印',applicant:'马丽',dept:'财务管理部',summary:'银行贷款合同盖章',date:'2026-06-18 14:00',urgency:'紧急',status:'待审批',detail:{contract:'银行流动资金贷款合同',pages:8,copies:2,sealType:'公章'}},
+  {id:'SP041',type:'招待',applicant:'陈明',dept:'项目交付部',summary:'客户验收宴请 ¥1,800',date:'2026-06-18 14:30',urgency:'普通',status:'待审批',detail:{guest:'前海数字项目组5人',budget:1800,restaurant:'海底捞',date:'2026-06-21'}},
+  {id:'SP042',type:'请假',applicant:'黄磊',dept:'行政综合部',summary:'年假4天（6/23-6/26）',date:'2026-06-18 15:00',urgency:'普通',status:'待审批',detail:{leaveType:'年假',days:4,reason:'回老家'}},
+  {id:'SP043',type:'出差',applicant:'周华',dept:'市场营销部',summary:'广州华南装备客户拜访3天',date:'2026-06-18 15:30',urgency:'普通',status:'待审批',detail:{dest:'广州',start:'2026-06-22',end:'2026-06-24',purpose:'客户关系维护'}},
+  {id:'SP044',type:'采购',applicant:'吴芳',dept:'行政综合部',summary:'会议室投影仪更换2台 ¥18,000',date:'2026-06-18 16:00',urgency:'普通',status:'待审批',detail:{item:'爱普生投影仪 2台',vendor:'联想集团',amount:18000,reason:'旧设备故障'}},
+  {id:'SP045',type:'招待',applicant:'赵敏',dept:'财务管理部',summary:'审计组工作餐 ¥800',date:'2026-06-18 16:30',urgency:'普通',status:'待审批',detail:{guest:'审计项目组3人',budget:800,restaurant:'公司食堂包间',date:'2026-06-19'}},
+
   // ===== 席宝已审批通过的 =====
   {id:'SP015',type:'请假',applicant:'郑雪',dept:'市场营销部',summary:'年假5天（6/10-6/14）',date:'2026-06-08 09:00',urgency:'普通',status:'已通过',approvedBy:'席宝',detail:{leaveType:'年假',days:5,reason:'旅游'}},
   {id:'SP016',type:'采购',applicant:'张伟',dept:'技术研发部',summary:'Dell服务器2台 ¥170,000',date:'2026-06-05 14:00',urgency:'普通',status:'已通过',approvedBy:'席宝'},

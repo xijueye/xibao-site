@@ -61,6 +61,13 @@ const defaultPurchases = [
   {id:'CG20260601011',item:'交换机 S5735 10台',supplier:'华为技术',amount:32000,applicant:'张伟',date:'2026-06-01',status:'已通过',reason:'网络设备更新'},
   {id:'CG20260528012',item:'激光打印机 8台',supplier:'联想集团',amount:32000,applicant:'孙磊',date:'2026-05-28',status:'已通过',reason:'行政办公'},
 ];
+  // ===== 新增待审批采购 =====
+  {id:'CG20260619001',item:'服务器硬盘 50块',supplier:'希捷科技',amount:92500,applicant:'周婷',date:'2026-06-19',status:'待审批',reason:'存储扩容'},
+  {id:'CG20260619002',item:'UPS电源 5台',supplier:'华为技术',amount:22500,applicant:'张伟',date:'2026-06-19',status:'待审批',reason:'机房备用电源'},
+  {id:'CG20260618003',item:'激光打印机 5台',supplier:'联想集团',amount:20000,applicant:'孙磊',date:'2026-06-18',status:'待审批',reason:'行政办公'},
+  {id:'CG20260618004',item:'光纤跳线 300条',supplier:'安普布线',amount:10500,applicant:'王强',date:'2026-06-18',status:'待审批',reason:'布线工程'},
+  {id:'CG20260617005',item:'A4打印纸 200箱',supplier:'得力办公',amount:24000,applicant:'孙磊',date:'2026-06-17',status:'待审批',reason:'办公用品采购'},
+
 if (!DB.get('biz_purchases').length) DB.set('biz_purchases', defaultPurchases);
 
 

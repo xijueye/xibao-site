@@ -79,6 +79,14 @@ const defaultInbounds = [
   {id:'RK20260605010',item:'网线（超五类）',spec:'安普 超五类',supplier:'安普布线',qty:20,unitPrice:320,warehouse:'A区-原材料仓',date:'2026-06-05',status:'已入库',receivedBy:'席宝'},
   {id:'RK20260603011',item:'光纤跳线',spec:'LC-LC 单模',supplier:'安普布线',qty:200,unitPrice:35,warehouse:'A区-原材料仓',date:'2026-06-03',status:'已入库',receivedBy:'席宝'},
 ];
+  // ===== 新增待验收入库 =====
+  {id:'RK20260619001',item:'UPS电源',spec:'3KVA在线式',supplier:'华为技术',qty:5,unitPrice:4500,warehouse:'D区-设备仓',date:'2026-06-19',status:'待验收'},
+  {id:'RK20260619002',item:'光纤跳线',spec:'LC-LC 单模 3米',supplier:'安普布线',qty:300,unitPrice:35,warehouse:'A区-原材料仓',date:'2026-06-19',status:'待验收'},
+  {id:'RK20260619003',item:'A4打印纸',spec:'Double A 70g',supplier:'得力办公',qty:200,unitPrice:120,warehouse:'C区-办公用品仓',date:'2026-06-19',status:'待验收'},
+  {id:'RK20260618004',item:'服务器硬盘',spec:'希捷银河 8TB SAS',supplier:'希捷科技',qty:50,unitPrice:1850,warehouse:'A区-原材料仓',date:'2026-06-18',status:'待验收'},
+  {id:'RK20260618005',item:'交换机',spec:'S5735-L24T4X',supplier:'华为技术',qty:10,unitPrice:3200,warehouse:'D区-设备仓',date:'2026-06-18',status:'待验收'},
+  {id:'RK20260617006',item:'网线（六类）',spec:'安普 305米/箱',supplier:'安普布线',qty:40,unitPrice:480,warehouse:'A区-原材料仓',date:'2026-06-17',status:'待验收'},
+
 if (!DB.get('inv_inbounds').length) DB.set('inv_inbounds', defaultInbounds);
 
 
