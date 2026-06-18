@@ -134,7 +134,7 @@ function viewWfDetail(id) {
   
   const html = `<div>
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-      <div><span class="flow-type-badge" style="background:${isProcurement?'#dbeafe;color:#1e40af':'#d1fae5;color:#065f46'}">${isProcurement?'🛒 采购全流程':'📈 销售全流程'}</span>
+      <div><span class="flow-type-badge" style="background:${{procurement:'#dbeafe;color:#1e40af',sales:'#d1fae5;color:#065f46',approval:'#fef3c7;color:#92400e',project_accept:'#ede9fe;color:#5b21b6',onboard:'#fce7f3;color:#9d174d'}[wf.type]||'#f3f4f6;color:#374151'}">${{procurement:'🛒 采购全流程',sales:'📈 销售全流程',approval:'📋 审批流',project_accept:'✅ 项目验收',onboard:'👤 入职流程'}[wf.type]||'📋 流程'}</span>
       <span class="status ${wf.status==='active'?'processing':wf.status==='completed'?'approved':'rejected'}" style="margin-left:8px">${wf.status==='active'?'进行中':wf.status==='completed'?'已完成':'已驳回'}</span></div>
     </div>
     <div style="font-size:13px;color:var(--gray-500);margin-bottom:16px">创建：${wf.createdAt} | 更新：${wf.updatedAt} | 完成 ${wf.steps.filter(s=>s.status==='done').length}/${wf.steps.length} 步</div>
@@ -290,6 +290,122 @@ function doStartOnboard() {
   document.querySelectorAll('[id^=modal-]').forEach(m=>m.remove());
   Modal.toast('✅ 入职流程已发起'); renderWfList();
 }
+
+// ===== 流程引擎（workflow.html独立运行） =====
+const WorkflowEngine = {
+  key: 'portal_workflows',
+  getAll() { try { return JSON.parse(localStorage.getItem(this.key)) || []; } catch { return []; } },
+  save(list) { localStorage.setItem(this.key, JSON.stringify(list)); },
+  getById(id) { return this.getAll().find(w => w.id === id); },
+  advance(workflowId, nextStep, data = {}) {
+    const list = this.getAll(); const wf = list.find(w => w.id === workflowId); if (!wf) return;
+    const stepDef = wf.steps.find(s => s.key === nextStep);
+    if (stepDef) { stepDef.status = 'done'; stepDef.doneAt = new Date().toLocaleString('zh-CN'); stepDef.doneBy = '席宝'; Object.assign(stepDef.data || {}, data); }
+    const currentIdx = wf.steps.findIndex(s => s.key === nextStep);
+    if (currentIdx < wf.steps.length - 1) { wf.currentStep = wf.steps[currentIdx + 1].key; } else { wf.status = 'completed'; wf.currentStep = null; }
+    wf.updatedAt = new Date().toLocaleString('zh-CN'); this.save(list);
+  },
+  reject(workflowId, currentStep, reason) {
+    const list = this.getAll(); const wf = list.find(w => w.id === workflowId); if (!wf) return;
+    const step = wf.steps.find(s => s.key === currentStep);
+    if (step) { step.status = 'rejected'; step.rejectReason = reason; }
+    wf.status = 'rejected'; wf.updatedAt = new Date().toLocaleString('zh-CN'); this.save(list);
+  },
+  startWorkflow(type, title, data) {
+    const list = this.getAll(); const id = 'WF' + Date.now().toString(36).toUpperCase(); let steps = [];
+    if (type === 'procurement') steps = [
+      {key:'purchase_apply', label:'采购申请', system:'oa-system.html', status:'done', doneAt:new Date().toLocaleString('zh-CN'), doneBy:'席宝', data},
+      {key:'purchase_approve', label:'采购审批', system:'oa-system.html', status:'pending'},
+      {key:'contract_approve', label:'合同审批', system:'legal-system.html', status:'pending'},
+      {key:'seal_apply', label:'用印申请', system:'oa-system.html', status:'pending'},
+      {key:'seal_approve', label:'用印审批', system:'oa-system.html', status:'pending'},
+      {key:'goods_receive', label:'到货验收', system:'inventory-system.html', status:'pending'},
+      {key:'finance_pay', label:'财务付款', system:'finance-system.html', status:'pending'},
+      {key:'voucher_entry', label:'凭证入账', system:'finance-system.html', status:'pending'},
+    ];
+    else if (type === 'sales') steps = [
+      {key:'sales_contract', label:'销售合同', system:'production-system.html', status:'done', doneAt:new Date().toLocaleString('zh-CN'), doneBy:'席宝', data},
+      {key:'outbound_apply', label:'出库申请', system:'inventory-system.html', status:'pending'},
+      {key:'outbound_approve', label:'出库审核', system:'oa-system.html', status:'pending'},
+      {key:'outbound_exec', label:'出库执行', system:'inventory-system.html', status:'pending'},
+      {key:'customer_accept', label:'客户验收', system:'production-system.html', status:'pending'},
+      {key:'receivable', label:'应收账款', system:'finance-system.html', status:'pending'},
+      {key:'bank_confirm', label:'银行到账', system:'finance-system.html', status:'pending'},
+    ];
+    const wf = { id, type, title, status: 'active', currentStep: steps.length > 1 ? steps[1].key : null,
+      createdAt: new Date().toLocaleString('zh-CN'), updatedAt: new Date().toLocaleString('zh-CN'), steps };
+    list.unshift(wf); this.save(list); return wf;
+  },
+  getPendingForSystem(systemFile) {
+    return this.getAll().filter(wf => wf.status === 'active' && wf.currentStep && wf.steps.find(s => s.key === wf.currentStep && s.system === systemFile));
+  }
+};
+
+// ===== 初始化示例流程 =====
+function initWorkflows() {
+  if (WorkflowEngine.getAll().length > 0) return;
+  const wf1 = {id:'WF-PURCHASE-001',type:'procurement',title:'ThinkPad T14笔记本50台采购',status:'active',currentStep:'goods_receive',createdAt:'2026-06-15 09:00',updatedAt:'2026-06-18 14:30',steps:[
+    {key:'purchase_apply',label:'采购申请',system:'oa-system.html',status:'done',doneAt:'2026-06-15 09:00',doneBy:'孙磊',data:{item:'ThinkPad T14 50台',vendor:'联想集团',amount:340000}},
+    {key:'purchase_approve',label:'采购审批',system:'oa-system.html',status:'done',doneAt:'2026-06-15 11:30',doneBy:'席宝'},
+    {key:'contract_approve',label:'合同审批',system:'legal-system.html',status:'done',doneAt:'2026-06-16 09:00',doneBy:'吴刚'},
+    {key:'seal_apply',label:'用印申请',system:'oa-system.html',status:'done',doneAt:'2026-06-16 14:00',doneBy:'吴刚'},
+    {key:'seal_approve',label:'用印审批',system:'oa-system.html',status:'done',doneAt:'2026-06-16 16:00',doneBy:'席宝'},
+    {key:'goods_receive',label:'到货验收',system:'inventory-system.html',status:'pending'},
+    {key:'finance_pay',label:'财务付款',system:'finance-system.html',status:'pending'},
+    {key:'voucher_entry',label:'凭证入账',system:'finance-system.html',status:'pending'}]};
+  const wf2 = {id:'WF-SALES-001',type:'sales',title:'华为交换机S5735 × 20台销售',status:'active',currentStep:'outbound_exec',createdAt:'2026-06-12 10:00',updatedAt:'2026-06-18 11:00',steps:[
+    {key:'sales_contract',label:'销售合同',system:'production-system.html',status:'done',doneAt:'2026-06-12 10:00',doneBy:'李娜',data:{customer:'北京中科信息技术有限公司',amount:156000}},
+    {key:'outbound_apply',label:'出库申请',system:'inventory-system.html',status:'done',doneAt:'2026-06-16 15:00',doneBy:'席宝'},
+    {key:'outbound_approve',label:'出库审核',system:'oa-system.html',status:'done',doneAt:'2026-06-17 09:30',doneBy:'席宝'},
+    {key:'outbound_exec',label:'出库执行',system:'inventory-system.html',status:'pending'},
+    {key:'customer_accept',label:'客户验收',system:'production-system.html',status:'pending'},
+    {key:'receivable',label:'应收账款',system:'finance-system.html',status:'pending'},
+    {key:'bank_confirm',label:'银行到账',system:'finance-system.html',status:'pending'}]};
+  const wf3 = {id:'WF-PURCHASE-002',type:'procurement',title:'服务器硬盘100块采购（已完成）',status:'completed',currentStep:null,createdAt:'2026-05-20 08:30',updatedAt:'2026-06-10 16:00',steps:[
+    {key:'purchase_apply',label:'采购申请',system:'oa-system.html',status:'done',doneAt:'2026-05-20 08:30',doneBy:'周婷'},
+    {key:'purchase_approve',label:'采购审批',system:'oa-system.html',status:'done',doneAt:'2026-05-20 14:00',doneBy:'席宝'},
+    {key:'contract_approve',label:'合同审批',system:'legal-system.html',status:'done',doneAt:'2026-05-21 10:00',doneBy:'吴刚'},
+    {key:'seal_apply',label:'用印申请',system:'oa-system.html',status:'done',doneAt:'2026-05-21 15:00',doneBy:'吴刚'},
+    {key:'seal_approve',label:'用印审批',system:'oa-system.html',status:'done',doneAt:'2026-05-22 09:00',doneBy:'席宝'},
+    {key:'goods_receive',label:'到货验收',system:'inventory-system.html',status:'done',doneAt:'2026-06-01 10:00',doneBy:'席宝'},
+    {key:'finance_pay',label:'财务付款',system:'finance-system.html',status:'done',doneAt:'2026-06-05 11:00',doneBy:'刘芳'},
+    {key:'voucher_entry',label:'凭证入账',system:'finance-system.html',status:'done',doneAt:'2026-06-10 16:00',doneBy:'马丽'}]};
+  const wf4 = {id:'WF-SALES-002',type:'sales',title:'网线50箱销售（已完成）',status:'completed',currentStep:null,createdAt:'2026-05-28 09:00',updatedAt:'2026-06-15 14:00',steps:[
+    {key:'sales_contract',label:'销售合同',system:'production-system.html',status:'done',doneAt:'2026-05-28 09:00',doneBy:'李娜'},
+    {key:'outbound_apply',label:'出库申请',system:'inventory-system.html',status:'done',doneAt:'2026-06-01 10:00',doneBy:'席宝'},
+    {key:'outbound_approve',label:'出库审核',system:'oa-system.html',status:'done',doneAt:'2026-06-01 14:00',doneBy:'席宝'},
+    {key:'outbound_exec',label:'出库执行',system:'inventory-system.html',status:'done',doneAt:'2026-06-02 09:00',doneBy:'席宝'},
+    {key:'customer_accept',label:'客户验收',system:'production-system.html',status:'done',doneAt:'2026-06-10 15:00',doneBy:'李娜'},
+    {key:'receivable',label:'应收账款',system:'finance-system.html',status:'done',doneAt:'2026-06-12 10:00',doneBy:'刘芳'},
+    {key:'bank_confirm',label:'银行到账',system:'finance-system.html',status:'done',doneAt:'2026-06-15 14:00',doneBy:'马丽'}]};
+  const wf5 = {id:'WF-APPROVAL-001',type:'approval',title:'2026年度市场推广预算审批',status:'active',currentStep:'finance_approve',createdAt:'2026-06-16 10:00',updatedAt:'2026-06-18 09:00',steps:[
+    {key:'submit',label:'提交申请',system:'oa-system.html',status:'done',doneAt:'2026-06-16 10:00',doneBy:'李娜',data:{title:'市场推广预算',dept:'市场营销部',amount:500000}},
+    {key:'dept_approve',label:'部门审批',system:'oa-system.html',status:'done',doneAt:'2026-06-16 14:00',doneBy:'席宝'},
+    {key:'finance_approve',label:'财务审核',system:'finance-system.html',status:'pending'},
+    {key:'gm_approve',label:'总经理审批',system:'oa-system.html',status:'pending'},
+    {key:'execute',label:'执行确认',system:'oa-system.html',status:'pending'}]};
+  const wf6 = {id:'WF-ACCEPT-001',type:'project_accept',title:'供应链优化咨询项目验收',status:'active',currentStep:'quality_check',createdAt:'2026-06-10 09:00',updatedAt:'2026-06-18 11:00',steps:[
+    {key:'apply',label:'验收申请',system:'production-system.html',status:'done',doneAt:'2026-06-10 09:00',doneBy:'李娜',data:{project:'供应链优化咨询',customer:'前海数字',amount:1500000}},
+    {key:'tech_review',label:'技术评审',system:'production-system.html',status:'done',doneAt:'2026-06-14 15:00',doneBy:'陈明'},
+    {key:'quality_check',label:'质量检查',system:'audit-system.html',status:'pending'},
+    {key:'customer_accept',label:'客户验收',system:'production-system.html',status:'pending'},
+    {key:'finance_settle',label:'财务结算',system:'finance-system.html',status:'pending'},
+    {key:'archive',label:'项目归档',system:'production-system.html',status:'pending'}]};
+  const wf7 = {id:'WF-ONBOARD-001',type:'onboard',title:'郑雪 入职流程',status:'active',currentStep:'orientation',createdAt:'2026-06-15 09:00',updatedAt:'2026-06-18 10:00',steps:[
+    {key:'hr_register',label:'HR登记',system:'hr-system.html',status:'done',doneAt:'2026-06-15 09:00',doneBy:'席宝',data:{name:'郑雪',dept:'市场营销部',position:'产品经理'}},
+    {key:'it_setup',label:'IT设备配置',system:'inventory-system.html',status:'done',doneAt:'2026-06-16 14:00',doneBy:'张伟'},
+    {key:'access_apply',label:'权限申请',system:'oa-system.html',status:'done',doneAt:'2026-06-17 09:00',doneBy:'孙磊'},
+    {key:'orientation',label:'入职培训',system:'hr-system.html',status:'pending'},
+    {key:'probation',label:'试用期跟踪',system:'hr-system.html',status:'pending'}]};
+  const wf8 = {id:'WF-ONBOARD-002',type:'onboard',title:'陈明 入职流程（已完成）',status:'completed',currentStep:null,createdAt:'2026-02-10 09:00',updatedAt:'2026-02-20 16:00',steps:[
+    {key:'hr_register',label:'HR登记',system:'hr-system.html',status:'done',doneAt:'2026-02-10 09:00',doneBy:'席宝'},
+    {key:'it_setup',label:'IT设备配置',system:'inventory-system.html',status:'done',doneAt:'2026-02-12 10:00',doneBy:'张伟'},
+    {key:'access_apply',label:'权限申请',system:'oa-system.html',status:'done',doneAt:'2026-02-13 09:00',doneBy:'孙磊'},
+    {key:'orientation',label:'入职培训',system:'hr-system.html',status:'done',doneAt:'2026-02-15 17:00',doneBy:'赵丽'},
+    {key:'probation',label:'试用期跟踪',system:'hr-system.html',status:'done',doneAt:'2026-02-20 16:00',doneBy:'席宝'}]};
+  WorkflowEngine.save([wf1, wf2, wf3, wf4, wf5, wf6, wf7, wf8]);
+}
+initWorkflows();
 
 renderWfList();
 </script>
