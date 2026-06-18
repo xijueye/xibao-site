@@ -50,7 +50,7 @@ const defaultInvoices = [
 ];
 if (!DB.get('tax_invoices').length) DB.set('tax_invoices', defaultInvoices);
 
-const filings = [
+const defaultFilings = [
   {tax:'增值税',period:'2026年5月',deadline:'2026-06-20',amount:186420,status:'待申报'},
   {tax:'企业所得税（季度）',period:'2026年Q2',deadline:'2026-07-15',amount:0,status:'未到期'},
   {tax:'个人所得税',period:'2026年5月',deadline:'2026-06-20',amount:52380,status:'待申报'},
@@ -58,6 +58,7 @@ const filings = [
   {tax:'城建税及附加',period:'2026年5月',deadline:'2026-06-20',amount:22370,status:'待申报'},
 ];
 
+if(!DB.get('tax_filings').length) DB.set('tax_filings', defaultFilings);
 let currentTab = 'invoice';
 function switchTab(tab) {
   currentTab = tab;
@@ -83,7 +84,7 @@ function renderInvoice(el) {
     <div class="portal-stats" style="margin-bottom:20px">
       <div class="stat-card"><div class="label">待认证进项</div><div class="value">${input.filter(i=>i.status==='待认证').length}</div><div class="change">金额 ¥${Summary.calc(input.filter(i=>i.status==='待认证'),'amount').toLocaleString()}</div></div>
       <div class="stat-card green"><div class="label">本月销项</div><div class="value">${output.length}张</div><div class="change">金额 ¥${Summary.calc(output,'amount').toLocaleString()}</div></div>
-      <div class="stat-card orange"><div class="label">待申报</div><div class="value">${filings.filter(i=>i.status==='待申报').length}项</div></div>
+      <div class="stat-card orange"><div class="label">待申报</div><div class="value">${DB.get('tax_filings').filter(i=>i.status==='待申报').length}项</div></div>
     </div>
     <div class="card"><div class="card-body">
       <table><thead><tr><th>发票号码</th><th>代码</th><th>类型</th><th>方向</th><th>对方单位</th><th>金额（元）</th><th>税额</th><th>日期</th><th>状态</th><th>操作</th></tr></thead>
@@ -152,7 +153,7 @@ function viewInvoice(id) {
 function renderFiling(el) {
   el.innerHTML = `<div class="card"><div class="card-header"><h3>⚠️ 申报提醒</h3></div><div class="card-body">
     <table><thead><tr><th>税种</th><th>所属期</th><th>截止日</th><th>应纳税额</th><th>状态</th><th>操作</th></tr></thead>
-    <tbody>${filings.map((f,i)=>`<tr>
+    <tbody>${DB.get('tax_filings').map((f,i)=>`<tr>
       <td><strong>${f.tax}</strong></td><td>${f.period}</td><td>${f.deadline}</td>
       <td>${f.amount ? '¥'+f.amount.toLocaleString() : '-'}</td>
       <td><span class="status ${f.status==='待申报'?'warning':f.status==='已申报'?'approved':'processing'}">${f.status}</span></td>
@@ -162,10 +163,10 @@ function renderFiling(el) {
 }
 
 function doFiling(idx) {
-  const f = filings[idx];
+  const f = DB.get('tax_filings')[idx];
   Modal.confirm(`确认申报「${f.tax}」（${f.period}），应纳税额 ¥${f.amount.toLocaleString()}？`, () => {
     f.status = '已申报';
-    Modal.toast(`✅ ${f.tax}申报成功（模拟）`); renderContent();
+    f.status='已申报';DB.set('tax_filings',DB.get('tax_filings'));Modal.toast(`✅ ${f.tax}申报成功`);renderContent();
   });
 }
 

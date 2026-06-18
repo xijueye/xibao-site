@@ -179,7 +179,7 @@ function renderContract(el) {
     <tbody>${contracts.map(c=>`<tr>
       <td>${c.id}</td><td><strong>${c.name}</strong></td><td>${c.vendor}</td><td>¥${c.amount}</td><td>${c.dueDate}</td>
       <td><span class="status ${c.status==='即将到期'?'warning':'processing'}">${c.status}</span></td>
-      <td><button class="btn btn-sm btn-primary" onclick="Modal.toast('📋 合同详情（模拟）','info')">查看</button></td>
+      <td><button class="btn btn-sm btn-primary" onclick="viewProductionContract('${c.id}')">查看</button></td>
     </tr>`).join('')}</tbody></table>
   </div></div>`;
 }
@@ -198,7 +198,7 @@ function renderPurchase(el) {
         <td style="font-size:12px">${p.id}</td><td><strong>${p.item}</strong></td><td>${p.supplier}</td>
         <td style="font-weight:600">¥${p.amount.toLocaleString()}</td><td>${p.applicant}</td><td>${p.date}</td>
         <td><span class="status ${p.status==='待审核'||p.status==='待审批'?'pending':'approved'}">${p.status}</span></td>
-        <td>${p.status==='待审批'||p.status==='待审核' ? `<button class="btn btn-sm btn-primary" onclick="approvePurchase('${p.id}')">通过</button> <button class="btn btn-sm btn-danger" onclick="rejectPurchase('${p.id}')">驳回</button>` : `<span style="color:var(--gray-400);font-size:12px">已审批</span>`}</td>
+        <td>${p.status==='待审批'||p.status==='待审核' ? `<button class="btn btn-sm btn-primary" onclick="approvePurchase('${p.id}')">通过</button> <button class="btn btn-sm btn-danger" onclick="rejectPurchase('${p.id}')">驳回</button>` : `<a href="#" onclick="viewPurchase('${p.id}');return false" style="color:var(--primary);font-size:13px;text-decoration:none">查看</a>`}</td>
       </tr>`).join('')}</tbody></table>
     </div></div>`;
 }

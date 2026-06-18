@@ -106,6 +106,79 @@ function switchTab(tab){
   renderContent();
 }
 
+
+// ===== 公文详情 =====
+function viewDoc(id){
+  const d=DB.get('oa_docs').find(i=>i.id===id);if(!d)return;
+  const html=`<div style="font-size:14px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+      <div><strong>文号：</strong>${d.id}</div><div><strong>类型：</strong>${d.type}</div>
+      <div><strong>拟稿部门：</strong>${d.dept}</div><div><strong>拟稿人：</strong>${d.author}</div>
+      <div><strong>日期：</strong>${d.date}</div><div><strong>密级：</strong><span class="status ${d.level==='紧急'?'danger':d.level==='重要'?'warning':'pending'}">${d.level}</span></div>
+      <div style="grid-column:1/-1"><strong>状态：</strong><span class="status ${d.status==='已发布'?'approved':'processing'}">${d.status}</span></div>
+    </div>
+    <div style="padding:16px;background:var(--gray-50);border-radius:8px;line-height:1.8">
+      <h4 style="margin-bottom:8px">${d.title}</h4>
+      <p style="color:var(--gray-600);font-size:13px">各有关部门：</p>
+      <p style="color:var(--gray-600);font-size:13px">　　根据公司管理要求，现将有关事项通知如下：</p>
+      <p style="color:var(--gray-600);font-size:13px">　　一、认真贯彻落实公司各项规章制度，确保各项工作有序推进。</p>
+      <p style="color:var(--gray-600);font-size:13px">　　二、各部门负责人要高度重视，安排专人负责落实。</p>
+      <p style="color:var(--gray-600);font-size:13px">　　三、执行过程中遇到的问题及时反馈。</p>
+      <p style="color:var(--gray-600);font-size:13px;text-align:right;margin-top:12px">华信集团${d.dept}</p>
+      <p style="color:var(--gray-600);font-size:13px;text-align:right">${d.date}</p>
+    </div></div>`;
+  Modal.show(`📄 公文详情 - ${d.id}`,html,{width:'560px'});
+}
+
+// ===== 会议纪要 =====
+function viewMeetingMinutes(id){
+  const m=DB.get('oa_meetings').find(i=>i.id===id);if(!m)return;
+  const html=`<div style="font-size:14px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+      <div><strong>会议主题：</strong>${m.title}</div><div><strong>会议室：</strong>${m.room}</div>
+      <div><strong>日期：</strong>${m.date}</div><div><strong>时间：</strong>${m.time}</div>
+      <div><strong>组织部门：</strong>${m.organizer}</div><div><strong>参会人数：</strong>${m.attendees}人</div>
+    </div>
+    <div style="padding:16px;background:var(--gray-50);border-radius:8px;line-height:1.8">
+      <h4 style="margin-bottom:8px;text-align:center">会议纪要</h4>
+      <p style="font-size:13px;color:var(--gray-600)"><strong>会议主题：</strong>${m.title}</p>
+      <p style="font-size:13px;color:var(--gray-600)"><strong>时间地点：</strong>${m.date} ${m.time} ${m.room}</p>
+      <p style="font-size:13px;color:var(--gray-600)"><strong>主持人：</strong>${m.organizer}负责人</p>
+      <p style="font-size:13px;color:var(--gray-600)"><strong>参会人员：</strong>各部门负责人及相关人员（共${m.attendees}人）</p>
+      <hr style="margin:12px 0;border-color:var(--gray-200)">
+      <p style="font-size:13px;color:var(--gray-600)"><strong>一、会议内容</strong></p>
+      <p style="font-size:13px;color:var(--gray-600)">　　1. 各部门汇报近期工作进展及存在问题</p>
+      <p style="font-size:13px;color:var(--gray-600)">　　2. 讨论下阶段重点工作安排</p>
+      <p style="font-size:13px;color:var(--gray-600)">　　3. 协调解决跨部门协作事项</p>
+      <p style="font-size:13px;color:var(--gray-600)"><strong>二、会议决议</strong></p>
+      <p style="font-size:13px;color:var(--gray-600)">　　1. 各部门按计划推进重点工作</p>
+      <p style="font-size:13px;color:var(--gray-600)">　　2. 下周召开专题协调会</p>
+    </div></div>`;
+  Modal.show(`📋 会议纪要 - ${m.title}`,html,{width:'560px'});
+}
+
+// ===== 车辆调度 =====
+function dispatchVehicle(plate){
+  const v=DB.get('oa_vehicles').find(i=>i.plate===plate);if(!v)return;
+  const fields=[
+    {name:'date',label:'用车日期',type:'date',required:true},
+    {name:'from',label:'出发地',required:true},
+    {name:'to',label:'目的地',required:true},
+    {name:'purpose',label:'用车事由',type:'textarea',full:true,required:true},
+  ];
+  const html=Form.render(fields)+`<div style="margin-top:16px;text-align:right">
+    <button class="btn" style="background:#f3f4f6;color:#374151" onclick="Modal.close(this.closest('[id^=modal]').id)">取消</button>
+    <button class="btn btn-primary" onclick="confirmDispatch('${plate}')">确认调度</button></div>`;
+  Modal.show(`🚗 车辆调度 - ${v.plate} ${v.model}`,html,{width:'520px'});
+}
+function confirmDispatch(plate){
+  const d=Form.getData();if(!d.date||!d.to){Modal.toast('请填写必填项','warning');return;}
+  const list=DB.get('oa_vehicles');const v=list.find(i=>i.plate===plate);
+  if(v){v.status='在用';v.usage=`${d.date} ${d.from}→${d.to}`;DB.set('oa_vehicles',list);}
+  document.querySelectorAll('[id^=modal-]').forEach(m=>m.remove());
+  Modal.toast(`✅ ${plate} 已调度`);renderContent();
+}
+
 function renderContent(){
   const el=document.getElementById('tab-content');
   ({pending:renderPending,approved:renderApproved,mine:renderMine,doc:renderDoc,meeting:renderMeeting,vehicle:renderVehicle})[currentTab]?.(el);
@@ -207,7 +280,7 @@ function renderDoc(el){
   <tbody>${list.map(d=>`<tr><td>${d.id}</td><td><strong>${d.title}</strong></td><td>${d.type}</td><td>${d.dept}</td><td>${d.author}</td><td>${d.date}</td>
   <td><span class="status ${d.level==='紧急'?'danger':d.level==='重要'?'warning':'pending'}">${d.level}</span></td>
   <td><span class="status ${d.status==='已发布'?'approved':'processing'}">${d.status}</span></td>
-  <td>${d.status==='审核中'?`<button class="btn btn-sm btn-primary" onclick="publishDoc('${d.id}')">发布</button>`:`<a href="#" onclick="Modal.toast('📄 公文详情（模拟）','info');return false" style="color:var(--primary);font-size:13px;text-decoration:none">查看</a>`}</td></tr>`).join('')}</tbody></table></div></div>`;
+  <td>${d.status==='审核中'?`<button class="btn btn-sm btn-primary" onclick="publishDoc('${d.id}')">发布</button>`:`<a href="#" onclick="viewDoc('${d.id}');return false" style="color:var(--primary);font-size:13px;text-decoration:none">查看</a>`}</td></tr>`).join('')}</tbody></table></div></div>`;
 }
 function showNewDoc(){
   const fields=[{name:'title',label:'公文标题',full:true,required:true},{name:'type',label:'文种',type:'select',options:['通知','通报','决定','报告','请示','函','纪要'],required:true},
@@ -229,7 +302,7 @@ function renderMeeting(el){
   <div class="card"><div class="card-body"><table><thead><tr><th>会议主题</th><th>会议室</th><th>日期</th><th>时间</th><th>组织部门</th><th>参会人数</th><th>状态</th><th>操作</th></tr></thead>
   <tbody>${list.map(m=>`<tr><td><strong>${m.title}</strong></td><td>${m.room}</td><td>${m.date}</td><td>${m.time}</td><td>${m.organizer}</td><td>${m.attendees}人</td>
   <td><span class="status ${m.status==='进行中'?'processing':m.status==='待开始'?'pending':'approved'}">${m.status}</span></td>
-  <td>${m.status==='待开始'?`<button class="btn btn-sm btn-primary" onclick="Modal.toast('📋 会议纪要模板已生成','info')">纪要</button>`:`<a href="#" onclick="Modal.toast('📋 查看会议纪要（模拟）','info');return false" style="color:var(--primary);font-size:13px;text-decoration:none">纪要</a>`}</td></tr>`).join('')}</tbody></table></div></div>`;
+  <td>${m.status==='待开始'?`<button class="btn btn-sm btn-primary" onclick="viewMeetingMinutes('${m.id}')">纪要</button>`:`<a href="#" onclick="viewMeetingMinutes('${m.id}');return false" style="color:var(--primary);font-size:13px;text-decoration:none">纪要</a>`}</td></tr>`).join('')}</tbody></table></div></div>`;
 }
 function showBookRoom(){
   const fields=[{name:'room',label:'会议室',type:'select',options:['3F-大会议室A','3F-大会议室B','5F-会议室C','5F-会议室D','8F-贵宾室'],required:true},{name:'date',label:'日期',type:'date',required:true},
@@ -250,7 +323,7 @@ function renderVehicle(el){
   <div class="card"><div class="card-body"><table><thead><tr><th>车牌号</th><th>类型</th><th>车型</th><th>司机</th><th>当前状态</th><th>使用情况</th><th>操作</th></tr></thead>
   <tbody>${list.map(v=>`<tr><td><strong>${v.plate}</strong></td><td>${v.type}</td><td>${v.model}</td><td>${v.driver}</td>
   <td><span class="status ${v.status==='空闲'?'approved':v.status==='在用'?'processing':'danger'}">${v.status}</span></td><td>${v.usage}</td>
-  <td>${v.status==='空闲'?`<button class="btn btn-sm btn-primary" onclick="Modal.toast('🚗 调度申请已提交（模拟）','info')">调度</button>`:'-'}</td></tr>`).join('')}</tbody></table></div></div>`;
+  <td>${v.status==='空闲'?`<button class="btn btn-sm btn-primary" onclick="dispatchVehicle('${v.plate}')">调度</button>`:'-'}</td></tr>`).join('')}</tbody></table></div></div>`;
 }
 
 renderContent();
