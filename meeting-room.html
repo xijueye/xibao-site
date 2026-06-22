@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>华信集团 · 会议室预定系统</title>
+<link rel="stylesheet" href="assets/style.css">
+<style>
+  .booking-calendar { display: grid; grid-template-columns: repeat(7,1fr); gap: 4px; margin-bottom: 20px; }
+  .cal-header { font-size: 12px; font-weight: 600; color: var(--gray-500); text-align: center; padding: 8px 0; }
+  .cal-day { background: white; border-radius: 6px; padding: 8px; min-height: 80px; border: 1px solid var(--gray-200); font-size: 12px; cursor: pointer; transition: all 0.2s; }
+  .cal-day:hover { border-color: var(--primary); }
+  .cal-day .date { font-weight: 600; color: var(--gray-700); margin-bottom: 4px; }
+  .cal-day .event { background: var(--primary-light); color: var(--primary); border-radius: 4px; padding: 2px 6px; margin-bottom: 2px; font-size: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cal-day .event.green { background: #d1fae5; color: #065f46; }
+  .cal-day .event.orange { background: #fef3c7; color: #92400e; }
+  .room-status-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-top: 16px; }
+  .room-status-card { background: white; border-radius: var(--radius); padding: 20px; border-left: 4px solid; box-shadow: var(--shadow-sm); }
+  .room-status-card.idle { border-left-color: var(--success); }
+  .room-status-card.busy { border-left-color: var(--danger); }
+  .room-status-card.maintain { border-left-color: var(--warning); }
+  .room-status-card .room-name { font-size: 16px; font-weight: 700; color: var(--gray-800); }
+  .room-status-card .room-info { font-size: 13px; color: var(--gray-500); margin-top: 4px; }
+  .room-status-card .room-equip { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+  .room-status-card .equip-tag { background: var(--gray-100); color: var(--gray-600); padding: 2px 8px; border-radius: 4px; font-size: 11px; }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="logo"><span class="icon">🏢</span><span>华信集团 · 统一业务门户</span></div>
+  <div class="nav-links">
+    <a href="index.html">门户首页</a>
+    <a href="workbench.html">工作台</a>
+    <a href="messages.html">消息中心</a>
+    <a href="analytics.html">数据分析</a>
+  </div>
+  <div class="user-info"><div class="avatar">席</div><span>席宝</span></div>
+</div>
+<div class="layout">
+  <div class="sidebar">
+    <div class="menu-group">
+      <div class="menu-title">📅 会议室预定</div>
+      <a class="menu-item active" onclick="showTab('rooms')"><span class="icon">🏢</span> 会议室列表</a>
+      <a class="menu-item" onclick="showTab('bookings')"><span class="icon">📋</span> 预定记录</a>
+      <a class="menu-item" onclick="showTab('calendar')"><span class="icon">📅</span> 日历视图</a>
+    </div>
+  </div>
+  <div class="main-content">
+    <!-- 会议室列表 -->
+    <div id="tab-rooms">
+      <div class="page-header">
+        <h2>🏢 会议室列表</h2>
+        <div style="display:flex;gap:12px;align-items:center;">
+          <div class="search-box"><input type="text" placeholder="搜索会议室..." oninput="searchRooms(this.value)"></div>
+          <button class="btn btn-primary" onclick="showNewRoom()">➕ 新建会议室</button>
+        </div>
+      </div>
+      <div class="room-status-grid" id="roomGrid"></div>
+    </div>
+    <!-- 预定记录 -->
+    <div id="tab-bookings" style="display:none;">
+      <div class="page-header">
+        <h2>📋 预定记录</h2>
+        <div style="display:flex;gap:12px;align-items:center;">
+          <div class="search-box"><input type="text" placeholder="搜索预定..." oninput="searchBookings(this.value)"></div>
+          <button class="btn btn-primary" onclick="showNewBooking()">➕ 新建预定</button>
+        </div>
+      </div>
+      <div class="card"><div class="card-body">
+        <table><thead><tr><th>预定编号</th><th>会议室</th><th>预定人</th><th>日期</th><th>时间段</th><th>会议主题</th><th>状态</th><th>操作</th></tr></thead>
+        <tbody id="bookingList"></tbody></table>
+      </div></div>
+    </div>
+    <!-- 日历视图 -->
+    <div id="tab-calendar" style="display:none;">
+      <div class="page-header"><h2>📅 日历视图 — 2026年6月</h2></div>
+      <div class="card" style="padding:20px;">
+        <div class="booking-calendar" id="calendarGrid"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal -->
+<div id="modal-overlay" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:1000;display:none;align-items:center;justify-content:center;" onclick="closeModal()">
+  <div style="background:white;border-radius:12px;padding:32px;width:560px;max-height:80vh;overflow-y:auto;box-shadow:0 20px 40px rgba(0,0,0,0.2);" onclick="event.stopPropagation()">
+    <div id="modalContent"></div>
+  </div>
+</div>
+<script>
+const ROOMS_DB = 'meeting_rooms';
+const BOOKINGS_DB = 'meeting_bookings';
+
+let rooms = JSON.parse(localStorage.getItem(ROOMS_DB)) || [
+  {id:1,name:'启航厅',floor:'3F',capacity:30,location:'A座3楼',equip:['投影仪','白板','视频会议','音响'],status:'使用中',currentMeeting:'产品规划周会',until:'17:30'},
+  {id:2,name:'远航厅',floor:'5F',capacity:20,location:'A座5楼',equip:['投影仪','白板','视频会议'],status:'空闲',currentMeeting:'',until:''},
+  {id:3,name:'聚力厅',floor:'6F',capacity:50,location:'B座6楼',equip:['投影仪','白板','视频会议','音响','直播设备'],status:'空闲',currentMeeting:'',until:''},
+  {id:4,name:'创新坊',floor:'3F',capacity:8,location:'A座3楼',equip:['白板','电视'],status:'使用中',currentMeeting:'技术方案评审',until:'16:00'},
+  {id:5,name:'协作间A',floor:'4F',capacity:6,location:'A座4楼',equip:['电视','白板'],status:'空闲',currentMeeting:'',until:''},
+  {id:6,name:'协作间B',floor:'4F',capacity:6,location:'A座4楼',equip:['电视','白板'],status:'维护中',currentMeeting:'',until:''},
+  {id:7,name:'贵宾接待室',floor:'1F',capacity:12,location:'A座1楼',equip:['投影仪','视频会议','茶水服务'],status:'空闲',currentMeeting:'',until:''},
+  {id:8,name:'培训教室',floor:'B1',capacity:40,location:'B座负一楼',equip:['投影仪','音响','白板','录播设备'],status:'使用中',currentMeeting:'新员工入职培训',until:'18:00'},
+  {id:9,name:'路演厅',floor:'1F',capacity:80,location:'B座1楼',equip:['投影仪','音响','直播设备','提词器'],status:'空闲',currentMeeting:'',until:''},
+  {id:10,name:'洽谈室A',floor:'2F',capacity:4,location:'A座2楼',equip:['电视'],status:'空闲',currentMeeting:'',until:''},
+  {id:11,name:'洽谈室B',floor:'2F',capacity:4,location:'A座2楼',equip:['电视'],status:'使用中',currentMeeting:'供应商洽谈',until:'15:30'},
+  {id:12,name:'多功能厅',floor:'B1',capacity:120,location:'B座负一楼',equip:['投影仪','音响','舞台灯光','直播设备','同传设备'],status:'空闲',currentMeeting:'',until:''},
+];
+
+let bookings = JSON.parse(localStorage.getItem(BOOKINGS_DB)) || [
+  {id:'BK20260601001',roomId:1,room:'启航厅',booker:'张伟',dept:'总裁办',date:'2026-06-20',time:'09:00-11:00',topic:'集团战略规划研讨',attendees:25,status:'已完成',catering:'茶歇'},
+  {id:'BK20260601002',roomId:2,room:'远航厅',booker:'李娜',dept:'财务部',date:'2026-06-20',time:'14:00-16:00',topic:'Q2财务分析会',attendees:12,status:'已完成',catering:'无'},
+  {id:'BK20260601003',roomId:1,room:'启航厅',booker:'王芳',dept:'市场部',date:'2026-06-20',time:'14:00-17:30',topic:'产品规划周会',attendees:18,status:'进行中',catering:'茶歇'},
+  {id:'BK20260602001',roomId:4,room:'创新坊',booker:'赵强',dept:'技术部',date:'2026-06-20',time:'13:30-16:00',topic:'技术方案评审',attendees:6,status:'进行中',catering:'无'},
+  {id:'BK20260602002',roomId:8,room:'培训教室',booker:'孙磊',dept:'人力资源部',date:'2026-06-20',time:'09:00-18:00',topic:'新员工入职培训',attendees:35,status:'进行中',catering:'午餐'},
+  {id:'BK20260603001',roomId:11,room:'洽谈室B',booker:'陈明',dept:'采购部',date:'2026-06-20',time:'10:00-15:30',topic:'供应商洽谈',attendees:3,status:'进行中',catering:'茶歇'},
+  {id:'BK20260603002',roomId:3,room:'聚力厅',booker:'周婷',dept:'销售部',date:'2026-06-21',time:'09:00-12:00',topic:'华东区客户路演',attendees:40,status:'待使用',catering:'茶歇+午餐'},
+  {id:'BK20260604001',roomId:2,room:'远航厅',booker:'吴刚',dept:'审计部',date:'2026-06-21',time:'14:00-17:00',topic:'内审问题整改推进',attendees:8,status:'待使用',catering:'无'},
+  {id:'BK20260604002',roomId:7,room:'贵宾接待室',booker:'郑雪',dept:'行政部',date:'2026-06-21',time:'10:00-11:30',topic:'接待深圳合作伙伴',attendees:6,status:'待使用',catering:'茶水'},
+  {id:'BK20260605001',roomId:1,room:'启航厅',booker:'黄磊',dept:'人力资源部',date:'2026-06-22',time:'09:00-11:00',topic:'月度绩效评审会',attendees:20,status:'待使用',catering:'茶歇'},
+  {id:'BK20260605002',roomId:9,room:'路演厅',booker:'刘洋',dept:'品牌部',date:'2026-06-22',time:'14:00-17:00',topic:'品牌升级发布会彩排',attendees:50,status:'待使用',catering:'午餐'},
+  {id:'BK20260605003',roomId:5,room:'协作间A',booker:'马丽',dept:'法务部',date:'2026-06-22',time:'10:00-11:00',topic:'合同条款讨论',attendees:4,status:'待使用',catering:'无'},
+  {id:'BK20260606001',roomId:12,room:'多功能厅',booker:'张伟',dept:'总裁办',date:'2026-06-25',time:'09:00-17:00',topic:'2026年中工作总结大会',attendees:100,status:'待使用',catering:'全天餐饮'},
+  {id:'BK20260606002',roomId:3,room:'聚力厅',booker:'赵强',dept:'技术部',date:'2026-06-23',time:'14:00-16:00',topic:'架构评审会',attendees:15,status:'待使用',catering:'无'},
+  {id:'BK20260606003',roomId:4,room:'创新坊',booker:'王芳',dept:'市场部',date:'2026-06-23',time:'09:30-12:00',topic:'Q3营销方案脑暴',attendees:6,status:'待使用',catering:'茶歇'},
+  {id:'BK20260607001',roomId:2,room:'远航厅',booker:'李娜',dept:'财务部',date:'2026-06-24',time:'09:00-11:00',topic:'预算编制培训',attendees:10,status:'待使用',catering:'无'},
+  {id:'BK20260607002',roomId:6,room:'协作间B',booker:'孙磊',dept:'人力资源部',date:'2026-06-20',time:'15:00-16:00',topic:'设备维护中',attendees:0,status:'已取消',catering:'无'},
+  {id:'BK20260608001',roomId:1,room:'启航厅',booker:'陈明',dept:'采购部',date:'2026-06-19',time:'14:00-16:00',topic:'供应商大会',attendees:30,status:'已完成',catering:'茶歇'},
+  {id:'BK20260608002',roomId:3,room:'聚力厅',booker:'周婷',dept:'销售部',date:'2026-06-19',time:'09:00-12:00',topic:'月度销售复盘',attendees:20,status:'已完成',catering:'茶歇'},
+];
+
+function save() {
+  localStorage.setItem(ROOMS_DB, JSON.stringify(rooms));
+  localStorage.setItem(BOOKINGS_DB, JSON.stringify(bookings));
+}
+
+let currentTab = 'rooms';
+function showTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.sidebar .menu-item').forEach(m => m.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  ['rooms','bookings','calendar'].forEach(t => {
+    document.getElementById('tab-'+t).style.display = t===tab ? 'block' : 'none';
+  });
+  if(tab==='rooms') renderRooms(rooms);
+  if(tab==='bookings') renderBookings(bookings);
+  if(tab==='calendar') renderCalendar();
+}
+
+function renderRooms(list) {
+  document.getElementById('roomGrid').innerHTML = list.map(r => `
+    <div class="room-status-card ${r.status==='空闲'?'idle':r.status==='维护中'?'maintain':'busy'}">
+      <div style="display:flex;justify-content:space-between;align-items:start;">
+        <div>
+          <div class="room-name">${r.name}</div>
+          <div class="room-info">${r.location} · ${r.capacity}人 · ${r.equip.length}项设备</div>
+        </div>
+        <span class="status ${r.status==='空闲'?'normal':r.status==='维护中'?'warning':'processing'}">${r.status}</span>
+      </div>
+      ${r.currentMeeting ? `<div style="margin-top:8px;padding:8px;background:var(--gray-50);border-radius:6px;font-size:12px;"><strong>${r.currentMeeting}</strong> <span style="color:var(--gray-400);">至 ${r.until}</span></div>` : ''}
+      <div class="room-equip">${r.equip.map(e=>'<span class="equip-tag">'+e+'</span>').join('')}</div>
+      <div style="margin-top:12px;display:flex;gap:6px;">
+        ${r.status==='空闲'?'<button class="btn btn-primary btn-sm" onclick="showNewBooking(\''+r.name+'\')">预定</button>':''}
+        <button class="btn btn-sm" style="background:var(--gray-100);color:var(--gray-600);" onclick="viewRoomBookings(${r.id})">查看预定</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderBookings(list) {
+  document.getElementById('bookingList').innerHTML = list.map(b => `
+    <tr>
+      <td><strong>${b.id}</strong></td>
+      <td>${b.room}</td>
+      <td>${b.booker}（${b.dept}）</td>
+      <td>${b.date}</td>
+      <td>${b.time}</td>
+      <td>${b.topic}</td>
+      <td><span class="status ${b.status==='已完成'?'completed':b.status==='进行中'?'processing':b.status==='待使用'?'pending':'rejected'}">${b.status}</span></td>
+      <td><button class="btn btn-primary btn-sm" onclick="viewBooking('${b.id}')">详情</button></td>
+    </tr>
+  `).join('');
+}
+
+function renderCalendar() {
+  const days = ['日','一','二','三','四','五','六'];
+  let html = days.map(d => `<div class="cal-header">${d}</div>`).join('');
+  // 2026年6月20日是周六，从周日(14)开始
+  for(let i=1;i<=14;i++) html += `<div class="cal-day"><div class="date" style="color:var(--gray-300);">${i-14+20>0?'':(5+i)}</div></div>`;
+  // 填充6月1-20（前20天已经在前面的循环处理了，这里简化处理）
+  // 实际渲染6月20-30日
+  for(let d=20;d<=30;d++) {
+    const dateStr = `2026-06-${String(d).padStart(2,'0')}`;
+    const dayBookings = bookings.filter(b => b.date === dateStr && b.status !== '已取消');
+    html += `<div class="cal-day"><div class="date">${d}日 周${days[new Date(2026,5,d).getDay()]}</div>`;
+    dayBookings.forEach(b => {
+      const cls = b.status==='进行中'?'orange':b.status==='已完成'?'green':'';
+      html += `<div class="event ${cls}">${b.time.split('-')[0]} ${b.booker}</div>`;
+    });
+    html += `</div>`;
+  }
+  document.getElementById('calendarGrid').innerHTML = html;
+}
+
+function searchRooms(k) {
+  renderRooms(rooms.filter(r => r.name.includes(k) || r.location.includes(k) || r.equip.some(e=>e.includes(k))));
+}
+function searchBookings(k) {
+  renderBookings(bookings.filter(b => b.topic.includes(k) || b.booker.includes(k) || b.room.includes(k)));
+}
+function viewRoomBookings(roomId) {
+  const room = rooms.find(r=>r.id===roomId);
+  const rb = bookings.filter(b=>b.roomId===roomId);
+  showModal(`
+    <h3 style="font-size:18px;margin-bottom:16px;">${room.name} — 预定记录</h3>
+    <table style="width:100%;font-size:13px;"><thead><tr><th>日期</th><th>时间</th><th>预定人</th><th>主题</th><th>状态</th></tr></thead>
+    <tbody>${rb.map(b=>'<tr><td>'+b.date+'</td><td>'+b.time+'</td><td>'+b.booker+'</td><td>'+b.topic+'</td><td><span class="status '+(b.status==='已完成'?'completed':b.status==='进行中'?'processing':'pending')+'">'+b.status+'</span></td></tr>').join('')}</tbody></table>
+    <div style="text-align:right;margin-top:16px;"><button class="btn btn-outline" onclick="closeModal()">关闭</button></div>
+  `);
+}
+function viewBooking(id) {
+  const b = bookings.find(x=>x.id===id);
+  showModal(`
+    <h3 style="font-size:18px;margin-bottom:16px;">📋 预定详情</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:14px;">
+      <div><span style="color:var(--gray-400);">预定编号</span><br><strong>${b.id}</strong></div>
+      <div><span style="color:var(--gray-400);">会议室</span><br><strong>${b.room}</strong></div>
+      <div><span style="color:var(--gray-400);">预定人</span><br><strong>${b.booker}（${b.dept}）</strong></div>
+      <div><span style="color:var(--gray-400);">日期</span><br><strong>${b.date}</strong></div>
+      <div><span style="color:var(--gray-400);">时间段</span><br><strong>${b.time}</strong></div>
+      <div><span style="color:var(--gray-400);">参会人数</span><br><strong>${b.attendees}人</strong></div>
+      <div style="grid-column:1/-1;"><span style="color:var(--gray-400);">会议主题</span><br><strong>${b.topic}</strong></div>
+      <div><span style="color:var(--gray-400);">茶水服务</span><br><strong>${b.catering}</strong></div>
+      <div><span style="color:var(--gray-400);">状态</span><br><span class="status ${b.status==='已完成'?'completed':b.status==='进行中'?'processing':'pending'}">${b.status}</span></div>
+    </div>
+    ${b.status==='待使用'?`<div style="margin-top:16px;display:flex;gap:8px;justify-content:flex-end;">
+      <button class="btn btn-danger btn-sm" onclick="cancelBooking('${b.id}')">取消预定</button>
+      <button class="btn btn-outline btn-sm" onclick="closeModal()">关闭</button>
+    </div>`:`<div style="text-align:right;margin-top:16px;"><button class="btn btn-outline" onclick="closeModal()">关闭</button></div>`}
+  `);
+}
+function cancelBooking(id) {
+  if(confirm('确定取消该预定？')) {
+    bookings = bookings.filter(b=>b.id!==id);
+    save();
+    closeModal();
+    renderBookings(bookings);
+  }
+}
+function showNewBooking(roomName) {
+  showModal(`
+    <h3 style="font-size:18px;margin-bottom:16px;">➕ 新建会议室预定</h3>
+    <div style="display:grid;gap:12px;">
+      <div><label style="font-size:13px;font-weight:600;">会议室</label><select id="bkRoom" style="width:100%;padding:8px;border:1px solid var(--gray-300);border-radius:6px;">
+        ${rooms.filter(r=>r.status==='空闲').map(r=>'<option'+(roomName===r.name?' selected':'')+'>'+r.name+' ('+r.location+' '+r.capacity+'人)</option>').join('')}
+      </select></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div><label style="font-size:13px;font-weight:600;">预定人</label><input id="bkName" style="width:100%;padding:8px;border:1px solid var(--gray-300);border-radius:6px;" value="席宝"></div>
+        <div><label style="font-size:13px;font-weight:600;">部门</label><input id="bkDept" style="width:100%;padding:8px;border:1px solid var(--gray-300);border-radius:6px;" value="信息中心"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div><label style="font-size:13px;font-weight:600;">日期</label><input type="date" id="bkDate" style="width:100%;padding:8px;border:1px solid var(--gray-300);border-radius:6px;" value="2026-06-21"></div>
+        <div><label style="font-size:13px;font-weight:600;">时间段</label><select id="bkTime" style="width:100%;padding:8px;border:1px solid var(--gray-300);border-radius:6px;">
+          <option>09:00-10:00</option><option>09:00-11:00</option><option>09:00-12:00</option>
+          <option>10:00-11:30</option><option>13:00-14:00</option><option>13:30-16:00</option>
+          <option>14:00-16:00</option><option>14:00-17:00</option><option>14:00-17:30</option>
+        </select></div>
+      </div>
+      <div><label style="font-size:13px;font-weight:600;">会议主题</label><input id="bkTopic" style="width:100%;padding:8px;border:1px solid var(--gray-300);border-radius:6px;" placeholder="请输入会议主题"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div><label style="font-size:13px;font-weight:600;">参会人数</label><input type="number" id="bkAttendees" style="width:100%;padding:8px;border:1px solid var(--gray-300);border-radius:6px;" value="10"></div>
+        <div><label style="font-size:13px;font-weight:600;">茶水服务</label><select id="bkCatering" style="width:100%;padding:8px;border:1px solid var(--gray-300);border-radius:6px;">
+          <option>无</option><option>茶歇</option><option>茶歇+午餐</option><option>全天餐饮</option>
+        </select></div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:20px;">
+      <button class="btn btn-outline" onclick="closeModal()">取消</button>
+      <button class="btn btn-primary" onclick="submitBooking()">确认预定</button>
+    </div>
+  `);
+}
+function submitBooking() {
+  const room = document.getElementById('bkRoom').value.split(' (')[0];
+  const roomObj = rooms.find(r=>r.name===room);
+  const newB = {
+    id: 'BK'+Date.now(), roomId: roomObj.id, room: room,
+    booker: document.getElementById('bkName').value,
+    dept: document.getElementById('bkDept').value,
+    date: document.getElementById('bkDate').value,
+    time: document.getElementById('bkTime').value,
+    topic: document.getElementById('bkTopic').value || '临时会议',
+    attendees: parseInt(document.getElementById('bkAttendees').value) || 5,
+    status: '待使用',
+    catering: document.getElementById('bkCatering').value
+  };
+  bookings.unshift(newB);
+  save();
+  closeModal();
+  renderBookings(bookings);
+  alert('✅ 预定成功！编号：' + newB.id);
+}
+function showNewRoom() {
+  showModal(`
+    <h3 style="font-size:18px;margin-bottom:16px;">➕ 新建会议室</h3>
+    <div style="display:grid;gap:12px;">
+      <div><label style="font-size:13px;font-weight:600;">会议室名称</label><input id="rmName" style="width:100%;padding:8px;border:1px solid var(--gray-300);border-radius:6px;"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div><label style="font-size:13px;font-weight:600;">位置</label><input id="rmLoc" style="width:100%;padding:8px;border:1px solid var(--gray-300);border-radius:6px;"></div>
+        <div><label style="font-size:13px;font-weight:600;">容量(人)</label><input type="number" id="rmCap" style="width:100%;padding:8px;border:1px solid var(--gray-300);border-radius:6px;" value="10"></div>
+      </div>
+      <div><label style="font-size:13px;font-weight:600;">设备（逗号分隔）</label><input id="rmEquip" style="width:100%;padding:8px;border:1px solid var(--gray-300);border-radius:6px;" placeholder="投影仪,白板,视频会议"></div>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:20px;">
+      <button class="btn btn-outline" onclick="closeModal()">取消</button>
+      <button class="btn btn-primary" onclick="submitRoom()">确认创建</button>
+    </div>
+  `);
+}
+function submitRoom() {
+  rooms.push({
+    id: rooms.length+1, name: document.getElementById('rmName').value,
+    floor: '', capacity: parseInt(document.getElementById('rmCap').value),
+    location: document.getElementById('rmLoc').value,
+    equip: document.getElementById('rmEquip').value.split(',').map(s=>s.trim()),
+    status: '空闲', currentMeeting: '', until: ''
+  });
+  save(); closeModal(); renderRooms(rooms);
+}
+function showModal(html) {
+  const o = document.getElementById('modal-overlay');
+  o.style.display = 'flex';
+  document.getElementById('modalContent').innerHTML = html;
+}
+function closeModal() { document.getElementById('modal-overlay').style.display = 'none'; }
+
+renderRooms(rooms);
+</script>
+</body>
+</html>
