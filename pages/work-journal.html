@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>席宝的工作日志仪表盘</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: system-ui, -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; }
+.topbar { display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); color: white; }
+.topbar .logo { display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 700; }
+.topbar .user { display: flex; align-items: center; gap: 8px; }
+.topbar .avatar { width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,0.3); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; }
+.container { max-width: 1100px; margin: 0 auto; padding: 24px 20px; }
+.header { text-align: center; color: white; padding: 20px 0 24px; }
+.header h1 { font-size: 26px; text-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+.header p { font-size: 13px; opacity: 0.85; margin-top: 4px; }
+.cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
+.card { background: white; border-radius: 12px; padding: 18px; text-align: center; box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+.card .icon { font-size: 24px; margin-bottom: 6px; }
+.card .val { font-size: 28px; font-weight: 700; color: #333; }
+.card .lbl { font-size: 11px; color: #999; margin-top: 2px; }
+.charts { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 20px; }
+.chart-box { background: white; border-radius: 12px; padding: 18px; box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+.chart-box h3 { font-size: 14px; color: #333; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 2px solid #f0f0f0; }
+.chart { width: 100%; height: 260px; }
+.timeline-box { background: white; border-radius: 12px; padding: 18px; box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+.timeline-box h3 { font-size: 14px; color: #333; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 2px solid #f0f0f0; }
+.tl-item { display: flex; align-items: center; padding: 8px 0; border-bottom: 1px solid #f5f5f5; font-size: 13px; }
+.tl-item:last-child { border-bottom: none; }
+.tl-time { min-width: 90px; color: #667; font-weight: 600; }
+.tl-badge { display: inline-block; padding: 2px 7px; border-radius: 8px; font-size: 10px; font-weight: 600; color: white; margin: 0 8px; }
+.b-m { background: #e74c3c; } .b-d { background: #3498db; } .b-e { background: #f39c12; }
+.b-c { background: #2ecc71; } .b-t { background: #9b59b6; } .b-l { background: #1abc9c; }
+.tl-name { flex: 1; }
+.tl-dur { color: #888; min-width: 60px; text-align: right; }
+.footer { text-align: center; color: rgba(255,255,255,0.6); font-size: 11px; padding: 16px 0; }
+@media (max-width: 768px) { .cards { grid-template-columns: repeat(2, 1fr); } .charts { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="logo"><span>📊</span><span>工作日志仪表盘</span></div>
+  <div class="user"><div class="avatar">席</div><span>席宝</span></div>
+</div>
+<div class="container">
+  <div class="header">
+    <h1>📊 席宝的工作日志仪表盘</h1>
+    <p>2026年6月22日 · 数据自动采集 · 实时更新</p>
+  </div>
+  <div class="cards">
+    <div class="card"><div class="icon">⏱️</div><div class="val">728</div><div class="lbl">总工作时长(分钟)</div></div>
+    <div class="card"><div class="icon">📋</div><div class="val">13</div><div class="lbl">事项总数</div></div>
+    <div class="card"><div class="icon">✅</div><div class="val">1/2</div><div class="lbl">待办完成率</div></div>
+    <div class="card"><div class="icon">⭐</div><div class="val">6</div><div class="lbl">效率评分(/10)</div></div>
+  </div>
+  <div class="charts">
+    <div class="chart-box"><h3>🥧 时间分配比例</h3><div class="chart" id="pie"></div></div>
+    <div class="chart-box"><h3>📊 各类型时长对比</h3><div class="chart" id="bar"></div></div>
+  </div>
+  <div class="timeline-box">
+    <h3>📅 今日事项时间线</h3>
+    <div class="tl-item"><span class="tl-time">09:00-09:15</span><span class="tl-badge b-e">邮件</span><span class="tl-name">查看处理邮件（10封）</span><span class="tl-dur">15min</span></div>
+    <div class="tl-item"><span class="tl-time">09:30-09:45</span><span class="tl-badge b-c">沟通</span><span class="tl-name">山东实施群沟通</span><span class="tl-dur">15min</span></div>
+    <div class="tl-item"><span class="tl-time">10:00-10:15</span><span class="tl-badge b-c">沟通</span><span class="tl-name">26年B端全员群沟通</span><span class="tl-dur">15min</span></div>
+    <div class="tl-item"><span class="tl-time">10:15-10:25</span><span class="tl-badge b-c">沟通</span><span class="tl-name">护网启动会群沟通</span><span class="tl-dur">10min</span></div>
+    <div class="tl-item"><span class="tl-time">14:00-16:00</span><span class="tl-badge b-m">会议</span><span class="tl-name">Comate培训</span><span class="tl-dur">120min</span></div>
+    <div class="tl-item"><span class="tl-time">14:00-15:00</span><span class="tl-badge b-l">本地</span><span class="tl-name">企业门户页面开发</span><span class="tl-dur">60min</span></div>
+    <div class="tl-item"><span class="tl-time">15:00-16:00</span><span class="tl-badge b-l">本地</span><span class="tl-name">AI Agent新闻页面制作</span><span class="tl-dur">60min</span></div>
+    <div class="tl-item"><span class="tl-time">15:00-19:18</span><span class="tl-badge b-l">本地</span><span class="tl-name">编写工作日志自动采集Skill</span><span class="tl-dur">258min</span></div>
+    <div class="tl-item"><span class="tl-time">16:00-17:00</span><span class="tl-badge b-d">文档</span><span class="tl-name">编辑席宝升级过程总结.otl</span><span class="tl-dur">60min</span></div>
+    <div class="tl-item"><span class="tl-time">17:00-18:00</span><span class="tl-badge b-d">文档</span><span class="tl-name">编辑WPS Comate个人学习总结.otl</span><span class="tl-dur">60min</span></div>
+    <div class="tl-item"><span class="tl-time">18:00-18:30</span><span class="tl-badge b-d">文档</span><span class="tl-name">席宝项目管理.dbt 更新</span><span class="tl-dur">30min</span></div>
+    <div class="tl-item"><span class="tl-time">18:30-18:45</span><span class="tl-badge b-d">文档</span><span class="tl-name">查看客成PM新人学习路径</span><span class="tl-dur">15min</span></div>
+    <div class="tl-item"><span class="tl-time">待处理</span><span class="tl-badge b-t">待办</span><span class="tl-name">完成skill作业</span><span class="tl-dur">未完成</span></div>
+  </div>
+  <div class="footer">数据来源：WPS协作日历·会议·邮件·IM群聊·云文档·本地文件·待办事项<br>由 WPS Comate 自动采集生成 · 每工作日下午6点自动更新</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+<script>
+var pie=echarts.init(document.getElementById('pie'));
+pie.setOption({tooltip:{trigger:'item',formatter:'{b}: {c}min ({d}%)'},legend:{bottom:0,textStyle:{fontSize:11}},color:['#e74c3c','#3498db','#f39c12','#2ecc71','#9b59b6','#1abc9c'],series:[{type:'pie',radius:['35%','65%'],center:['50%','45%'],label:{show:true,formatter:'{b}\n{d}%',fontSize:11},itemStyle:{borderRadius:5,borderColor:'#fff',borderWidth:2},data:[{value:543,name:'文档工作'},{value:120,name:'会议培训'},{value:40,name:'IM沟通'},{value:15,name:'邮件处理'},{value:0,name:'待办任务'},{value:10,name:'其他'}]}]});
+var bar=echarts.init(document.getElementById('bar'));
+bar.setOption({tooltip:{trigger:'axis'},grid:{left:'3%',right:'4%',bottom:'3%',top:'10%',containLabel:true},xAxis:{type:'category',data:['文档','会议','沟通','邮件','待办','其他']},yAxis:{type:'value',name:'分钟'},series:[{type:'bar',barWidth:'50%',data:[{value:543,itemStyle:{color:'#3498db'}},{value:120,itemStyle:{color:'#e74c3c'}},{value:40,itemStyle:{color:'#2ecc71'}},{value:15,itemStyle:{color:'#f39c12'}},{value:0,itemStyle:{color:'#9b59b6'}},{value:10,itemStyle:{color:'#1abc9c'}}],label:{show:true,position:'top',formatter:'{c}min'}}]});
+window.addEventListener('resize',function(){pie.resize();bar.resize()});
+</script>
+</body>
+</html>
