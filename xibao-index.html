@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>席宝的个人网站 - 席宝</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: #f8fafc;
+            color: #333;
+            min-height: 100vh;
+        }
+        
+        /* 顶部导航 */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 64px;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 48px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            z-index: 1000;
+        }
+        
+        .navbar .brand {
+            font-size: 20px;
+            font-weight: 700;
+            color: #6366f1;
+            letter-spacing: -0.5px;
+        }
+        
+        .navbar .user-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .navbar .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        /* Hero 区域 */
+        .hero {
+            margin-top: 64px;
+            padding: 100px 48px 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
+            animation: float 20s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(5deg); }
+            66% { transform: translate(-20px, 20px) rotate(-3deg); }
+        }
+        
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 16px;
+            font-weight: 800;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+        
+        .hero .subtitle {
+            font-size: 22px;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+            font-weight: 300;
+        }
+        
+        .hero .org-badge {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 8px 24px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 30px;
+            font-size: 15px;
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* 内容区域 */
+        .content {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 80px 48px;
+        }
+        
+        .section-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a1a2e;
+            margin-bottom: 32px;
+            position: relative;
+            padding-left: 20px;
+        }
+        
+        .section-title::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 28px;
+            background: #6366f1;
+            border-radius: 2px;
+        }
+        
+        /* 卡片网格 */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 48px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(0,0,0,0.04);
+        }
+        
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+        }
+        
+        .card-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #ede9fe, #e0e7ff);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+        
+        .card h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a2e;
+            margin-bottom: 10px;
+        }
+        
+        .card p {
+            font-size: 15px;
+            color: #666;
+            line-height: 1.7;
+        }
+        
+        /* 技能标签 */
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 16px;
+        }
+        
+        .tag {
+            padding: 6px 16px;
+            background: #ede9fe;
+            color: #6366f1;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        
+        /* 页脚 */
+        .footer {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+            font-size: 14px;
+            border-top: 1px solid rgba(0,0,0,0.06);
+            background: white;
+        }
+        
+        .footer strong {
+            color: #6366f1;
+        }
+        
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .navbar { padding: 0 20px; }
+            .hero { padding: 80px 24px 60px; }
+            .hero h1 { font-size: 32px; }
+            .hero .subtitle { font-size: 18px; }
+            .content { padding: 60px 24px; }
+            .card-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <span class="brand">席宝</span>
+        <div class="user-badge">
+            <div class="user-avatar">席</div>
+            <span>WPS Comate 用户</span>
+        </div>
+    </nav>
+    
+    <section class="hero">
+        <h1>席宝的个人网站</h1>
+        <p class="subtitle">WPS Comate 个性化主页</p>
+        <span class="org-badge">🏢 金山办公 · WPS 365</span>
+    </section>
+    
+    <main class="content">
+        <h2 class="section-title">关于我</h2>
+        <div class="card-grid">
+            <div class="card">
+                <div class="card-icon">👋</div>
+                <h3>你好，我是席宝</h3>
+                <p>WPS Comate 智能助手用户，专注于 SaaS 客户交付与 AI 技能开发。</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">🎯</div>
+                <h3>工作方向</h3>
+                <p>开发通用型 AI Skill 并产品化，目标是打造类似 App Store 模式的标准化技能市场。</p>
+            </div>
+            <div class="card">
+                <div class="card-icon">💡</div>
+                <h3>兴趣领域</h3>
+                <p>AI 应用开发、SaaS 产品交付、自动化工作流、Web 应用开发。</p>
+            </div>
+        </div>
+        
+        <h2 class="section-title">技能标签</h2>
+        <div class="tags">
+            <span class="tag">WPS 365</span>
+            <span class="tag">SaaS 交付</span>
+            <span class="tag">AI Skill</span>
+            <span class="tag">Web 开发</span>
+            <span class="tag">项目管理</span>
+            <span class="tag">自动化</span>
+            <span class="tag">产品化</span>
+            <span class="tag">客户成功</span>
+        </div>
+    </main>
+    
+    <footer class="footer">
+        Powered by <strong>WPS Comate</strong> · 由 AI 智能助手生成
+    </footer>
+</body>
+</html>
