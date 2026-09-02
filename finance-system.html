@@ -70,38 +70,47 @@
 <script src="assets/app.js"></script>
 <script>
 const defaultExpenses=[
-  {id:'BX2026001',applicant:'李娜',dept:'市场营销部',type:'维修费',amount:9871,date:'2026-06-18',status:'待审核'},
-  {id:'BX2026002',applicant:'张伟',dept:'技术研发部',type:'交通费',amount:3576,date:'2026-06-17',status:'部门经理已审'},
-  {id:'BX2026003',applicant:'李娜',dept:'市场营销部',type:'维修费',amount:5623,date:'2026-06-16',status:'财务审核中'},
-  {id:'BX2026004',applicant:'孙磊',dept:'行政综合部',type:'交通费',amount:13493,date:'2026-06-15',status:'已通过'},
-  {id:'BX2026005',applicant:'吴刚',dept:'法务合规部',type:'培训费',amount:2414,date:'2026-06-14',status:'已驳回'},
-  {id:'BX2026006',applicant:'刘芳',dept:'财务管理部',type:'检测费',amount:1492,date:'2026-06-13',status:'已通过'},
-  {id:'BX2026007',applicant:'李娜',dept:'市场营销部',type:'招待费',amount:4058,date:'2026-06-12',status:'已通过'},
-  {id:'BX2026008',applicant:'王强',dept:'生产制造部',type:'办公费',amount:12708,date:'2026-06-11',status:'已通过'},
-  {id:'BX2026009',applicant:'刘芳',dept:'财务管理部',type:'检测费',amount:4100,date:'2026-06-10',status:'待审核'},
-  {id:'BX2026010',applicant:'赵丽',dept:'人力资源部',type:'交通费',amount:518,date:'2026-06-09',status:'部门经理已审'},
-  {id:'BX2026011',applicant:'陈明',dept:'项目交付部',type:'交通费',amount:11754,date:'2026-06-08',status:'财务审核中'},
-  {id:'BX2026012',applicant:'吴刚',dept:'法务合规部',type:'维修费',amount:8839,date:'2026-06-07',status:'已通过'},
-  {id:'BX2026013',applicant:'王强',dept:'生产制造部',type:'交通费',amount:6867,date:'2026-06-06',status:'已驳回'},
-  {id:'BX2026014',applicant:'赵丽',dept:'人力资源部',type:'检测费',amount:4443,date:'2026-06-05',status:'已通过'},
-  {id:'BX2026015',applicant:'李娜',dept:'市场营销部',type:'招待费',amount:2490,date:'2026-06-04',status:'已通过'},
-  {id:'BX2026016',applicant:'陈明',dept:'项目交付部',type:'差旅费',amount:7388,date:'2026-06-03',status:'已通过'},
-  {id:'BX2026017',applicant:'陈明',dept:'项目交付部',type:'检测费',amount:5500,date:'2026-06-02',status:'待审核'},
-  {id:'BX2026018',applicant:'李娜',dept:'市场营销部',type:'差旅费',amount:6754,date:'2026-06-01',status:'部门经理已审'},
-  {id:'BX2026019',applicant:'王强',dept:'生产制造部',type:'通讯费',amount:4684,date:'2026-06-01',status:'财务审核中'},
-  {id:'BX2026020',applicant:'郑雪',dept:'市场营销部',type:'差旅费',amount:12249,date:'2026-06-01',status:'已通过'},
-  {id:'BX2026021',applicant:'张伟',dept:'技术研发部',type:'培训费',amount:8840,date:'2026-06-01',status:'已驳回'},
-  {id:'BX2026022',applicant:'吴刚',dept:'法务合规部',type:'检测费',amount:10012,date:'2026-06-01',status:'已通过'},
-  {id:'BX2026023',applicant:'李娜',dept:'市场营销部',type:'差旅费',amount:9176,date:'2026-06-01',status:'已通过'},
-  {id:'BX2026024',applicant:'孙磊',dept:'行政综合部',type:'通讯费',amount:14413,date:'2026-06-01',status:'已通过'},
-  {id:'BX2026025',applicant:'李娜',dept:'市场营销部',type:'差旅费',amount:5215,date:'2026-06-01',status:'待审核'},
-  {id:'BX2026026',applicant:'周婷',dept:'技术研发部',type:'办公费',amount:9112,date:'2026-06-01',status:'部门经理已审'},
-  {id:'BX2026027',applicant:'郑雪',dept:'市场营销部',type:'招待费',amount:5858,date:'2026-06-01',status:'财务审核中'},
-  {id:'BX2026028',applicant:'李娜',dept:'市场营销部',type:'检测费',amount:1502,date:'2026-06-01',status:'已通过'},
-  {id:'BX2026029',applicant:'陈明',dept:'项目交付部',type:'通讯费',amount:7498,date:'2026-06-01',status:'已驳回'},
-  {id:'BX2026030',applicant:'陈明',dept:'项目交付部',type:'维修费',amount:6663,date:'2026-06-01',status:'已通过'},
+  {id:'BX2026001',applicant:'李娜',dept:'市场营销部',project:'华东客户现场支持',type:'差旅费',amount:9871,date:'2026-06-18',status:'未审批'},
+  {id:'BX2026002',applicant:'张伟',dept:'技术研发部',project:'北京研发中心出差',type:'差旅费',amount:3576,date:'2026-06-17',status:'已通过'},
+  {id:'BX2026003',applicant:'李娜',dept:'市场营销部',project:'市场调研活动',type:'办公费',amount:5623,date:'2026-06-16',status:'已驳回'},
+  {id:'BX2026004',applicant:'孙磊',dept:'行政综合部',project:'办公设备采购',type:'办公费',amount:13493,date:'2026-06-15',status:'已通过'},
+  {id:'BX2026005',applicant:'吴刚',dept:'法务合规部',project:'法律培训课程',type:'培训费',amount:2414,date:'2026-06-14',status:'未审批'},
+  {id:'BX2026006',applicant:'刘芳',dept:'财务管理部',project:'财务系统年检',type:'检测费',amount:1492,date:'2026-06-13',status:'已通过'},
+  {id:'BX2026007',applicant:'李娜',dept:'市场营销部',project:'VIP客户招待',type:'招待费',amount:4058,date:'2026-06-12',status:'已通过'},
+  {id:'BX2026008',applicant:'王强',dept:'生产制造部',project:'生产线维护耗材',type:'办公费',amount:12708,date:'2026-06-11',status:'未审批'},
+  {id:'BX2026009',applicant:'刘芳',dept:'财务管理部',project:'财务软件年费',type:'办公费',amount:4100,date:'2026-06-10',status:'已通过'},
+  {id:'BX2026010',applicant:'赵丽',dept:'人力资源部',project:'员工通勤补贴',type:'交通费',amount:518,date:'2026-06-09',status:'未审批'},
+  {id:'BX2026011',applicant:'陈明',dept:'项目交付部',project:'山东机场项目出差',type:'差旅费',amount:11754,date:'2026-06-08',status:'已通过'},
+  {id:'BX2026012',applicant:'吴刚',dept:'法务合规部',project:'合同审查费',type:'检测费',amount:8839,date:'2026-06-07',status:'已通过'},
+  {id:'BX2026013',applicant:'王强',dept:'生产制造部',project:'园区交通接送',type:'交通费',amount:6867,date:'2026-06-06',status:'已驳回'},
+  {id:'BX2026014',applicant:'赵丽',dept:'人力资源部',project:'体检中心费用',type:'检测费',amount:4443,date:'2026-06-05',status:'已通过'},
+  {id:'BX2026015',applicant:'李娜',dept:'市场营销部',project:'行业展会招待',type:'招待费',amount:2490,date:'2026-06-04',status:'已通过'},
+  {id:'BX2026016',applicant:'陈明',dept:'项目交付部',project:'华南区域客户拜访',type:'差旅费',amount:7388,date:'2026-06-03',status:'已通过'},
+  {id:'BX2026017',applicant:'陈明',dept:'项目交付部',project:'项目验收检测',type:'检测费',amount:5500,date:'2026-06-02',status:'未审批'},
+  {id:'BX2026018',applicant:'李娜',dept:'市场营销部',project:'西南区域调研',type:'差旅费',amount:6754,date:'2026-06-01',status:'已驳回'},
+  {id:'BX2026019',applicant:'王强',dept:'生产制造部',project:'车间通讯设备',type:'通讯费',amount:4684,date:'2026-06-01',status:'未审批'},
+  {id:'BX2026020',applicant:'郑雪',dept:'市场营销部',project:'华北客户交流会',type:'差旅费',amount:12249,date:'2026-06-01',status:'已通过'},
+  {id:'BX2026021',applicant:'张伟',dept:'技术研发部',project:'Golang技术培训',type:'培训费',amount:8840,date:'2026-06-01',status:'已通过'},
+  {id:'BX2026022',applicant:'吴刚',dept:'法务合规部',project:'知识产权检测',type:'检测费',amount:10012,date:'2026-06-01',status:'已通过'},
+  {id:'BX2026023',applicant:'李娜',dept:'市场营销部',project:'杭州办事处出差',type:'差旅费',amount:9176,date:'2026-06-01',status:'未审批'},
+  {id:'BX2026024',applicant:'孙磊',dept:'行政综合部',project:'员工手机话费',type:'通讯费',amount:14413,date:'2026-06-01',status:'已通过'},
+  {id:'BX2026025',applicant:'李娜',dept:'市场营销部',project:'深圳客户拜访',type:'差旅费',amount:5215,date:'2026-06-01',status:'未审批'},
+  {id:'BX2026026',applicant:'周婷',dept:'技术研发部',project:'新员工入职办公',type:'办公费',amount:9112,date:'2026-06-01',status:'已通过'},
+  {id:'BX2026027',applicant:'郑雪',dept:'市场营销部',project:'合作伙伴晚宴',type:'招待费',amount:5858,date:'2026-06-01',status:'已驳回'},
+  {id:'BX2026028',applicant:'李娜',dept:'市场营销部',project:'上海客户检测',type:'检测费',amount:1502,date:'2026-06-01',status:'已通过'},
+  {id:'BX2026029',applicant:'陈明',dept:'项目交付部',project:'远程会议设备',type:'通讯费',amount:7498,date:'2026-06-01',status:'未审批'},
+  {id:'BX2026030',applicant:'陈明',dept:'项目交付部',project:'项目设备维修',type:'维修费',amount:6663,date:'2026-06-01',status:'已通过'},
 ];
-if(!DB.get('fin_expenses').length) DB.set('fin_expenses',defaultExpenses);
+// 自动迁移旧数据（补充project字段，统一status）
+(function() {
+  var list = DB.get('fin_expenses');
+  if (!list.length) { DB.set('fin_expenses', defaultExpenses); return; }
+  list.forEach(function(e) {
+    if (!e.project) e.project = e.type + '项目';
+    if (e.status === '待审核' || e.status === '部门经理已审' || e.status === '财务审核中') e.status = '未审批';
+  });
+  DB.set('fin_expenses', list);
+})();
 
 const defaultInvoices=[
   {id:'INV001',number:'0894560021',code:'011002600311',type:'增值税普票',direction:'进项',counterparty:'上海恒远建设工程有限公司',amount:161495,tax:9690,date:'2026-06-18',status:'已认证',uploadDate:'2026-06-18'},
@@ -231,17 +240,27 @@ const defaultSettlements=[
 if(!DB.get('fin_settlements').length) DB.set('fin_settlements',defaultSettlements);
 
 let currentTab='gl';
+let expenseSubTab='list'; // 费用报销子页：'list'=全部报销单列表, 'submit'=提交报销单
+let editingExpenseId=null; // 编辑模式下的报销单ID，null表示新建
+
+// 员工名单（智能字段 - 报销人可选范围）
+const staffList=['李娜','张伟','孙磊','吴刚','刘芳','王强','赵丽','陈明','郑雪','周婷','席宝'];
+const deptMap={'李娜':'市场营销部','张伟':'技术研发部','孙磊':'行政综合部','吴刚':'法务合规部','刘芳':'财务管理部','王强':'生产制造部','赵丽':'人力资源部','陈明':'项目交付部','郑雪':'市场营销部','周婷':'技术研发部','席宝':'人力资源部'};
+
 function switchTab(tab){
   currentTab=tab;
+  expenseSubTab='list'; editingExpenseId=null; // 重置费用报销子页
   document.querySelectorAll('.menu-item').forEach(m=>m.classList.remove('active'));
   event.target.closest('.menu-item')?.classList.add('active');
   const ab=document.getElementById('add-btn');ab.style.display='';
-  const map={gl:['新建凭证',showNewVoucher],expense:['新建报销',showNewExpense],invoice:['上传发票',showUploadInvoice],report:['导出报表',()=>Modal.toast('📥 导出中...')],receivable:['-',null],payable:['-',null],asset:['新增资产',showNewAsset],budget:['-',null],bank:['-',null],settlement:['新建结算单',showNewSettlement]};
-  const m=map[tab];if(m[0]==='-')ab.style.display='none';else{ab.textContent='➕ '+m[0];ab.onclick=m[1]||(()=>{});}
+  const map={gl:['新建凭证',showNewVoucher],expense:['',null],invoice:['上传发票',showUploadInvoice],report:['导出报表',()=>Modal.toast('📥 导出中...')],receivable:['-',null],payable:['-',null],asset:['新增资产',showNewAsset],budget:['-',null],bank:['-',null],settlement:['新建结算单',showNewSettlement]};
+  const m=map[tab];if(!m||m[0]==='-')ab.style.display='none';else if(m[0]){ab.textContent='➕ '+m[0];ab.onclick=m[1]||(()=>{});}
+  else ab.style.display='none';
   const titles={gl:'📒 凭证管理',expense:'🧾 费用报销',invoice:'📄 发票台账',receivable:'📥 应收账款',payable:'📤 应付账款',asset:'🏠 固定资产',budget:'📊 预算执行',report:'📊 财务报表',bank:'🏦 银行对账',settlement:'💸 付款结算'};
   document.getElementById('page-title').textContent=titles[tab]||'';
   ({gl:renderGL,expense:renderExpense,invoice:renderInvoice,receivable:renderReceivable,payable:renderPayable,asset:renderAsset,budget:renderBudget,report:renderReport,bank:renderBank,settlement:renderSettlement})[tab]?.(document.getElementById('tab-content'));
 }
+function switchExpenseSubTab(sub){expenseSubTab=sub;renderExpense(document.getElementById('tab-content'));}
 
 function renderGL(el){
   const kw=(document.getElementById('fin-gl-kw')?.value||'').toLowerCase();
@@ -254,46 +273,325 @@ function renderGL(el){
   <div style="padding:16px;text-align:center;color:var(--gray-400);font-size:13px">共 ${vouchers.length} 条凭证</div></div></div>`;
 }
 
-// ===== 费用报销 =====
-function renderExpense(el){
-  const list=DB.get('fin_expenses');
-  const kw=(document.getElementById('fin-exp-kw')?.value||'').toLowerCase();
-  const filtered=kw?list.filter(i=>i.applicant.toLowerCase().includes(kw)||i.type.includes(kw)||i.id.toLowerCase().includes(kw)):list;
-  const pending=list.filter(i=>i.status==='待审核').length;
-  const approved=list.filter(i=>i.status==='已通过');
-  el.innerHTML=(wfHtml||'')+`<div class="portal-stats" style="margin-bottom:20px">
-    <div class="stat-card"><div class="label">待审核</div><div class="value">${pending}</div></div>
-    <div class="stat-card green"><div class="label">已报销总额</div><div class="value">¥${Summary.money(Summary.calc(approved,'amount'))}</div></div>
-    <div class="stat-card orange"><div class="label">审批流程中</div><div class="value">${list.filter(i=>i.status.includes('已审')).length}</div></div>
-  </div>
-  <div class="filter-bar"><input type="text" id="fin-exp-kw" placeholder="搜索报销人/类型/单号..." oninput="renderExpense(document.getElementById('tab-content'))" style="padding:6px 12px;border:1px solid var(--gray-200);border-radius:6px;font-size:13px;width:240px"></div>
-  <div class="card"><div class="card-header"><h3>报销审批流程说明</h3></div><div class="card-body padded" style="font-size:13px;color:var(--gray-600)">
-    <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
-      <span style="padding:4px 12px;background:var(--primary-light);color:var(--primary);border-radius:4px;font-weight:600">部门经理审核</span>→
-      <span style="padding:4px 12px;background:#fef3c7;color:#92400e;border-radius:4px;font-weight:600">财务审核</span>→
-      <span style="padding:4px 12px;background:#d1fae5;color:#065f46;border-radius:4px;font-weight:600">CFO审批</span>→
-      <span style="padding:4px 12px;background:#d1fae5;color:#065f46;border-radius:4px;font-weight:600">出纳付款</span>
+// ===== 费用报销（两页模式） =====
+// renderExpense 根据 expenseSubTab 决定渲染列表或提交表单
+function renderExpense(el) {
+  if (expenseSubTab === 'submit') {
+    renderExpenseSubmit(el);
+  } else {
+    renderExpenseList(el);
+  }
+}
+
+// ===== 全部报销单列表 =====
+function renderExpenseList(el) {
+  const list = DB.get('fin_expenses');
+  const kw = (document.getElementById('fin-exp-kw')?.value || '').toLowerCase();
+  const filtered = kw ? list.filter(i => 
+    (i.applicant||'').toLowerCase().includes(kw) || 
+    (i.project||'').toLowerCase().includes(kw) ||
+    (i.type||'').toLowerCase().includes(kw) || 
+    (i.id||'').toLowerCase().includes(kw)
+  ) : list;
+  
+  // 统计三种状态的数量
+  const unapproved = list.filter(i => i.status === '未审批').length;
+  const approved   = list.filter(i => i.status === '已通过');
+  const rejected   = list.filter(i => i.status === '已驳回').length;
+
+  el.innerHTML = `
+    <!-- 子页 Tab 切换 -->
+    <div style="display:flex;gap:0;margin-bottom:20px;border-bottom:2px solid var(--gray-100)">
+      <button onclick="switchExpenseSubTab('list')" style="flex:none;padding:10px 24px;border:none;background:transparent;font-size:14px;font-weight:600;color:var(--primary);border-bottom:2px solid var(--primary);margin-bottom:-2px;cursor:pointer">📋 全部报销单</button>
+      <button onclick="switchExpenseSubTab('submit')" style="flex:none;padding:10px 24px;border:none;background:transparent;font-size:14px;font-weight:600;color:var(--gray-500);cursor:pointer">📝 提交报销单</button>
     </div>
-    <div style="color:var(--gray-400);font-size:12px">金额≤5000元：部门经理审批即可 | 5000-20000元：需财务审核 | ＞20000元：需CFO审批</div>
-  </div></div>
-  <div class="card"><div class="card-body"><table><thead><tr><th>单号</th><th>报销人</th><th>部门</th><th>类型</th><th>金额</th><th>日期</th><th>审批阶段</th><th>状态</th><th>操作</th></tr></thead>
-  <tbody>${filtered.map(e=>{const stages=['待审核','部门经理已审','财务审核中','CFO审批','出纳付款','已通过'];const stageIdx=['待审核','部门经理已审','财务审核中','CFO审批','已通过','已驳回'].indexOf(e.status);
-    return `<tr><td>${e.id}</td><td><strong>${e.applicant}</strong></td><td>${e.dept}</td><td>${e.type}</td><td style="font-weight:600">¥${e.amount.toLocaleString()}</td><td>${e.date}</td>
-    <td><div style="display:flex;gap:4px">${stages.map((s,i)=>`<span style="width:8px;height:8px;border-radius:50%;background:${i<=stageIdx?'var(--success)':'var(--gray-200)'}"></span>`).join('')}</div></td>
-    <td><span class="status ${e.status==='待审核'?'pending':e.status.includes('已审')?'processing':e.status==='已通过'?'approved':'rejected'}">${e.status}</span></td>
-    <td>${e.status==='待审核'?`<button class="btn btn-sm btn-primary" onclick="approveExpense('${e.id}')">通过</button> <button class="btn btn-sm btn-danger" onclick="Modal.toast('❌ 已驳回','error')">驳回</button>`:`<a href="#" onclick="viewExpense('${e.id}');return false" style="color:var(--primary);font-size:13px;text-decoration:none">查看</a>`}</td></tr>`;}).join('')}</tbody></table></div></div>`;
+    <!-- 统计卡片 -->
+    <div class="portal-stats" style="margin-bottom:20px">
+      <div class="stat-card"><div class="label">未审批</div><div class="value">${unapproved}</div></div>
+      <div class="stat-card green"><div class="label">已通过总额</div><div class="value">¥${Summary.money(Summary.calc(approved,'amount'))}</div></div>
+      <div class="stat-card" style="border-left-color:#dc2626"><div class="label">已驳回</div><div class="value">${rejected}</div></div>
+    </div>
+    <!-- 搜索栏 -->
+    <div class="filter-bar"><input type="text" id="fin-exp-kw" placeholder="搜索报销人/报销项目/类型/单号..." oninput="renderExpenseList(document.getElementById('tab-content'))" style="padding:6px 12px;border:1px solid var(--gray-200);border-radius:6px;font-size:13px;width:280px"></div>
+    <!-- 报销单列表 -->
+    <div class="card"><div class="card-body">
+      <div style="overflow-x:auto">
+      <table>
+        <thead><tr><th>单号</th><th>报销人</th><th>部门</th><th>报销项目</th><th>报销类别</th><th>金额</th><th>日期</th><th>状态</th><th>操作</th></tr></thead>
+        <tbody>${filtered.map(e => {
+          const statusClass = e.status === '已通过' ? 'approved' : e.status === '已驳回' ? 'rejected' : 'pending';
+          let actionBtn = '';
+          if (e.status === '未审批') {
+            actionBtn = `<button class="btn btn-sm btn-success" onclick="approveExpense('${e.id}')">✅ 通过</button> <button class="btn btn-sm btn-danger" onclick="rejectExpense('${e.id}')">驳回</button>`;
+          } else if (e.status === '已驳回') {
+            actionBtn = `<button class="btn btn-sm btn-warning" onclick="editExpense('${e.id}')">✏️ 修改</button>`;
+          } else {
+            actionBtn = `<span style="color:var(--gray-400);font-size:12px">已归档</span>`;
+          }
+          return `<tr>
+            <td style="font-size:12px;color:var(--gray-500)">${e.id}</td>
+            <td><strong>${e.applicant}</strong></td>
+            <td style="font-size:12px">${e.dept}</td>
+            <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${e.project || '-'}</td>
+            <td>${e.type}</td>
+            <td style="font-weight:600">¥${e.amount.toLocaleString()}</td>
+            <td style="font-size:12px">${e.date}</td>
+            <td><span class="status ${statusClass}">${e.status}</span></td>
+            <td>${actionBtn}</td>
+          </tr>`;
+        }).join('')}</tbody>
+      </table>
+      </div>
+      <div style="padding:16px;text-align:center;color:var(--gray-400);font-size:13px">共 ${filtered.length} 条报销单记录</div>
+    </div></div>`;
 }
-function showNewExpense(){
-  const fields=[{name:'type',label:'报销类型',type:'select',options:['差旅费','办公费','招待费','交通费','培训费','通讯费'],required:true},{name:'amount',label:'总金额（元）',type:'number',required:true},
-  {name:'desc1',label:'费用明细1',required:true},{name:'amount1',label:'金额1',type:'number',required:true},
-  {name:'desc2',label:'费用明细2'},{name:'amount2',label:'金额2',type:'number'},
-  {name:'remark',label:'备注',type:'textarea',full:true}];
-  const html=Form.render(fields)+`<div style="margin-top:16px;text-align:right"><button class="btn" style="background:#f3f4f6;color:#374151" onclick="Modal.close(this.closest('[id^=modal]').id)">取消</button><button class="btn btn-primary" onclick="submitExpense()">提交报销</button></div>`;
-  Modal.show('📝 新建报销单',html,{width:'560px'});
+
+// ===== 报销单提交/编辑表单页 =====
+function renderExpenseSubmit(el) {
+  const isEdit = !!editingExpenseId;
+  const record = isEdit ? DB.get('fin_expenses').find(i => i.id === editingExpenseId) : null;
+  const pageTitle = isEdit ? '✏️ 修改报销单 - ' + record.id : '📝 提交新报销单';
+
+  const expenseCategories = ['差旅费','办公费','招待费','交通费','培训费','通讯费','维修费','检测费'];
+  const fields = [
+    {
+      name: 'applicant',
+      label: '报销人',
+      type: 'select',
+      options: staffList,
+      required: true,
+      full: false
+    },
+    {
+      name: 'project',
+      label: '报销项目（费用说明）',
+      type: 'text',
+      required: true,
+      full: true,
+      placeholder: '例：北京研发中心出差-高铁票、办公设备采购等'
+    },
+    {
+      name: 'type',
+      label: '报销类别',
+      type: 'select',
+      options: expenseCategories,
+      required: true,
+      full: false
+    },
+    {
+      name: 'amount',
+      label: '报销金额（元）',
+      type: 'number',
+      required: true,
+      full: false
+    },
+    {
+      name: 'date',
+      label: '报销日期',
+      type: 'date',
+      required: true,
+      full: false
+    },
+    {
+      name: 'remark',
+      label: '备注（可选）',
+      type: 'textarea',
+      full: true,
+      placeholder: '特殊情况说明等（可留空）'
+    }
+  ];
+
+  // 预填值
+  const values = record ? {
+    applicant: record.applicant || '',
+    project: record.project || '',
+    type: record.type || '',
+    amount: record.amount || '',
+    date: record.date || new Date().toISOString().slice(0,10),
+    remark: record.remark || ''
+  } : { date: new Date().toISOString().slice(0,10) };
+
+  el.innerHTML = `
+    <!-- 子页 Tab 切换 -->
+    <div style="display:flex;gap:0;margin-bottom:20px;border-bottom:2px solid var(--gray-100)">
+      <button onclick="switchExpenseSubTab('list')" style="flex:none;padding:10px 24px;border:none;background:transparent;font-size:14px;font-weight:600;color:var(--gray-500);cursor:pointer">📋 全部报销单</button>
+      <button onclick="switchExpenseSubTab('submit')" style="flex:none;padding:10px 24px;border:none;background:transparent;font-size:14px;font-weight:600;color:var(--primary);border-bottom:2px solid var(--primary);margin-bottom:-2px;cursor:pointer">📝 ${isEdit ? '修改报销单' : '提交报销单'}</button>
+    </div>
+    <!-- 提示卡片 -->
+    <div style="background:linear-gradient(135deg,#eff6ff,#dbeafe);border:1px solid #bfdbfe;border-radius:10px;padding:14px 18px;margin-bottom:20px;font-size:13px;color:#1e40af">
+      💡 <strong>报销规则：</strong>
+      金额 ≤ 5,000元 → 系统自动通过；5,000 ~ 20,000元 → 财务审批；> 20,000元 → 需 CFO 审批。
+      提交后状态为「未审批」，财务审批通过后自动流转。
+    </div>
+    <!-- 表单卡片 -->
+    <div class="card">
+      <div class="card-header"><h3>${pageTitle}</h3></div>
+      <div class="card-body" style="padding:24px 28px">
+        ${Form.render(fields, values)}
+        <div style="margin-top:24px;display:flex;justify-content:space-between;align-items:center">
+          <button class="btn" style="background:var(--gray-100);color:var(--gray-600)" onclick="switchExpenseSubTab('list')">← 返回列表</button>
+          <div style="display:flex;gap:10px">
+            <button class="btn" style="background:#f3f4f6;color:#374151" onclick="switchExpenseSubTab('list')">取消</button>
+            <button class="btn btn-primary" onclick="submitExpense()">${isEdit ? '✅ 重新提交' : '📤 提交报销单'}</button>
+          </div>
+        </div>
+      </div>
+    </div>`;
+
+  // 监听报销人下拉，自动填充部门
+  setTimeout(() => {
+    const applicantEl = document.querySelector('select[name=applicant]');
+    const deptInput = document.querySelector('input[name=dept]');
+    if (applicantEl) {
+      applicantEl.addEventListener('change', function() {
+        // 若有隐藏的部门字段则填充
+        const dept = deptMap[this.value] || '';
+        if (deptInput) deptInput.value = dept;
+      });
+      // 编辑模式或新建时默认填充
+      if (isEdit && record) {
+        applicantEl.value = record.applicant || '';
+        // 人工触发change事件
+        applicantEl.dispatchEvent(new Event('change'));
+      }
+    }
+  }, 50);
 }
-function submitExpense(){const d=Form.getData();if(!d.type||!d.amount){Modal.toast('请填写必填项','warning');return;}const l=DB.get('fin_expenses');l.unshift({id:DB.genId('BX'),applicant:'席宝',dept:'人力资源部',type:d.type,amount:parseFloat(d.amount),date:new Date().toISOString().slice(0,10),status:'待审核',items:[{desc:d.desc1,amount:parseFloat(d.amount1)||0}],level:1});DB.set('fin_expenses',l);document.querySelectorAll('[id^=modal-]').forEach(m=>m.remove());Modal.toast('✅ 已提交');currentTab='expense';renderContent();}
-function approveExpense(id){const l=DB.get('fin_expenses');const i=l.find(x=>x.id===id);if(i){i.status='部门经理已审';DB.set('fin_expenses',l);Modal.toast('✅ 审批通过');renderContent();}}
-function viewExpense(id){const e=DB.get('fin_expenses').find(i=>i.id===id);if(!e)return;Modal.show(`报销单 ${e.id}`,`<div style="font-size:14px"><p><strong>报销人：</strong>${e.applicant} | <strong>类型：</strong>${e.type} | <strong>金额：</strong>¥${e.amount.toLocaleString()}</p><p><strong>状态：</strong><span class="status ${e.status==='已通过'?'approved':'pending'}">${e.status}</span></p></div>`,{width:'480px'});}
+
+// ===== 提交报销单 =====
+function submitExpense() {
+  const d = Form.getData();
+  if (!d.applicant || !d.type || !d.amount || !d.project) {
+    Modal.toast('请填写所有必填项（报销人/报销项目/报销类别/金额）','warning');
+    return;
+  }
+  const l = DB.get('fin_expenses');
+  const isEdit = !!editingExpenseId;
+  
+  if (isEdit) {
+    // 编辑模式：更新已有记录，状态改为未审批
+    const record = l.find(i => i.id === editingExpenseId);
+    if (record) {
+      record.applicant = d.applicant;
+      record.dept = deptMap[d.applicant] || record.dept;
+      record.project = d.project;
+      record.type = d.type;
+      record.amount = parseFloat(d.amount);
+      record.date = d.date || new Date().toISOString().slice(0,10);
+      record.remark = d.remark || '';
+      record.status = '未审批';
+      record.editTime = new Date().toLocaleString('zh-CN');
+    }
+    DB.set('fin_expenses', l);
+    editingExpenseId = null;
+    expenseSubTab = 'list';
+    Modal.toast('✅ 修改成功，已重新提交审批');
+    renderExpense(document.getElementById('tab-content'));
+  } else {
+    // 新建模式
+    const newRecord = {
+      id: DB.genId('BX'),
+      applicant: d.applicant,
+      dept: deptMap[d.applicant] || '未分配',
+      project: d.project,
+      type: d.type,
+      amount: parseFloat(d.amount),
+      date: d.date || new Date().toISOString().slice(0,10),
+      remark: d.remark || '',
+      status: '未审批',
+      submitTime: new Date().toLocaleString('zh-CN')
+    };
+    l.unshift(newRecord);
+    DB.set('fin_expenses', l);
+    expenseSubTab = 'list';
+    Modal.toast('✅ 报销单已提交，等待审批');
+    renderExpense(document.getElementById('tab-content'));
+  }
+}
+
+// ===== 审批通过 =====
+function approveExpense(id) {
+  const l = DB.get('fin_expenses');
+  const item = l.find(i => i.id === id);
+  if (!item) return;
+  Modal.show('确认审批', `<div style="font-size:14px"><p>确定通过该报销单？</p>
+    <div style="background:var(--gray-50);padding:12px;border-radius:8px;margin-top:10px">
+      <div><strong>报销人：</strong>${item.applicant}</div>
+      <div><strong>项目：</strong>${item.project}</div>
+      <div><strong>金额：</strong><span style="color:var(--primary);font-weight:700">¥${item.amount.toLocaleString()}</span></div>
+    </div></div>`, {
+    width: '420px',
+    footer: `<button class="btn" style="background:#f3f4f6;color:#374151" onclick="Modal.close(this.closest('[id^=modal]').id)">取消</button>
+             <button class="btn btn-success" onclick="Modal.close(this.closest('[id^=modal]').id);approveExpenseConfirm('${id}')">确认通过</button>`
+  });
+}
+function approveExpenseConfirm(id) {
+  const l = DB.get('fin_expenses');
+  const item = l.find(i => i.id === id);
+  if (item) {
+    item.status = '已通过';
+    item.approvedAt = new Date().toLocaleString('zh-CN');
+    item.approver = '席宝';
+    DB.set('fin_expenses', l);
+    Modal.toast('✅ 审批通过');
+    renderExpense(document.getElementById('tab-content'));
+  }
+}
+
+// ===== 驳回 =====
+function rejectExpense(id) {
+  Modal.show('驳回报销单', `<div style="font-size:14px">
+    <label style="display:block;font-weight:500;margin-bottom:6px">请填写驳回原因 <span style="color:#dc2626">*</span></label>
+    <textarea id="rejectReason" rows="3" style="width:100%;padding:8px 12px;border:1px solid var(--gray-200);border-radius:6px;font-size:14px" placeholder="如：票据不齐、金额超出预算等"></textarea>
+  </div>`, {
+    width: '420px',
+    footer: `<button class="btn" style="background:#f3f4f6;color:#374151" onclick="Modal.close(this.closest('[id^=modal]').id)">取消</button>
+             <button class="btn btn-danger" onclick="rejectExpenseConfirm('${id}')">确认驳回</button>`
+  });
+}
+function rejectExpenseConfirm(id) {
+  const reason = document.getElementById('rejectReason')?.value;
+  if (!reason) { Modal.toast('请填写驳回原因','warning'); return; }
+  const l = DB.get('fin_expenses');
+  const item = l.find(i => i.id === id);
+  if (item) {
+    item.status = '已驳回';
+    item.rejectReason = reason;
+    item.rejectedAt = new Date().toLocaleString('zh-CN');
+    DB.set('fin_expenses', l);
+    document.querySelectorAll('[id^=modal-]').forEach(m => m.remove());
+    Modal.toast('❌ 已驳回：' + reason);
+    renderExpense(document.getElementById('tab-content'));
+  }
+}
+
+// ===== 编辑已驳回的报销单 =====
+function editExpense(id) {
+  editingExpenseId = id;
+  expenseSubTab = 'submit';
+  renderExpense(document.getElementById('tab-content'));
+}
+
+// ===== 查看报销单详情（弹窗） =====
+function viewExpense(id){
+  const e = DB.get('fin_expenses').find(i => i.id === id);
+  if (!e) return;
+  const statusClass = e.status === '已通过' ? 'approved' : e.status === '已驳回' ? 'rejected' : 'pending';
+  Modal.show(`🧾 报销单 ${e.id}`, `
+    <div style="font-size:14px;line-height:1.8">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 20px">
+        <div><strong>报销人：</strong>${e.applicant}</div>
+        <div><strong>部门：</strong>${e.dept}</div>
+        <div style="grid-column:1/-1"><strong>报销项目：</strong>${e.project || '-'}</div>
+        <div><strong>报销类别：</strong>${e.type}</div>
+        <div><strong>金额：</strong><span style="color:var(--primary);font-weight:700">¥${e.amount.toLocaleString()}</span></div>
+        <div><strong>日期：</strong>${e.date}</div>
+        <div><strong>状态：</strong><span class="status ${statusClass}">${e.status}</span></div>
+        ${e.remark ? `<div style="grid-column:1/-1"><strong>备注：</strong>${e.remark}</div>` : ''}
+        ${e.rejectReason ? `<div style="grid-column:1/-1;background:#fef2f2;padding:8px 12px;border-radius:6px;border-left:3px solid #dc2626"><strong>驳回原因：</strong>${e.rejectReason}</div>` : ''}
+      </div>
+    </div>`, {width: '480px'});
+}
 
 // ===== 发票管理 =====
 function renderInvoice(el){
