@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>五家办公智能体 · 一表对比</title>
+<style>
+  :root{
+    --bg:#f7f8fa; --card:#ffffff; --line:#e6e8ee; --line2:#f0f1f5;
+    --tx:#1c1f26; --tx2:#5a616e; --tx3:#8b93a1;
+    --blue:#2563eb; --blue-bg:#eef4ff;
+    --green:#0f9d58; --green-bg:#eaf7ef;
+    --amber:#c2810a; --amber-bg:#fdf6e3;
+    --red:#dc3545; --red-bg:#fdeeef;
+    --purple:#7c3aed; --purple-bg:#f3eeff;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--tx);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    font-size:14px; line-height:1.6;
+  }
+
+  /* 顶栏 */
+  .topbar{
+    display:flex;align-items:center;justify-content:space-between;
+    background:var(--card);border-bottom:1px solid var(--line);
+    padding:12px 20px;position:sticky;top:0;z-index:10
+  }
+  .topbar .left{display:flex;align-items:center;gap:9px;font-weight:650;font-size:15px}
+  .topbar .icon{font-size:18px}
+  .topbar .user{font-size:13px;color:var(--tx2);font-weight:500}
+
+  .wrap{max-width:1400px;margin:0 auto;padding:28px 20px 60px}
+
+  h1{font-size:22px;font-weight:700;letter-spacing:-.3px}
+  .sub{color:var(--tx2);font-size:13px;margin-top:6px}
+  .meta{color:var(--tx3);font-size:12px;margin-top:4px}
+
+  .legend{
+    display:flex;gap:16px;flex-wrap:wrap;align-items:center;
+    margin:16px 0 14px;padding:10px 14px;background:var(--card);
+    border:1px solid var(--line);border-radius:10px;font-size:12.5px;color:var(--tx2)
+  }
+  .legend b{color:var(--tx);font-weight:600}
+  .star5{color:#0f9d58;letter-spacing:-1px}
+  .star4{color:#5aa96a;letter-spacing:-1px}
+  .star3{color:#c2810a;letter-spacing:-1px}
+
+  .tablebox{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:auto}
+  table{border-collapse:collapse;width:100%;min-width:1180px}
+  th,td{padding:12px 13px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line2)}
+  thead th{
+    background:#fafbfd;font-size:12.5px;font-weight:600;color:var(--tx2);
+    border-bottom:1px solid var(--line);position:sticky;top:0;white-space:nowrap;z-index:2
+  }
+  thead th.sc{text-align:center;width:92px}
+  tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:#fbfcfe}
+
+  td.nm{width:190px;min-width:190px}
+  .pname{font-weight:650;font-size:14px}
+  .pco{font-size:11.5px;color:var(--tx3);margin-top:2px}
+  .tag{
+    display:inline-block;font-size:10.5px;padding:1px 6px;border-radius:4px;
+    margin:4px 4px 0 0;line-height:1.6;font-weight:500
+  }
+  .t-red{background:var(--red-bg);color:var(--red)}
+  .t-blue{background:var(--blue-bg);color:var(--blue)}
+  .t-green{background:var(--green-bg);color:var(--green)}
+  .t-amber{background:var(--amber-bg);color:var(--amber)}
+
+  td.sc{text-align:center;width:92px;white-space:nowrap;font-size:13px}
+  td.sc small{display:block;color:var(--tx3);font-size:11px;margin-top:2px;white-space:normal;line-height:1.45}
+
+  td.good{color:var(--green);font-size:13px;line-height:1.65}
+  td.bad{color:var(--red);font-size:13px;line-height:1.65}
+  td.good b,td.bad b{font-weight:650}
+
+  .foot{
+    margin-top:16px;padding:16px 18px;background:var(--card);
+    border:1px solid var(--line);border-radius:12px
+  }
+  .foot h3{font-size:13.5px;font-weight:650;margin-bottom:10px}
+  .pick{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:9px}
+  .pick div{
+    background:#fafbfd;border:1px solid var(--line2);border-radius:8px;
+    padding:9px 12px;font-size:13px;line-height:1.55
+  }
+  .pick b{color:var(--blue)}
+  .warn{margin-top:12px;font-size:12.5px;color:var(--tx3);line-height:1.7}
+
+  .scroll-hint{display:none;font-size:12px;color:var(--tx3);margin-bottom:6px}
+  @media (max-width:720px){
+    .scroll-hint{display:block}
+    .wrap{padding:20px 12px 48px}
+    h1{font-size:19px}
+  }
+
+  @media print{
+    .topbar{position:static}
+    .tablebox{overflow:visible}
+    table{min-width:0}
+    body{background:#fff}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="left"><span class="icon">⚖️</span><span>五家办公智能体 · 一表对比</span></div>
+  <div class="user">席宝</div>
+</div>
+
+<div class="wrap">
+
+  <h1>五家办公智能体 · 一表对比</h1>
+  <p class="sub">只比四件事：<b>智能办公</b> → <b>自动生产文档 / PPT</b> → <b>对接客户业务系统</b> → <b>内外数据私有化</b>。一行一家，看完即选。</p>
+  <p class="meta">整理时间：2026-10-08 · 星级为基于公开事实的相对判断，非厂商官方评分</p>
+
+  <div class="legend">
+    <span><b>星级</b></span>
+    <span class="star5">★★★★★</span> 强项，行业领先
+    <span class="star4">★★★★☆</span> 良好，够用
+    <span class="star3">★★★☆☆</span> 偏弱 / 需绕路
+    <span style="color:var(--red)">⚠️</span> 有硬伤，需特别确认
+  </div>
+
+  <p class="scroll-hint">← 左右滑动查看完整表格 →</p>
+
+  <div class="tablebox">
+  <table>
+    <thead>
+      <tr>
+        <th>产品 / 公司</th>
+        <th class="sc">智能办公</th>
+        <th class="sc">文档 / PPT<br>自动生产</th>
+        <th class="sc">业务系统<br>对接</th>
+        <th class="sc">数据私有化</th>
+        <th style="width:26%">主要优点</th>
+        <th style="width:26%">主要短板</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr>
+        <td class="nm">
+          <div class="pname">WPS Comate</div>
+          <div class="pco">金山办公 · 组织级平台</div>
+          <span class="tag t-green">可断网运行</span>
+        </td>
+        <td class="sc"><span class="star4">★★★★☆</span></td>
+        <td class="sc"><span class="star4">★★★★☆</span><small>WPS 原生可编辑</small></td>
+        <td class="sc"><span class="star5">★★★★★</span></td>
+        <td class="sc"><span class="star5">★★★★★</span><small>唯一离线版</small></td>
+        <td class="good">
+          <b>私有化最彻底</b>：有纯内网离线版，模型与数据闭环本地、离线补丁更新、全程无外网；<br>
+          <b>对接体系最完整</b>：DataHub 语义层（行/列/指标级权限 + 动态脱敏）+ APIHub 连接器；<br>
+          凭证由网关注入、<b>不进大模型上下文</b>。
+        </td>
+        <td class="bad">
+          偏组织级，<b>上手重</b>、需 IT 参与；<br>
+          私有化<b>不在标准套餐</b>内，定价不公开、需单独商务；<br>
+          个人轻度使用体验一般。
+        </td>
+      </tr>
+
+      <tr>
+        <td class="nm">
+          <div class="pname">WorkBuddy</div>
+          <div class="pco">腾讯 · 全场景工作台</div>
+          <span class="tag t-blue">SaaS→私有化</span>
+        </td>
+        <td class="sc"><span class="star4">★★★★☆</span></td>
+        <td class="sc"><span class="star4">★★★★☆</span><small>中文办公契合</small></td>
+        <td class="sc"><span class="star4">★★★★☆</span></td>
+        <td class="sc"><span class="star4">★★★★☆</span><small>三种部署模式</small></td>
+        <td class="good">
+          <b>升级路径最顺</b>：SaaS → VPC 专享（独享 VPC、网络层隔离）→ 全栈私有化 + 信创适配；<br>
+          <b>内网对接最规范</b>：自建 MCP-Server 封装 ERP/OA/CRM，可走<b>专线打通</b>、完全不暴露公网；<br>
+          另有与沐曦合作的国产 GPU 一体机，开箱即用。
+        </td>
+        <td class="bad">
+          私有化的<b>落地案例与计价披露弱一档</b>；<br>
+          MCP 只支持 SSE，<b>不支持 stdio</b>；<br>
+          生态绑定腾讯（微信 / 企业微信 / 腾讯文档）。
+        </td>
+      </tr>
+
+      <tr>
+        <td class="nm">
+          <div class="pname">豆包工作 + TRAE Work</div>
+          <div class="pco">字节跳动 · 内容生产力</div>
+          <span class="tag t-red">本体不可私有化</span>
+        </td>
+        <td class="sc"><span class="star5">★★★★★</span></td>
+        <td class="sc"><span class="star5">★★★★★</span><small>多模态最强</small></td>
+        <td class="sc"><span class="star3">★★★☆☆</span></td>
+        <td class="sc"><span class="star3">⚠️ ★★★☆☆</span><small>见下注</small></td>
+        <td class="good">
+          <b>内容生产力第一</b>：多模态能力最强，PPT / 图文 / 视频类产出体验最好；<br>
+          深度绑定飞书与扣子，团队协作链路顺；<br>
+          TRAE Work 独有"手机发任务、电脑执行"。
+        </td>
+        <td class="bad">
+          <b>最大的坑</b>：能私有化的是<b>底下的火山引擎组件</b>（方舟 / HiAgent / ArkClaw 企业版），<b>豆包工作本体是 SaaS</b>——产品与可私有化组件是两套，须分别商务谈，容易踩空；<br>
+          离开飞书价值骤降。
+        </td>
+      </tr>
+
+      <tr>
+        <td class="nm">
+          <div class="pname">千问办公</div>
+          <div class="pco">阿里 · 钉钉生态</div>
+          <span class="tag t-green">政企私有化版</span>
+        </td>
+        <td class="sc"><span class="star5">★★★★★</span></td>
+        <td class="sc"><span class="star5">★★★★★</span><small>成品口碑最好</small></td>
+        <td class="sc"><span class="star5">★★★★★</span></td>
+        <td class="sc"><span class="star4">★★★★☆</span></td>
+        <td class="good">
+          <b>四场景最均衡、无明显短板</b>；<br>
+          对接方式最实用：「应用」功能让业务系统<b>保留原界面与数据、在系统内加 Agent 能力，改完直接写回业务系统</b>，员工不用跨系统切换；<br>
+          30+ 连接器，成品质量口碑最好；已推政企私有化版本。
+        </td>
+        <td class="bad">
+          <b>模型不可更换</b>，锁死在阿里体系；<br>
+          绑钉钉 + 阿里云，非钉钉用户迁移成本高；<br>
+          部分能力仍在灰度。
+        </td>
+      </tr>
+
+      <tr>
+        <td class="nm">
+          <div class="pname">百度搭子 DuMate</div>
+          <div class="pco">百度 · 通用任务</div>
+          <span class="tag t-blue">三选部署</span>
+        </td>
+        <td class="sc"><span class="star4">★★★★☆</span></td>
+        <td class="sc"><span class="star4">★★★★☆</span></td>
+        <td class="sc"><span class="star4">★★★★☆</span></td>
+        <td class="sc"><span class="star4">★★★★☆</span></td>
+        <td class="good">
+          通用任务能力扎实，WAIC 唯一入选"镇馆之宝"的通用智能体；<br>
+          部署三选：公有云 / VPC 专属 / 本地私有化；<br>
+          与库库 AI 分工明确（库库管文档三件套，搭子管通用任务）。
+        </td>
+        <td class="bad">
+          <b>品牌更名频繁</b>（GenFlow→库库 AI、DuMate→搭子），认知与资料还在建立；<br>
+          生态沉淀弱于前三家；<br>
+          企业级对接案例披露较少。
+        </td>
+      </tr>
+
+    </tbody>
+  </table>
+  </div>
+
+  <div class="foot">
+    <h3>怎么选（按你的硬条件对号入座）</h3>
+    <div class="pick">
+      <div><b>数据绝不能出内网</b><br>→ WPS Comate（唯一能断网跑的）</div>
+      <div><b>要快落地、先 SaaS 试水再升级</b><br>→ WorkBuddy（路径最顺，可走到全栈私有化）</div>
+      <div><b>四场景都要、不分主次</b><br>→ 千问办公（最均衡，短板最少）</div>
+      <div><b>团队在飞书、重内容生产</b><br>→ 豆包工作 + TRAE Work</div>
+      <div><b>已有百度网盘 / 文库沉淀</b><br>→ 百度搭子 + 库库 AI</div>
+    </div>
+    <p class="warn">
+      ⚠️ <b>两点提醒：</b>① 星级是基于公开事实的相对判断，非厂商官方评分，具体能力以厂商最新说明为准。② 采购前务必用<b>你自己的一个真实任务</b>把 2–3 家实测一轮——尤其"业务系统对接"和"私有化"这两项，厂商 PPT 与落地效果差距最大。
+    </p>
+  </div>
+
+</div>
+
+</body>
+</html>
