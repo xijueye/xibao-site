@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>四大办公智能体 · 深度对比</title>
+<style>
+  :root{
+    --bg:#f7f8fa; --card:#ffffff; --line:#e6e8ee; --line2:#f0f1f5;
+    --tx:#1c1f26; --tx2:#5a616e; --tx3:#8b93a1;
+    --blue:#2563eb; --blue-bg:#eef4ff;
+    --green:#0f9d58; --green-bg:#eaf7ef;
+    --amber:#c2810a; --amber-bg:#fdf6e3;
+    --red:#dc3545; --red-bg:#fdeeef;
+    --purple:#7c3aed; --purple-bg:#f3eeff;
+    --teal:#0d9488; --teal-bg:#e7f7f5;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--tx);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    font-size:14px; line-height:1.65;
+  }
+
+  /* 顶栏 */
+  .topbar{
+    display:flex;align-items:center;justify-content:space-between;
+    background:var(--card);border-bottom:1px solid var(--line);
+    padding:12px 20px;position:sticky;top:0;z-index:10
+  }
+  .topbar .left{display:flex;align-items:center;gap:9px;font-weight:650;font-size:15px}
+  .topbar .icon{font-size:18px}
+  .topbar .user{font-size:13px;color:var(--tx2);font-weight:500}
+
+  .wrap{max-width:1360px;margin:0 auto;padding:28px 20px 60px}
+
+  h1{font-size:23px;font-weight:700;letter-spacing:-.3px}
+  .sub{color:var(--tx2);font-size:13.5px;margin-top:7px}
+  .meta{color:var(--tx3);font-size:12px;margin-top:5px}
+
+  .notice{
+    display:flex;gap:8px;align-items:flex-start;
+    background:var(--amber-bg);border:1px solid #f3e3b3;border-radius:10px;
+    padding:10px 14px;margin-top:16px;font-size:12.5px;color:#7a5a10
+  }
+
+  /* 产品名片卡 */
+  .cards{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+    gap:14px;margin-top:20px
+  }
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:18px 18px 15px;position:relative;overflow:hidden
+  }
+  .card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px}
+  .card.c-blue::before{background:var(--blue)}
+  .card.c-teal::before{background:var(--teal)}
+  .card.c-red::before{background:var(--red)}
+  .card.c-purple::before{background:var(--purple)}
+  .card .tagrow{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:9px}
+  .card .pname{font-size:16.5px;font-weight:700}
+  .card .porg{font-size:12px;color:var(--tx3);margin-top:2px}
+  .card .pdesc{font-size:13px;color:var(--tx2);margin-top:9px;min-height:62px}
+  .card .kv{display:flex;gap:6px;font-size:12px;color:var(--tx2);margin-top:7px}
+  .card .kv b{color:var(--tx);font-weight:600;white-space:nowrap}
+
+  .tag{
+    display:inline-block;font-size:10.5px;padding:1px 7px;border-radius:5px;
+    line-height:1.7;font-weight:500
+  }
+  .t-red{background:var(--red-bg);color:var(--red)}
+  .t-blue{background:var(--blue-bg);color:var(--blue)}
+  .t-green{background:var(--green-bg);color:var(--green)}
+  .t-amber{background:var(--amber-bg);color:var(--amber)}
+  .t-purple{background:var(--purple-bg);color:var(--purple)}
+  .t-teal{background:var(--teal-bg);color:var(--teal)}
+
+  /* 维度章节 */
+  .section{margin-top:34px}
+  .sec-head{display:flex;align-items:center;gap:10px;margin-bottom:13px}
+  .sec-head .emoji{font-size:20px}
+  .sec-head h2{font-size:18px;font-weight:700;letter-spacing:-.2px}
+  .sec-head .hint{font-size:12px;color:var(--tx3)}
+
+  .tablebox{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:auto}
+  table{border-collapse:collapse;width:100%;min-width:1060px}
+  th,td{padding:13px 14px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line2)}
+  thead th{
+    background:#fafbfd;font-size:13px;font-weight:600;color:var(--tx2);
+    border-bottom:1px solid var(--line);white-space:nowrap;z-index:2
+  }
+  thead th .th-nm{font-size:13.5px;color:var(--tx);font-weight:650}
+  thead th .th-org{font-size:11px;color:var(--tx3);font-weight:400}
+  tbody tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:#fbfcfe}
+
+  td.point{width:132px;min-width:132px;font-weight:600;font-size:13px;color:var(--tx2)}
+
+  ul.clean{list-style:none}
+  ul.clean li{position:relative;padding-left:14px;margin:4px 0;font-size:12.8px;color:var(--tx2)}
+  ul.clean li::before{content:"";position:absolute;left:0;top:8px;width:5px;height:5px;border-radius:50%;background:#c9cfda}
+  ul.clean li b,ul.clean li strong{color:var(--tx);font-weight:600}
+  .price{font-weight:700;color:var(--tx);font-size:13px}
+  .muted{color:var(--tx3);font-size:11.5px}
+  .ok{color:var(--green);font-weight:600}
+  .part{color:var(--amber);font-weight:600}
+  .no{color:var(--tx3);font-weight:600}
+
+  /* 评分条 */
+  .rate{display:flex;align-items:center;gap:7px;margin-top:8px}
+  .rate .lbl{font-size:11.5px;color:var(--tx3);white-space:nowrap;width:64px}
+  .bar{flex:1;height:6px;border-radius:4px;background:#eef0f4;overflow:hidden}
+  .bar i{display:block;height:100%;border-radius:4px}
+  .bar.b-blue i{background:var(--blue)} .bar.b-teal i{background:var(--teal)}
+  .bar.b-red i{background:var(--red)} .bar.b-purple i{background:var(--purple)}
+  .rate .sc{font-size:11.5px;font-weight:700;width:30px;text-align:right}
+
+  /* 结语卡 */
+  .verdict{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin-top:14px}
+  .vcard{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px}
+  .vcard h3{font-size:14px;font-weight:650;margin-bottom:7px}
+  .vcard p{font-size:12.8px;color:var(--tx2)}
+
+  footer{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);font-size:11.5px;color:var(--tx3)}
+  footer p{margin:3px 0}
+
+  @media (max-width:720px){
+    h1{font-size:19px}
+    .wrap{padding:20px 12px 48px}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="left"><span class="icon">⚡</span> WPS Comate · 智能对比</div>
+  <div class="user">四大办公智能体深度对比</div>
+</div>
+
+<div class="wrap">
+  <h1>四大办公智能体 · 深度对比</h1>
+  <div class="sub">WPS Comate ｜ WorkBuddy ｜ 豆包工作 ｜ 千问办公 —— 从私有化部署、用户使用、收费模式到智能文档处理的全维度拆解</div>
+  <div class="meta">数据截至 2026-10-09 · 信息来源：各产品官网、官方发布会及新华网 / 央广网 / 36氪 / 界面新闻等公开报道（详见页尾说明）</div>
+
+  <div class="notice">
+    <span>📌</span>
+    <span><b>先纠正一个常见误解：</b>WorkBuddy 是<b>腾讯</b>（腾讯云 CodeBuddy 团队）的产品，而非字节跳动。字节对应的产品是 <b>豆包工作</b>。四款产品均为 2026 年发布或重大改版的新一代办公智能体，价格与功能迭代很快，请以官方最新口径为准。</span>
+  </div>
+
+  <!-- 产品名片 -->
+  <div class="cards">
+    <div class="card c-blue">
+      <div class="tagrow"><span class="tag t-blue">办公套件原生</span><span class="tag t-green">信创私有化</span></div>
+      <div class="pname">WPS Comate</div>
+      <div class="porg">金山办公 · 2026-07 发布</div>
+      <div class="pdesc">深度长在 WPS 365 里的 AI Agent，覆盖文档、表格、演示、PDF 全场景，支持信创私有化部署，面向企业交付。</div>
+      <div class="kv"><b>形态</b>WPS 365 内嵌 + 独立客户端</div>
+      <div class="kv"><b>企业参考</b>随 WPS 365 套餐 199/399/599 元/人/年</div>
+    </div>
+    <div class="card c-teal">
+      <div class="tagrow"><span class="tag t-teal">社交生态直连</span><span class="tag t-amber">专有云可选</span></div>
+      <div class="pname">WorkBuddy</div>
+      <div class="porg">腾讯 · 2026-03 上线</div>
+      <div class="pdesc">桌面客户端 + 微信/QQ/企微/飞书/钉钉直连，打通腾讯文档、会议、ima，个人版与企业版双线运营。</div>
+      <div class="kv"><b>形态</b>独立客户端 + 小程序 + IM 直连</div>
+      <div class="kv"><b>企业 SaaS</b>198 元/人/月（专有云 316 元/人/月起）</div>
+    </div>
+    <div class="card c-red">
+      <div class="tagrow"><span class="tag t-red">飞书协同</span><span class="tag t-amber">产品级私有化待明确</span></div>
+      <div class="pname">豆包工作</div>
+      <div class="porg">字节跳动 · 2026-08-25 发布</div>
+      <div class="pdesc">豆包 App 与飞书的"工作"入口，支持技能/连接器、手机遥控电脑、本地 Office 编辑，成果回流飞书。</div>
+      <div class="kv"><b>形态</b>桌面客户端 + 豆包App + 飞书</div>
+      <div class="kv"><b>企业版</b>公测 198 元/席/月（100 席起）</div>
+    </div>
+    <div class="card c-purple">
+      <div class="tagrow"><span class="tag t-purple">钉钉深度打通</span><span class="tag t-green">信创适配</span></div>
+      <div class="pname">千问办公</div>
+      <div class="porg">阿里巴巴 · 2026-08-03 公测</div>
+      <div class="pdesc">基于 Qwen 大模型，打通钉钉 25 项办公能力（IM/审批/日程/知识库/邮件），上线 30 天用户破 3000 万。</div>
+      <div class="kv"><b>形态</b>钉钉内嵌 + 网页 + 桌面客户端</div>
+      <div class="kv"><b>企业标准版</b>198 元/人/月</div>
+    </div>
+  </div>
+
+  <!-- 维度一：私有化部署 -->
+  <div class="section">
+    <div class="sec-head"><span class="emoji">🏢</span><h2>维度一 · 私有化部署</h2><span class="hint">面向政企客户数据不出域的核心关切</span></div>
+    <div class="tablebox"><table>
+      <thead><tr><th>对比项</th><th><div class="th-nm">WPS Comate</div><div class="th-org">金山办公</div></th><th><div class="th-nm">WorkBuddy</div><div class="th-org">腾讯</div></th><th><div class="th-nm">豆包工作</div><div class="th-org">字节跳动</div></th><th><div class="th-nm">千问办公</div><div class="th-org">阿里巴巴</div></th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="point">部署形态</td>
+          <td><ul class="clean"><li><b>SaaS / 私有云 / 混合云</b>全形态支持</li><li>TrustHub 权限管控、"人机同权"</li></ul></td>
+          <td><ul class="clean"><li><b>SaaS + 专有云</b>（专享版）</li><li>服务器/数据/模型均不出内网</li></ul></td>
+          <td><ul class="clean"><li><b>未查到产品级私有化官方口径</b></li><li>私有化能力经火山引擎（HiAgent / 豆包大模型私有化）提供</li></ul></td>
+          <td><ul class="clean"><li><b>企业旗舰版支持 VPC 网络部署</b>（价格询销售）</li><li>钉钉侧可选等保三级 / 私有化</li></ul></td>
+        </tr>
+        <tr>
+          <td class="point">信创适配</td>
+          <td><span class="ok">✔ 深度</span><ul class="clean"><li>广东"湾擎"WPS 专版<b>全栈信创</b></li><li>落地：北大第一医院、中山市政务专网</li></ul></td>
+          <td><span class="part">部分</span><ul class="clean"><li>"湾擎"政务中枢<b>纯离线、信创全栈</b>（政务侧）</li></ul></td>
+          <td><span class="no">—</span><ul class="clean"><li>未查到信创适配公开信息</li></ul></td>
+          <td><span class="ok">✔ 已适配</span><ul class="clean"><li>已上架<b>麒麟软件商店</b></li><li>落地：佛山禅城内网部署</li></ul></td>
+        </tr>
+        <tr>
+          <td class="point">综合评价</td>
+          <td><b style="color:var(--blue)">政务/医疗央国企案例最扎实</b><div class="muted">私有化交付成熟度最高</div></td>
+          <td><b style="color:var(--teal)">专有云就绪</b><div class="muted">政务侧有离线部署样板</div></td>
+          <td><b style="color:var(--red)">偏 SaaS 思路</b><div class="muted">重度私有化需求需走火山引擎路线</div></td>
+          <td><b style="color:var(--purple)">VPC 部署可行</b><div class="muted">信创起步快，案例数少于金山</div></td>
+        </tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <!-- 维度二：用户使用 -->
+  <div class="section">
+    <div class="sec-head"><span class="emoji">🧑‍💻</span><h2>维度二 · 用户使用</h2><span class="hint">入口形态、协同生态与上手门槛</span></div>
+    <div class="tablebox"><table>
+      <thead><tr><th>对比项</th><th><div class="th-nm">WPS Comate</div><div class="th-org">金山办公</div></th><th><div class="th-nm">WorkBuddy</div><div class="th-org">腾讯</div></th><th><div class="th-nm">豆包工作</div><div class="th-org">字节跳动</div></th><th><div class="th-nm">千问办公</div><div class="th-org">阿里巴巴</div></th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="point">入口形态</td>
+          <td><ul class="clean"><li>WPS 365 内组件 + <b>独立客户端</b></li><li>原生集成文字/表格/演示/PDF</li></ul></td>
+          <td><ul class="clean"><li><b>桌面客户端</b>（Win/Mac）</li><li>iOS/Android/微信小程序</li><li>2026-10 上线独立文件浏览器</li></ul></td>
+          <td><ul class="clean"><li><b>仅桌面客户端</b> + 豆包App/网页"工作"入口</li><li>手机可遥控电脑端任务</li></ul></td>
+          <td><ul class="clean"><li>钉钉内嵌 + <b>网页</b>（qwenwork.cn）+ 桌面客户端</li><li>另有 QwenNote A2 硬件（1199 元）</li></ul></td>
+        </tr>
+        <tr>
+          <td class="point">协同生态</td>
+          <td><ul class="clean"><li>IM/会议为 <b>WPS 365 自有</b>，套件内闭环</li><li>11 大领域 26 个专家场景 + 技能市场</li></ul></td>
+          <td><ul class="clean"><li><b>微信/QQ/企微/飞书/钉钉五端直连</b></li><li>腾讯文档/会议/ima/乐享深度集成</li></ul></td>
+          <td><ul class="clean"><li>与<b>飞书</b>聊天/文档/日程打通，成果回流</li><li>技能/连接器/工作伙伴机制</li></ul></td>
+          <td><ul class="clean"><li>打通<b>钉钉 25 项办公能力</b>（IM/审批/日程/知识库/邮件）</li><li>亦支持企微</li></ul></td>
+        </tr>
+        <tr>
+          <td class="point">上手门槛</td>
+          <td>低 — 自然语言交付，套件内直接唤起</td>
+          <td><b>最低</b> — 免部署下载即用，IM 里即可对话</td>
+          <td>低 — 豆包 App 用户零迁移成本</td>
+          <td>低 — 钉钉用户零迁移成本</td>
+        </tr>
+        <tr>
+          <td class="point">综合评价</td>
+          <td><b style="color:var(--blue)">套件原生派</b><div class="muted">WPS 重度用户体验最顺滑</div></td>
+          <td><b style="color:var(--teal)">生态连接派</b><div class="muted">跨 IM 生态覆盖最广</div></td>
+          <td><b style="color:var(--red)">个人流量派</b><div class="muted">飞书+豆包双入口，移动端体验好</div></td>
+          <td><b style="color:var(--purple)">钉钉原生派</b><div class="muted">组织流程（审批/日程）结合最深</div></td>
+        </tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <!-- 维度三：收费 -->
+  <div class="section">
+    <div class="sec-head"><span class="emoji">💰</span><h2>维度三 · 收费模式</h2><span class="hint">价格为 2026-10 公开口径，以官方最新为准</span></div>
+    <div class="tablebox"><table>
+      <thead><tr><th>对比项</th><th><div class="th-nm">WPS Comate</div><div class="th-org">金山办公</div></th><th><div class="th-nm">WorkBuddy</div><div class="th-org">腾讯</div></th><th><div class="th-nm">豆包工作</div><div class="th-org">字节跳动</div></th><th><div class="th-nm">千问办公</div><div class="th-org">阿里巴巴</div></th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="point">个人版</td>
+          <td><ul class="clean"><li>无独立报价，随 <b>WPS 365 套餐</b></li><li class="price">199 / 399 / 599 元/人/年</li><li>旗舰版含完整 AI；AI 用量按"智点"计量</li></ul></td>
+          <td><ul class="clean"><li>免费 500 积分，下载送 5000 Credits</li><li class="price">99 / 199 / 999 元/月</li><li class="muted">连续包月 70/140/700 元</li></ul></td>
+          <td><ul class="clean"><li>沿豆包专业版，上线送 30 天</li><li class="price">68 / 200 / 500 元/月</li><li class="muted">68 元档包年 688 元</li></ul></td>
+          <td><ul class="clean"><li>免费版注册送 2000 积分</li><li class="price">标准 98 元/月 · 高级 198 元/月</li><li class="muted">连续包月 78/158，年付 823/1663</li></ul></td>
+        </tr>
+        <tr>
+          <td class="point">企业版</td>
+          <td><ul class="clean"><li class="price">随 WPS 365 企业套餐</li><li class="muted">第三方估算 AI 约 15-30 元/用户/月（非官方）</li><li>专有化项目制报价</li></ul></td>
+          <td><ul class="clean"><li class="price">SaaS 198 元/人/月</li><li class="price">专有云 316 元/人/月</li><li class="muted">专有云 100 席起购；B 端付费席位已超 14 万</li></ul></td>
+          <td><ul class="clean"><li class="price">公测 198 元/席/月</li><li class="muted">100 席起售；亦可走飞书 AI 版：基础版 9900 元/年、企业版 9.9 万元/年</li></ul></td>
+          <td><ul class="clean"><li class="price">标准版 198 元/人/月</li><li class="muted">含 2000 积分/席/月，积分包 100 元起；旗舰版 VPC 部署询销售</li></ul></td>
+        </tr>
+        <tr>
+          <td class="point">综合评价</td>
+          <td><b style="color:var(--blue)">年费制打包</b><div class="muted">套餐内含，单买 AI 不单独计价</div></td>
+          <td><b style="color:var(--teal)">月订阅 + 积分</b><div class="muted">档位最全，专有云明码标价</div></td>
+          <td><b style="color:var(--red)">月订阅</b><div class="muted">个人档位最低 68 元起</div></td>
+          <td><b style="color:var(--purple)">月订阅 + 积分</b><div class="muted">个人/企业同为 198 元档，新人赠送多</div></td>
+        </tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <!-- 维度四：智能文档处理 -->
+  <div class="section">
+    <div class="sec-head"><span class="emoji">📄</span><h2>维度四 · 智能文档处理</h2><span class="hint">文档生成 / 阅读理解 / 格式兼容 / 交付能力</span></div>
+    <div class="tablebox"><table>
+      <thead><tr><th>对比项</th><th><div class="th-nm">WPS Comate</div><div class="th-org">金山办公</div></th><th><div class="th-nm">WorkBuddy</div><div class="th-org">腾讯</div></th><th><div class="th-nm">豆包工作</div><div class="th-org">字节跳动</div></th><th><div class="th-nm">千问办公</div><div class="th-org">阿里巴巴</div></th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="point">阅读理解</td>
+          <td><ul class="clean"><li>文档速读：<b>80 页报告约 2 分钟</b></li><li>多表合并、公式保留的表格处理</li></ul></td>
+          <td><ul class="clean"><li>deep research <b>15 分钟出报告</b></li><li>多专家并行协作分析</li></ul></td>
+          <td><ul class="clean"><li>网页/应用内容理解与复刻</li><li>浏览器录制回放自动化</li></ul></td>
+          <td><ul class="clean"><li><b>本地文件直读</b>：Word/Excel/PDF/音视频</li><li>多人工作台（百人协作网页）</li></ul></td>
+        </tr>
+        <tr>
+          <td class="point">内容生成</td>
+          <td><ul class="clean"><li>可编辑文档/图表/看板交付</li><li><b>公文 AI</b>：15 类公文、100+ 场景</li><li>AI PPT/审校/排版</li></ul></td>
+          <td><ul class="clean"><li>多格式同出：<b>docx/xlsx/pptx/pdf/md/html</b></li><li>"人机双写"选区精改，保留公式图表</li></ul></td>
+          <td><ul class="clean"><li>写文档/表格/PPT，<b>本地 Office 编辑</b>（2026-09 上线）</li><li>图片视频生成、网页/应用生成</li></ul></td>
+          <td><ul class="clean"><li>原生可编辑 <b>PPT/Word/Excel 在线二次编辑</b></li><li>多模态生成 + 全栈网页交付</li></ul></td>
+        </tr>
+        <tr>
+          <td class="point">交付亮点</td>
+          <td><b>政务公文 + 企业报表</b><div class="muted">办公套件格式保真度最高</div></td>
+          <td><b>多格式一次全出</b><div class="muted">选区精改是差异化体验</div></td>
+          <td><b>多模态最丰富</b><div class="muted">图/视频/网页/应用均可生成</div></td>
+          <td><b>在线协同编辑强</b><div class="muted">生成后可多人在线继续改</div></td>
+        </tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <!-- 能力雷达速览 -->
+  <div class="section">
+    <div class="sec-head"><span class="emoji">📊</span><h2>四维能力速览</h2><span class="hint">主观评分（满分 5），基于公开信息综合判断，仅供参考</span></div>
+    <div class="tablebox"><table>
+      <thead><tr><th>产品</th><th>私有化部署</th><th>使用便捷性</th><th>性价比</th><th>智能文档处理</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="point" style="color:var(--blue)">WPS Comate</td>
+          <td><div class="rate"><div class="bar b-blue"><i style="width:96%"></i></div><span class="sc">4.8</span></div></td>
+          <td><div class="rate"><div class="bar b-blue"><i style="width:84%"></i></div><span class="sc">4.2</span></div></td>
+          <td><div class="rate"><div class="bar b-blue"><i style="width:86%"></i></div><span class="sc">4.3</span></div></td>
+          <td><div class="rate"><div class="bar b-blue"><i style="width:92%"></i></div><span class="sc">4.6</span></div></td>
+        </tr>
+        <tr>
+          <td class="point" style="color:var(--teal)">WorkBuddy</td>
+          <td><div class="rate"><div class="bar b-teal"><i style="width:80%"></i></div><span class="sc">4.0</span></div></td>
+          <td><div class="rate"><div class="bar b-teal"><i style="width:94%"></i></div><span class="sc">4.7</span></div></td>
+          <td><div class="rate"><div class="bar b-teal"><i style="width:76%"></i></div><span class="sc">3.8</span></div></td>
+          <td><div class="rate"><div class="bar b-teal"><i style="width:88%"></i></div><span class="sc">4.4</span></div></td>
+        </tr>
+        <tr>
+          <td class="point" style="color:var(--red)">豆包工作</td>
+          <td><div class="rate"><div class="bar b-red"><i style="width:52%"></i></div><span class="sc">2.6</span></div></td>
+          <td><div class="rate"><div class="bar b-red"><i style="width:88%"></i></div><span class="sc">4.4</span></div></td>
+          <td><div class="rate"><div class="bar b-red"><i style="width:84%"></i></div><span class="sc">4.2</span></div></td>
+          <td><div class="rate"><div class="bar b-red"><i style="width:80%"></i></div><span class="sc">4.0</span></div></td>
+        </tr>
+        <tr>
+          <td class="point" style="color:var(--purple)">千问办公</td>
+          <td><div class="rate"><div class="bar b-purple"><i style="width:72%"></i></div><span class="sc">3.6</span></div></td>
+          <td><div class="rate"><div class="bar b-purple"><i style="width:86%"></i></div><span class="sc">4.3</span></div></td>
+          <td><div class="rate"><div class="bar b-purple"><i style="width:84%"></i></div><span class="sc">4.2</span></div></td>
+          <td><div class="rate"><div class="bar b-purple"><i style="width:86%"></i></div><span class="sc">4.3</span></div></td>
+        </tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <!-- 选型建议 -->
+  <div class="section">
+    <div class="sec-head"><span class="emoji">🎯</span><h2>一句话选型建议</h2></div>
+    <div class="verdict">
+      <div class="vcard">
+        <h3 style="color:var(--blue)">🏢 政企/央国企 · 有私有化信创要求</h3>
+        <p>优先 <b>WPS Comate</b>：全栈信创私有化案例最扎实（政务专网、医院、政务中枢均有落地），且与办公套件同源，格式保真和公文场景成熟。</p>
+      </div>
+      <div class="vcard">
+        <h3 style="color:var(--teal)">💬 跨 IM 生态 · 追求开箱即用</h3>
+        <p>优先 <b>WorkBuddy</b>：微信/QQ/企微/飞书/钉钉五端直连，免部署下载即用，专有云价格明码标价，B 端付费席位规模领先。</p>
+      </div>
+      <div class="vcard">
+        <h3 style="color:var(--red)">🚀 飞书团队 · 个人尝鲜</h3>
+        <p>考虑 <b>豆包工作</b>：个人订阅门槛最低（68 元/月起），飞书成果回流、手机遥控电脑体验新颖；但重度私有化需求暂不适合。</p>
+      </div>
+      <div class="vcard">
+        <h3 style="color:var(--purple)">📋 钉钉重度组织</h3>
+        <p>考虑 <b>千问办公</b>：审批/日程/知识库等组织流程打通最深，生成内容可多人在线二次编辑，新人免费额度慷慨（2000 积分）。</p>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>📌 信息来源：WPS 365 官网价格页、腾讯云社区、workbuddy.ai、豆包帮助中心、飞书官网、阿里云帮助中心、麒麟软件商店，以及新华网、中国经济网、经济参考报、央广网、36氪、界面新闻、东方财富等公开报道（2026-07 至 2026-10）。</p>
+    <p>⚠️ 说明：① 四款产品均处于快速迭代期，价格与功能请以官方最新口径为准；② "四维能力速览"为主观评分仅供参考；③ 豆包工作企业版 198 元/席/月为公测期口径，正式价可能调整；④ WPS Comate 无官方 AI 独立单价，表中为 WPS 365 套餐价。</p>
+    <p>由 WPS Comate 于 2026-10-09 生成</p>
+  </footer>
+</div>
+
+</body>
+</html>
